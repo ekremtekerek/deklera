@@ -19,6 +19,7 @@ demoyu göstermek. Fiyattan söz eden tek cümle bile paylaşımı reklama çevi
 
 ## Bağlantılar
 
+- Sayfa: `https://ekremtekerek.github.io/deklera/`
 - Demo: `https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/ekremtekerek/deklera/main/demo/blueprint.json`
 - Kaynak: `https://github.com/ekremtekerek/deklera`
 
