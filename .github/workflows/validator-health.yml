@@ -21,7 +21,14 @@ jobs:
     name: /health
     runs-on: ubuntu-latest
 
+    # Anahtar is duzeyinde ortama alinir. GitHub'da secrets baglami adim
+    # duzeyindeki if ifadesinden GORUNMEZ; belgelenen yol budur.
+    env:
+      VALIDATOR_KEY: ${{ secrets.VALIDATOR_KEY }}
+
     steps:
+      - uses: actions/checkout@v4
+
       - name: Check the validation service
         env:
           ENDPOINT: https://konform-validator.onrender.com/health
@@ -46,3 +53,57 @@ jobs:
             echo "Kural seti surumu bildirilmiyor - kural seti yuklenmemis olabilir." >&2
             exit 1
           }
+
+          # Almanya'nin ulusal kural seti de yuklu olmali. Ayri bir takvimde
+          # yurur (KoSIT yayimlar) ve ayri bir dosyadir; taban set yuklenmisken
+          # bunun eksik olmasi mumkundur.
+          echo "$body" | grep -q '"xrechnung_version"' || {
+            echo "XRechnung kural seti bildirilmiyor - ulusal profil calismaz." >&2
+            exit 1
+          }
+
+      # Servisin AYAKTA olmasi, ulusal profilin gercekten farkli davrandigini
+      # gostermez. Bu adim onu olcer: ayni belge, taban setten gecerken ulusal
+      # profilden dusmeli. Ikisi ayni cevabi veriyorsa Alman musteri
+      # dogrulanmis sanip reddedilen bir fatura gonderir.
+      #
+      # Anahtar bir kimlik bilgisidir ve depo sirrinda durur. Sir tanimli
+      # degilse adim SESSIZCE ATLANIR: eksik bir sir yuzunden izlemenin
+      # tamamini kirmizi yakmak, gercek bir arizayi gorunmez kilar.
+      - name: Check that the national profile actually differs
+        if: env.VALIDATOR_KEY != ''
+        env:
+          ENDPOINT: https://konform-validator.onrender.com/v1/validate
+        run: |
+          set -eu
+
+          xml="$(cat validator/fixtures/xrechnung-de.xml)"
+
+          ask() {
+            jq -n --arg xml "$1" --arg profile "$2" '{xml: $xml, profile: $profile}' \
+              | curl -fsS --max-time 120 -X POST "$ENDPOINT" \
+                  -H "Authorization: Bearer $VALIDATOR_KEY" \
+                  -H 'Content-Type: application/json' \
+                  --data-binary @-
+          }
+
+          # Saglam belge her iki sette de gecmeli.
+          ask "$xml" xrechnung | jq -e '.valid == true' >/dev/null || {
+            echo "Saglam Alman belgesi ulusal profilden dustu." >&2
+            exit 1
+          }
+
+          # Telefon (BT-42) EN 16931'de istege bagli, XRechnung'da zorunlu.
+          bozuk="$(printf '%s' "$xml" | perl -0pe 's{<ram:TelephoneUniversalCommunication>.*?</ram:TelephoneUniversalCommunication>}{}s')"
+
+          ask "$bozuk" en16931 | jq -e '.valid == true' >/dev/null || {
+            echo "Telefonsuz belge taban setten de dustu - kural setleri karismis olabilir." >&2
+            exit 1
+          }
+
+          ask "$bozuk" xrechnung | jq -e '.valid == false' >/dev/null || {
+            echo "Telefonsuz belge ulusal profilden GECTI - ulusal kurallar calismiyor." >&2
+            exit 1
+          }
+
+          echo "Ulusal profil taban setten farkli davraniyor."

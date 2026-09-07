@@ -552,6 +552,23 @@ düzeltmeyi göremezsiniz. Bir gün bu şekilde kaybedildi.
 docker compose run --rm -T wpcli eval-file - < build/ornek-uret.php
 ```
 
+### Sürekli izleme
+
+Yukarıdakiler elle çalıştırılan ölçümlerdir. Bunlardan biri — ulusal profilin
+canlı serviste gerçekten farklı davranması — `.github/workflows/validator-health.yml`
+içinde yarım saatte bir otomatik koşar.
+
+O adım `VALIDATOR_KEY` deposu sırrını ister ve **sır tanımlı değilse sessizce
+atlanır**. Sırrı eklemek için:
+
+```sh
+gh secret set VALIDATOR_KEY --repo ekremtekerek/deklera
+```
+
+Değer, doğrulama servisinin `LICENSE_SECRET` ortam değişkenidir (Render →
+konform-validator → Environment). Sır eklenmeden izleme yalnızca servisin
+ayakta olduğunu görür; ulusal kuralların çalıştığını görmez.
+
 ### Almanya — XRechnung 3.0.2 (KoSIT)
 
 Resmi yapılandırma KoSIT'in `validator-configuration-xrechnung` deposundan
