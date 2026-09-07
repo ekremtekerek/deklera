@@ -406,6 +406,37 @@ değişiyor; ilk satışları geciktirmemek için sonraya bırakıldı.
 
 ---
 
+## Lisans zinciri sınavı
+
+**7 Eylül 2026'da geçildi.** Temiz WordPress, paketten kurulan premium sürüm:
+
+```
+is_registered EVET · is_paying EVET · can_use_premium_code TRUE
+lisans 2036691 · plan pro · has_hosted_validation ACIK
+```
+
+Bu sınavın asıl sorusu şuydu: **kodda slug `deklera`, Freemius panosunda
+`konform` iken lisans açılır mı?** Açılıyor. Ürün `id` + `public_key` ile
+tanınıyor; slug yalnızca yerel depolama anahtarı.
+
+### Test lisansı oluştururken
+
+Freemius → Licenses → Create License'ta **"User (optional)" alanını boş
+bırakmayın.** Kullanıcısız lisansta etkinleştirme, sitenin yönetici
+e-postasıyla yeni hesap açmaya çalışır ve onay maili bekler:
+
+> Thanks! You should receive a confirmation email… complete the opt-in.
+
+Test sitesinin e-postası sahteyse mail hiç gelmez, lisans hiç bağlanmaz ve
+`is_registered` `hayır` kalır. Alana mevcut Freemius hesabının e-postası
+yazılınca sorun ortadan kalkar.
+
+Bu **gerçek müşteride yaşanmaz**: satın alanın hesabı Freemius tarafından
+zaten açılır ve lisans ona bağlı gelir. Yani bu tuzak sınavın kendisine
+aittir, ürüne değil.
+
+---
+
 ## Pro: gerçek doğrulama sınavı
 
 **Bunu da atlamayın.** Pro tek bir şey satıyor: belgenin **resmi** EN 16931
