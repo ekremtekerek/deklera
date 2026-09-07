@@ -499,7 +499,11 @@ Yerel WordPress'te, `api-test` ortamına karşı:
 
 1. Mağazayı geçici olarak Polonya'ya alın; KDV numarasını test NIP'iyle
    eşleştirin.
-2. Geçerli bir KSeF jetonu girin ve ortamı **test** bırakın.
+2. Geçerli bir KSeF jetonu girin ve ortamı **test** bırakın. Jeton üretmek
+   iki adımdır — `bin/ksef-live-test.php` XAdES ile bir **erişim** jetonu
+   alır, `bin/ksef-token-al.php` onunla API'den kalıcı bir **KSeF jetonu**
+   ister. İkincisi olmadan kullanıcının yolu değil, dev betiğinin yolu
+   koşulmuş olur — 0.2.0'da tam olarak bu kaçtı.
 3. Polonyalı alıcılı bir sipariş oluşturup `Generator::generate()` çalıştırın.
 4. Kuyruğu koşturun:
    `wp action-scheduler run --hooks=deklera_submit_to_ksef`
@@ -514,6 +518,10 @@ ksef_registered  KSeF number ...
 
 `ksef_registered` yoksa sürüm çıkarılmaz. Numara gelmemesi tek başına hata
 değildir (KSeF gecikebilir) ama `failed` satırı varsa sebebi çözülmelidir.
+
+Yerel makinede antivirüs TLS kesiyorsa WordPress konteyneri de `cURL error 60`
+alır ve denetim izine `failed` düşer — bu üründe değil, ortamda bir sorundur.
+Konteyneri kök olarak açıp `bin/trust-local-ca.sh` çalıştırın.
 
 Sınav bitince **mağaza ülkesini ve KDV numarasını geri alın, jetonu silin.**
 Jeton bir kimlik bilgisidir; geliştirme kurulumunda unutulmuş bir jeton
