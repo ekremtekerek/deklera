@@ -72,6 +72,28 @@
 		</properties>
 	</rule>
 
+	<!--
+		base64, KSeF'te bir tercih degil PROTOKOL. Sifrelenmis jeton, sarmalanmis
+		AES anahtari, IV ve faturanin kendisi API'ye base64 olarak gider; sertifika
+		da oyle gelir. Sniff bunlari "kod gizleme" diye uyariyor.
+
+		Uyari zararsiz gorunuyor ama degildi: phpcs uyarilarda da sifirdan farkli
+		cikis kodu donuyor ve CI 4 Eylul'den beri BU YUZDEN kirmiziydi; kimse
+		bakmadi, cunku "yalnizca uyari" sanildi. Ya susturulacak ya da yapi
+		kalici olarak yalan soyleyecekti.
+
+		Kapsam bilerek dar: yalnizca KSeF kodu ve onun testleri. Baska bir yerde
+		base64 gorulurse yine uyarir.
+	-->
+	<rule ref="WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode">
+		<exclude-pattern>*/src/Ksef/*</exclude-pattern>
+		<exclude-pattern>*/tests/Unit/ClientTest.php</exclude-pattern>
+	</rule>
+	<rule ref="WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode">
+		<exclude-pattern>*/src/Ksef/*</exclude-pattern>
+		<exclude-pattern>*/tests/Unit/ClientTest.php</exclude-pattern>
+	</rule>
+
 	<!-- Gelistirme betikleri: WordPress disinda veya yalnizca WP-CLI altinda calisirlar. -->
 	<!-- Bootstrap WordPress fonksiyonlarini bilerek sahteler; onek kurali gecerli degil. -->
 	<exclude-pattern>*/tests/bootstrap.php</exclude-pattern>

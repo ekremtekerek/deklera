@@ -12,6 +12,7 @@ namespace Deklera\Tests\Unit;
 use Deklera\Ksef\Client;
 use Deklera\Ksef\Encryption;
 use Deklera\Ksef\Response;
+use Deklera\Tests\Support\Oaep;
 use Deklera\Tests\Support\RecordingTransport;
 use PHPUnit\Framework\TestCase;
 
@@ -149,11 +150,7 @@ final class ClientTest extends TestCase {
 
 		$encrypted = (string) base64_decode( $transport->requests[1]['body']['encryptedToken'], true );
 
-		$plain = '';
-		$this->assertTrue(
-			\openssl_private_decrypt( $encrypted, $plain, $this->private_key, OPENSSL_PKCS1_OAEP_PADDING, 'sha256' ),
-			'Sarmalanan jeton çözülemedi.'
-		);
+		$plain = Oaep::decrypt( $encrypted, $this->private_key );
 
 		$parts = explode( '|', $plain );
 

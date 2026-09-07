@@ -264,6 +264,14 @@ final class KsefQueue {
 			throw new \RuntimeException( 'The archived document is missing or has been modified; it will not be sent.' );
 		}
 
+		/*
+		 * Sniff burada wp_remote_get() oneriyor ama okunan sey UZAK degil:
+		 * kendi arsivimizdeki dosya, hemen ustte SHA-256 ile butunlugu
+		 * dogrulanmis hali. WP_Filesystem ise yonetici baglaminda kimlik
+		 * sorabiliyor; bu kod Action Scheduler altinda, kimsenin ekrani
+		 * basinda olmadigi bir anda calisiyor.
+		 */
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Yerel arsiv dosyasi; bkz. ustteki gerekce.
 		$contents = file_get_contents( $document->absolute_path() );
 
 		if ( ! is_string( $contents ) ) {

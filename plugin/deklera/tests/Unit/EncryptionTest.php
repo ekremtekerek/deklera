@@ -10,6 +10,7 @@ declare( strict_types = 1 );
 namespace Deklera\Tests\Unit;
 
 use Deklera\Ksef\Encryption;
+use Deklera\Tests\Support\Oaep;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -80,8 +81,6 @@ final class EncryptionTest extends TestCase {
 	 * @return void
 	 */
 	public function test_our_oaep_encoding_is_accepted_by_openssl(): void {
-		$this->requires_native_oaep_digest();
-
 		$secret = Encryption::generate_key();
 
 		$encoded = Encryption::oaep_encode( $secret, $this->modulus_bytes );
@@ -92,13 +91,25 @@ final class EncryptionTest extends TestCase {
 			'Ham RSA işlemi başarısız oldu.'
 		);
 
-		$unwrapped = '';
-		$this->assertTrue(
-			\openssl_private_decrypt( $wrapped, $unwrapped, $this->private_key, OPENSSL_PKCS1_OAEP_PADDING, 'sha256' ),
-			'OpenSSL kendi OAEP çözücüsüyle bloğu çözemedi.'
+		$this->assertSame(
+			$secret,
+			Oaep::decrypt( $wrapped, $this->private_key ),
+			'Kodladığımız blok bağımsız çözücüyle açılamadı.'
 		);
 
-		$this->assertSame( $secret, $unwrapped );
+		/*
+		 * OpenSSL'in KENDI cozucusu ancak PHP 8.5'te OAEP ozetini secebiliyor.
+		 * Varsa ayrica onunla da dogrulanir: iki bagimsiz cozucu, tek kodlayici.
+		 */
+		if ( Encryption::has_native_oaep_digest() ) {
+			$unwrapped = '';
+			$this->assertTrue(
+				\openssl_private_decrypt( $wrapped, $unwrapped, $this->private_key, OPENSSL_PKCS1_OAEP_PADDING, 'sha256' ),
+				'OpenSSL kendi OAEP çözücüsüyle bloğu çözemedi.'
+			);
+
+			$this->assertSame( $secret, $unwrapped );
+		}
 	}
 
 	/**
@@ -110,8 +121,6 @@ final class EncryptionTest extends TestCase {
 	 * @return void
 	 */
 	public function test_encoding_round_trips_across_lengths_and_repeats(): void {
-		$this->requires_native_oaep_digest();
-
 		foreach ( array( 1, 16, 32, 64, 190 ) as $length ) {
 			for ( $attempt = 0; $attempt < 5; $attempt++ ) {
 				$message = random_bytes( $length );
@@ -120,17 +129,11 @@ final class EncryptionTest extends TestCase {
 				$wrapped = '';
 				\openssl_public_encrypt( $encoded, $wrapped, $this->public_key, OPENSSL_NO_PADDING );
 
-				$unwrapped = '';
-				$decrypted = \openssl_private_decrypt(
-					$wrapped,
-					$unwrapped,
-					$this->private_key,
-					OPENSSL_PKCS1_OAEP_PADDING,
-					'sha256'
+				$this->assertSame(
+					$message,
+					Oaep::decrypt( $wrapped, $this->private_key ),
+					sprintf( '%d baytlık veri çözülemedi.', $length )
 				);
-
-				$this->assertTrue( $decrypted, sprintf( '%d baytlık veri çözülemedi.', $length ) );
-				$this->assertSame( $message, $unwrapped );
 			}
 		}
 	}
@@ -181,19 +184,11 @@ final class EncryptionTest extends TestCase {
 	 * @return void
 	 */
 	public function test_wrapped_key_can_be_unwrapped(): void {
-		$this->requires_native_oaep_digest();
-
 		$key     = Encryption::generate_key();
 		$wrapped = Encryption::wrap_key( $key, $this->public_key );
 
 		$this->assertSame( $this->modulus_bytes, strlen( $wrapped ) );
-
-		$unwrapped = '';
-		$this->assertTrue(
-			\openssl_private_decrypt( $wrapped, $unwrapped, $this->private_key, OPENSSL_PKCS1_OAEP_PADDING, 'sha256' )
-		);
-
-		$this->assertSame( $key, $unwrapped );
+		$this->assertSame( $key, Oaep::decrypt( $wrapped, $this->private_key ) );
 	}
 
 	/**
@@ -207,28 +202,25 @@ final class EncryptionTest extends TestCase {
 	 * @return void
 	 */
 	public function test_both_wrapping_paths_produce_a_valid_key(): void {
-		$this->requires_native_oaep_digest();
-
 		$key = Encryption::generate_key();
 
-		foreach ( array( true, false ) as $native ) {
+		/*
+		 * Yerel yol PHP 8.5'ten once yok; o surumlerde denenmesi anlamsiz.
+		 * Kendi yolumuz ise HER surumde sinanir -- musterilerin bulundugu dal
+		 * odur ve bu testin var olma sebebi de budur.
+		 */
+		$paths = Encryption::has_native_oaep_digest() ? array( true, false ) : array( false );
+
+		foreach ( $paths as $native ) {
 			$wrapped = Encryption::wrap_key_using( $key, $this->public_key, $native );
 
 			$this->assertSame( $this->modulus_bytes, strlen( $wrapped ) );
 
-			$unwrapped = '';
-			$this->assertTrue(
-				\openssl_private_decrypt(
-					$wrapped,
-					$unwrapped,
-					$this->private_key,
-					OPENSSL_PKCS1_OAEP_PADDING,
-					'sha256'
-				),
+			$this->assertSame(
+				$key,
+				Oaep::decrypt( $wrapped, $this->private_key ),
 				sprintf( '%s yol ile sarmalanan anahtar çözülemedi.', $native ? 'yerel' : 'kendi' )
 			);
-
-			$this->assertSame( $key, $unwrapped );
 		}
 	}
 
@@ -296,20 +288,5 @@ final class EncryptionTest extends TestCase {
 		$this->expectException( \RuntimeException::class );
 
 		Encryption::wrap_key( Encryption::generate_key(), 'sertifika-degil' );
-	}
-
-	/**
-	 * OAEP özeti seçilebilmiyorsa doğrulama yapılamaz.
-	 *
-	 * `openssl_private_decrypt()` özet parametresini PHP 8.5'te aldı. Daha
-	 * eski sürümlerde OpenSSL'e "SHA-256 ile çöz" denemiyor, dolayısıyla
-	 * kodlamamız bu yolla doğrulanamıyor.
-	 *
-	 * @return void
-	 */
-	private function requires_native_oaep_digest(): void {
-		if ( PHP_VERSION_ID < 80500 ) {
-			$this->markTestSkipped( 'OAEP özeti seçimi PHP 8.5 ile geldi; doğrulama bu sürümde yapılamaz.' );
-		}
 	}
 }
