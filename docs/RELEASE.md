@@ -400,7 +400,8 @@ kanıtlamaz; servis her şeye "geçerli" diyor olabilir.
 
 7 Eylül 2026'da 0.3.0 premium paketiyle ölçülen sonuç: kural seti **1.3.16**,
 geçerli belge 0 bulgu (servis tarafı 2,5 sn), bozuk belge iki ölümcül bulguyla
-reddedildi. Sonda betikleri `build/pro-probe.php` ve `build/pro-negatif.php`.
+reddedildi. Sonda betigi: `bin/pro-dogrula.php` (iki yonu de kendisi olcer ve sonunda
+"calisiyor" ya da "surum cikarilmaz" der).
 
 **Render ücretsiz katmanı uyuyor.** İlk istek 12 saniye sürebilir; bu bir hata
 değil, soğuk başlangıç. Eklenti zaman aşımını buna göre veriyor, ama müşteriye

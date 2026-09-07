@@ -21,9 +21,45 @@ define( 'MINUTE_IN_SECONDS', 60 );
 
 require_once dirname( __DIR__ ) . '/vendor/autoload.php';
 
+/**
+ * Kayıtlı filtreler.
+ *
+ * Başlangıçta apply_filters() değeri olduğu gibi döndürüyordu. Bu, filtresi
+ * olan davranışların sınanmasını imkânsız kılıyordu: HostedValidator'ın
+ * çalışabilmesi için planın Pro olması gerekiyor ve plan yalnızca
+ * `deklera/plan` filtresiyle zorlanabiliyor.
+ *
+ * @var array<string, callable[]>
+ */
+$GLOBALS['deklera_test_filters'] = array();
+
+if ( ! function_exists( 'add_filter' ) ) {
+	/**
+	 * Filtre kaydeder.
+	 *
+	 * @param string   $tag      Kanca adı.
+	 * @param callable $callback Geri çağrı.
+	 * @return void
+	 */
+	function add_filter( string $tag, callable $callback ): void {
+		$GLOBALS['deklera_test_filters'][ $tag ][] = $callback;
+	}
+}
+
+if ( ! function_exists( 'deklera_test_reset_filters' ) ) {
+	/**
+	 * Kayıtlı filtreleri temizler. Testler birbirine sızmamalı.
+	 *
+	 * @return void
+	 */
+	function deklera_test_reset_filters(): void {
+		$GLOBALS['deklera_test_filters'] = array();
+	}
+}
+
 if ( ! function_exists( 'apply_filters' ) ) {
 	/**
-	 * Kancaları uygulamaz; ilk değeri döndürür.
+	 * Kayıtlı filtreleri sırayla uygular.
 	 *
 	 * @param string $tag   Kanca adı.
 	 * @param mixed  $value Değer.
@@ -31,7 +67,9 @@ if ( ! function_exists( 'apply_filters' ) ) {
 	 * @return mixed
 	 */
 	function apply_filters( string $tag, $value, ...$args ) {
-		unset( $tag, $args );
+		foreach ( $GLOBALS['deklera_test_filters'][ $tag ] ?? array() as $callback ) {
+			$value = $callback( $value, ...$args );
+		}
 
 		return $value;
 	}
@@ -157,5 +195,123 @@ if ( ! function_exists( 'delete_option' ) ) {
 		unset( $GLOBALS['deklera_test_options'][ $name ] );
 
 		return true;
+	}
+}
+
+/**
+ * Sıradaki HTTP yanıtları. Testler doldurur, wp_remote_post() tüketir.
+ *
+ * @var array<int, mixed>
+ */
+$GLOBALS['deklera_test_http'] = array();
+
+/**
+ * Gönderilen istekler; sıra ve gövde denetlenebilsin diye.
+ *
+ * @var array<int, array<string,mixed>>
+ */
+$GLOBALS['deklera_test_http_requests'] = array();
+
+if ( ! class_exists( 'WP_Error' ) ) {
+	/**
+	 * WP_Error'un sınamaya yetecek kadarı.
+	 */
+	class WP_Error {
+
+		/**
+		 * Kurucu.
+		 *
+		 * @param string $code    Hata kodu.
+		 * @param string $message Mesaj.
+		 */
+		public function __construct( private string $code = '', private string $message = '' ) {}
+
+		/**
+		 * Mesajı döndürür.
+		 *
+		 * @return string
+		 */
+		public function get_error_message(): string {
+			return $this->message;
+		}
+
+		/**
+		 * Kodu döndürür.
+		 *
+		 * @return string
+		 */
+		public function get_error_code(): string {
+			return $this->code;
+		}
+	}
+}
+
+if ( ! function_exists( 'is_wp_error' ) ) {
+	/**
+	 * Değer WP_Error mi.
+	 *
+	 * @param mixed $thing Değer.
+	 * @return bool
+	 */
+	function is_wp_error( $thing ): bool {
+		return $thing instanceof WP_Error;
+	}
+}
+
+if ( ! function_exists( 'wp_remote_post' ) ) {
+	/**
+	 * Ağa çıkmaz; kuyruktaki yanıtı döndürür ve isteği kaydeder.
+	 *
+	 * @param string               $url  Adres.
+	 * @param array<string,mixed>  $args Argümanlar.
+	 * @return array<string,mixed>|WP_Error
+	 */
+	function wp_remote_post( string $url, array $args = array() ) {
+		$GLOBALS['deklera_test_http_requests'][] = array(
+			'url'  => $url,
+			'args' => $args,
+		);
+
+		if ( array() === $GLOBALS['deklera_test_http'] ) {
+			return new WP_Error( 'http_request_failed', 'Kuyrukta yanıt kalmadı.' );
+		}
+
+		return array_shift( $GLOBALS['deklera_test_http'] );
+	}
+}
+
+if ( ! function_exists( 'wp_remote_retrieve_response_code' ) ) {
+	/**
+	 * Yanıtın HTTP durumunu döndürür.
+	 *
+	 * @param array<string,mixed>|WP_Error $response Yanıt.
+	 * @return int
+	 */
+	function wp_remote_retrieve_response_code( $response ): int {
+		return is_array( $response ) ? (int) ( $response['response']['code'] ?? 0 ) : 0;
+	}
+}
+
+if ( ! function_exists( 'wp_remote_retrieve_body' ) ) {
+	/**
+	 * Yanıtın gövdesini döndürür.
+	 *
+	 * @param array<string,mixed>|WP_Error $response Yanıt.
+	 * @return string
+	 */
+	function wp_remote_retrieve_body( $response ): string {
+		return is_array( $response ) ? (string) ( $response['body'] ?? '' ) : '';
+	}
+}
+
+if ( ! function_exists( 'trailingslashit' ) ) {
+	/**
+	 * Sonuna tek bir eğik çizgi koyar.
+	 *
+	 * @param string $value Değer.
+	 * @return string
+	 */
+	function trailingslashit( string $value ): string {
+		return rtrim( $value, "/\\" ) . '/';
 	}
 }

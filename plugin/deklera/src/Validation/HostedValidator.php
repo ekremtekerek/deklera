@@ -98,6 +98,28 @@ final class HostedValidator {
 
 		$response = $this->request( $xml );
 
+		/*
+		 * Zaman asimi ve baglanti hatasi WP_Error olarak gelir, HTTP durumu
+		 * olarak degil. Burada bir kez daha denenir ve sebebi olculdu:
+		 *
+		 * Render'in ucretsiz katmani ~15 dakika bos kalinca uyuyor. Uyandirma
+		 * istegi 12-20 saniye suruyor, yani etkilesimli butceyi (15 sn) asip
+		 * "0 bytes received" ile dusuyor. Hemen ardindan gelen ikinci istek
+		 * ISINMIS servisi buluyor ve 2,5 saniyede tam raporu donduruyor.
+		 *
+		 * Yani ilk istegin isi cevap almak degil, servisi uyandirmak. Denemeyi
+		 * birakmak, Pro musterisinin gunun ILK dogrulamasini her seferinde
+		 * kaybetmesi demekti.
+		 *
+		 * Arka plan yolunda butce zaten 90 saniye; orada ilk istek nadiren
+		 * duser, dusuyorsa da ikinci deneme kimseyi bekletmez.
+		 */
+		if ( \is_wp_error( $response ) ) {
+			sleep( self::RETRY_PAUSE );
+
+			$response = $this->request( $xml );
+		}
+
 		if ( \is_wp_error( $response ) ) {
 			return ValidationResult::unavailable( $response->get_error_message() );
 		}
@@ -110,10 +132,8 @@ final class HostedValidator {
 		 * sunucu istegi bekletmek yerine 404 donduruyor. Olculdu: birkac
 		 * dakika 404, sonra kendiliginden 200.
 		 *
-		 * Bu yuzden kesin bir HTTP durumuyla donen gecici hatalarda bir kez
-		 * daha deneriz. Zaman asiminda denemeyiz: orada butcenin tamami
-		 * zaten harcanmistir, ikinci deneme yalnizca bekleyeni iki kat
-		 * bekletir.
+		 * Bu yuzden kesin bir HTTP durumuyla donen gecici hatalarda da bir kez
+		 * daha deneriz. (Zaman asimi yukarida ayrica ele alindi.)
 		 */
 		if ( in_array( $status, self::RETRYABLE, true ) ) {
 			sleep( self::RETRY_PAUSE );
