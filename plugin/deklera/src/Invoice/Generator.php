@@ -123,7 +123,7 @@ final class Generator {
 		 */
 		$validation = Profile::KSEF === $profile
 			? ValidationResult::skipped()
-			: ( new HostedValidator() )->validate( $xml );
+			: ( new HostedValidator() )->validate( $xml, $profile );
 
 		if ( $validation->blocks() ) {
 			AuditLog::record( AuditLog::EVENT_INVALID, $order_id, 0, $validation->summary() );

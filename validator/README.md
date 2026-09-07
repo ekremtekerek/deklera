@@ -16,10 +16,33 @@ yapamaz.
 
 | Yol | Yöntem | Kimlik | Yanıt |
 |---|---|---|---|
-| `/health` | GET | yok | `{ok, rules_version, syntax}` |
-| `/v1/validate` | POST | `Authorization: Bearer <LICENSE_SECRET>` | `{valid, errors[], warnings[], rules_version}` |
+| `/health` | GET | yok | `{ok, rules_version, xrechnung_version, syntax}` |
+| `/v1/validate` | POST | `Authorization: Bearer <LICENSE_SECRET>` | `{valid, errors[], warnings[], profile, rules_version}` |
 
-Gövde: `{"xml": "<rsm:CrossIndustryInvoice …>"}`, en fazla 2 MB.
+Gövde: `{"xml": "<rsm:CrossIndustryInvoice …>", "profile": "en16931"}`,
+en fazla 2 MB.
+
+### Profiller
+
+`profile` iki değer alır:
+
+| Değer | Ne çalışır |
+|---|---|
+| `en16931` (varsayılan) | Yalnızca AB taban kural seti |
+| `xrechnung` | Taban **ve** Almanya'nın XRechnung 3.0.2 CIUS'u |
+
+Ulusal profil istendiğinde taban set de çalışır. Ulusal set yalnızca
+daraltmaları taşır; tek başına çalıştırmak, tabanın yakaladığı hataları
+görmeden "geçti" demek olurdu.
+
+Bunun neden gerektiği ölçülmüştür: eklentinin çıktısı taban seti geçerken
+Almanya'nın resmi denetleyicisinden on iki iddiadan düşüyordu
+(bkz. `docs/adr/0010`). Yani taban set tek başına bir Alman müşteriye
+"bu fatura kabul edilir" diyemez.
+
+Bilinmeyen bir profil sessizce tabana düşer — istemci servisten yeni
+olabilir; daha az kural çalıştırmak hiç doğrulamamaktan iyidir. Yanıttaki
+`profile` alanı hangisinin koşulduğunu söyler.
 
 `LICENSE_SECRET` tanımlı değilse servis **her isteği 401 ile reddeder**.
 Yanlışlıkla kimliksiz açılan bir servis çalışır durumda görünmez.
@@ -72,7 +95,7 @@ Doğrulama:
 
 ```sh
 curl -s https://<alan-adiniz>/health
-# {"ok":true,"rules_version":"1.3.16","syntax":"CII"}
+# {"ok":true,"rules_version":"1.3.16","xrechnung_version":"2026-08-31","syntax":"CII"}
 ```
 
 ### Sağlayıcı seçimi
@@ -183,6 +206,15 @@ Avrupa Komisyonu yeni sürüm yayımladığında:
 # .env içinde RULES_VERSION'ı değiştirin
 docker compose up -d --build
 ```
+
+Almanya'nın ulusal profili ayrı bir takvimde yürür ve KoSIT yayımlar:
+
+```sh
+# .env içinde XRECHNUNG_VERSION'ı değiştirin (örn. 2026-08-31)
+docker compose up -d --build
+```
+
+İkisi bağımsızdır; birini yükseltmek diğerini etkilemez.
 
 Dün geçerli olan bir belge bugün bulgu üretebilir; bu kuralların değişmesidir,
 bir kusur değil. Kullanım şartları bunu açıkça söyler.

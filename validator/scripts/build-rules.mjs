@@ -89,3 +89,64 @@ await writeFile(join(out, 'VERSION'), `${VERSION}\n`, 'utf8');
 await rm(work, { recursive: true, force: true });
 
 console.log(`Hazir: rules/en16931-cii.sef.json  (EN 16931 ${VERSION})`);
+
+/*
+ * Almanya'nin ulusal profili (XRechnung 3.0.2 CIUS).
+ *
+ * NEDEN AYRI BIR KURAL SETI
+ *
+ * EN 16931 bir tabandir; ulkeler ustune kendi daraltmalarini koyar. Almanya'da
+ * bunlar KoSIT tarafindan yayimlanir ve tabanda ISTEGE BAGLI olan alanlari
+ * ZORUNLU kilar. Olculdu: bizim ciktimiz EN 16931'i gecerken XRechnung'dan
+ * 12 iddiadan dusuyordu (bkz. docs/adr/0010). Yani taban seti tek basina
+ * Alman musteriye "bu fatura kabul edilir" diyemez.
+ */
+const XR_VERSION = process.env.XRECHNUNG_VERSION ?? '2026-08-31';
+const XR_URL = `https://github.com/itplr-kosit/validator-configuration-xrechnung/releases/download/v${XR_VERSION}/xrechnung-3.0.2-validator-configuration-${XR_VERSION}.zip`;
+
+console.log(`XRechnung 3.0.2 (${XR_VERSION}) indiriliyor...`);
+
+const xrWork = join(root, '.rules-build-xr');
+await rm(xrWork, { recursive: true, force: true });
+await mkdir(join(xrWork, 'x'), { recursive: true });
+
+const xrResponse = await fetch(XR_URL);
+
+if (!xrResponse.ok) {
+  console.error(`Indirilemedi: ${xrResponse.status} ${XR_URL}`);
+  process.exit(1);
+}
+
+const xrZip = join(xrWork, 'xrechnung.zip');
+await pipeline(Readable.fromWeb(xrResponse.body), createWriteStream(xrZip));
+
+try {
+  execFileSync('unzip', ['-o', '-q', xrZip, '-d', join(xrWork, 'x')], { stdio: 'inherit' });
+} catch {
+  execFileSync('tar', ['-xf', xrZip, '-C', join(xrWork, 'x')], { stdio: 'inherit' });
+}
+
+const xrXsl = join(xrWork, 'x', 'resources', 'xrechnung', '3.0.2', 'xsl', 'XRechnung-CII-validation.xsl');
+
+if (!existsSync(xrXsl)) {
+  console.error(`Beklenen XSL bulunamadi: ${xrXsl}`);
+  process.exit(1);
+}
+
+console.log('SEF derleniyor (Saxon-JS)...');
+
+execFileSync(
+  process.execPath,
+  [
+    join(root, 'node_modules', 'xslt3', 'xslt3.js'),
+    `-xsl:${xrXsl}`,
+    `-export:${join(out, 'xrechnung-cii.sef.json')}`,
+    '-nogo',
+  ],
+  { stdio: 'inherit' },
+);
+
+await writeFile(join(out, 'VERSION-XRECHNUNG'), `${XR_VERSION}\n`, 'utf8');
+await rm(xrWork, { recursive: true, force: true });
+
+console.log(`Hazir: rules/xrechnung-cii.sef.json  (XRechnung 3.0.2 ${XR_VERSION})`);

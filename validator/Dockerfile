@@ -11,7 +11,9 @@ COPY package.json package-lock.json ./
 RUN npm ci
 COPY scripts ./scripts
 ARG EN16931_VERSION=1.3.16
-RUN EN16931_VERSION=$EN16931_VERSION node scripts/build-rules.mjs
+ARG XRECHNUNG_VERSION=2026-08-31
+RUN EN16931_VERSION=$EN16931_VERSION XRECHNUNG_VERSION=$XRECHNUNG_VERSION \
+    node scripts/build-rules.mjs
 
 FROM node:22-slim AS runtime
 WORKDIR /app
@@ -20,6 +22,7 @@ COPY package.json package-lock.json ./
 RUN npm ci --omit=dev && npm cache clean --force
 COPY --from=build /app/rules ./rules
 COPY src ./src
+COPY fixtures ./fixtures
 # Kok olmayan kullanici; servis dosya yazmaz.
 USER node
 EXPOSE 8790

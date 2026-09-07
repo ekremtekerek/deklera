@@ -53,6 +53,43 @@ const stripped = example.replace(/<ram:SellerTradeParty>[\s\S]*?<\/ram:SellerTra
 const missing = validate(stripped);
 check('eksik satici yakalaniyor', missing.valid === false, `${missing.errors.length} hata`);
 
+// --- Almanya: ulusal profil (XRechnung 3.0.2) ---
+//
+// Bu bolumun sebebi somut: eklentinin ciktisi TABAN seti gecerken XRechnung'dan
+// 12 iddiadan dusuyordu (bkz. ADR 0010). Taban set tek basina Alman musteriye
+// "bu fatura kabul edilir" diyemez.
+console.log('\n' + 'XRechnung 3.0.2 ulusal profil');
+const alman = readFileSync(join(here, '..', 'fixtures', 'xrechnung-de.xml'), 'utf8');
+const ulusal = validate(alman, 'xrechnung');
+
+check('alman ornek ulusal profilden geciyor', ulusal.valid, JSON.stringify(ulusal.errors.slice(0, 3)));
+check('profil cevapta bildiriliyor', ulusal.profile === 'xrechnung');
+
+// Telefonu (BT-42) cikar: EN 16931'de istege bagli, XRechnung'da zorunlu.
+// Iki setin AYNI belgeye farkli cevap vermesi, ulusal setin gercekten
+// calistiginin kaniti. Ayni olsalardi bu testi eklemenin anlami olmazdi.
+const telefonsuz = alman.replace(
+  /<ram:TelephoneUniversalCommunication>[\s\S]*?<\/ram:TelephoneUniversalCommunication>/,
+  '',
+);
+
+check(
+  'telefonsuz belge taban setten yine geciyor',
+  validate(telefonsuz, 'en16931').valid,
+);
+
+const dusen = validate(telefonsuz, 'xrechnung');
+
+check('telefonsuz belge ulusal profilden dusuyor', dusen.valid === false);
+check(
+  'dusme sebebi BR-DE kurali',
+  dusen.errors.some((e) => e.rule.startsWith('BR-DE')),
+  JSON.stringify(dusen.errors.map((e) => e.rule)),
+);
+
+// Bilinmeyen profil sessizce tabana dusmeli; istemci bizden yeni olabilir.
+check('bilinmeyen profil tabana dusuyor', validate(example, 'mars').valid);
+
 if (failures > 0) {
   console.error(`\n${failures} kontrol basarisiz.`);
   process.exit(1);

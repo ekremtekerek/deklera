@@ -25,6 +25,7 @@ const here = dirname(fileURLToPath(import.meta.url));
 const PORT = Number(process.env.PORT ?? 8790);
 const SECRET = process.env.LICENSE_SECRET ?? '';
 const RULES_VERSION = process.env.RULES_VERSION ?? '1.3.16';
+const XRECHNUNG_VERSION = process.env.XRECHNUNG_VERSION ?? '2026-08-31';
 
 /** İstek gövdesi üst sınırı; doğrulama CPU yakar, açık uçlu bırakılmaz. */
 const MAX_BYTES = 2 * 1024 * 1024;
@@ -35,6 +36,21 @@ const MAX_BYTES = 2 * 1024 * 1024;
  */
 const ruleset = JSON.parse(
   readFileSync(join(here, '..', 'rules', 'en16931-cii.sef.json'), 'utf8'),
+);
+
+/*
+ * Almanya'nin ulusal profili (XRechnung 3.0.2 CIUS).
+ *
+ * EN 16931 bir tabandir; ulkeler ustune daraltma koyar ve tabanda ISTEGE
+ * BAGLI olan alanlari ZORUNLU kilabilir. Olculdu: eklentinin ciktisi taban
+ * seti gecerken XRechnung'dan 12 iddiadan dusuyordu -- bkz. ADR 0010. Yani
+ * taban seti tek basina bir Alman musteriye "bu fatura kabul edilir"
+ * diyemez.
+ *
+ * Ikisi birlikte 6,6 MB; ikisi de surec basina bir kez okunur.
+ */
+const xrechnungRuleset = JSON.parse(
+  readFileSync(join(here, '..', 'rules', 'xrechnung-cii.sef.json'), 'utf8'),
 );
 
 /**
@@ -75,34 +91,78 @@ export function parseSvrl(svrl) {
 }
 
 /**
- * XML'i resmi kural setine göre doğrular.
+ * Tek bir kural setini calistirir.
  *
- * @param {string} xml Fatura XML'i.
- * @returns {{valid: boolean, errors: object[], warnings: object[], duration_ms: number}}
+ * @param {object} rules Derlenmis kural seti.
+ * @param {string} xml   Fatura XML'i.
+ * @returns {{errors: object[], warnings: object[]} | {fatal: string}}
  */
-export function validate(xml) {
-  const started = Date.now();
-
-  let svrl;
-
+function run(rules, xml) {
   try {
-    svrl = SaxonJS.transform(
-      { stylesheetInternal: ruleset, sourceText: xml, destination: 'serialized' },
-      'sync',
-    ).principalResult;
+    return parseSvrl(
+      SaxonJS.transform(
+        { stylesheetInternal: rules, sourceText: xml, destination: 'serialized' },
+        'sync',
+      ).principalResult,
+    );
   } catch (error) {
     // Bicimsiz XML burada patlar; bu da gecerli bir dogrulama sonucudur.
+    return { fatal: String(error?.message ?? error) };
+  }
+}
+
+/**
+ * XML'i resmi kural setine göre doğrular.
+ *
+ * Ulusal profil istendiginde TABAN SET DE calisir. Sebebi, ulusal setin
+ * yalnizca daraltmalari tasimasi: tek basina calistirmak, tabanin yakaladigi
+ * hatalari gormeden "gecti" demek olurdu.
+ *
+ * @param {string} xml     Fatura XML'i.
+ * @param {string} profile 'en16931' (varsayilan) veya 'xrechnung'.
+ * @returns {{valid: boolean, errors: object[], warnings: object[], duration_ms: number, profile: string}}
+ */
+export function validate(xml, profile = 'en16931') {
+  const started = Date.now();
+  const national = profile === 'xrechnung';
+  const sonuc = run(ruleset, xml);
+
+  if (sonuc.fatal !== undefined) {
     return {
       valid: false,
-      errors: [{ rule: '', flag: 'fatal', message: String(error?.message ?? error), location: '' }],
+      errors: [{ rule: '', flag: 'fatal', message: sonuc.fatal, location: '' }],
       warnings: [],
       duration_ms: Date.now() - started,
+      profile,
     };
   }
 
-  const { errors, warnings } = parseSvrl(svrl);
+  let { errors, warnings } = sonuc;
 
-  return { valid: errors.length === 0, errors, warnings, duration_ms: Date.now() - started };
+  if (national) {
+    const ulusal = run(xrechnungRuleset, xml);
+
+    if (ulusal.fatal === undefined) {
+      // Ayni kural iki sette de gecebilir; kimlik ve konuma gore tekillestirilir.
+      const gorulen = new Set([...errors, ...warnings].map((f) => `${f.rule}|${f.location}`));
+
+      for (const bulgu of [...ulusal.errors, ...ulusal.warnings]) {
+        if (gorulen.has(`${bulgu.rule}|${bulgu.location}`)) {
+          continue;
+        }
+
+        (bulgu.flag === 'warning' ? warnings : errors).push(bulgu);
+      }
+    }
+  }
+
+  return {
+    valid: errors.length === 0,
+    errors,
+    warnings,
+    duration_ms: Date.now() - started,
+    profile,
+  };
 }
 
 /**
@@ -182,7 +242,12 @@ const server = createServer(async (request, response) => {
   const url = new URL(request.url ?? '/', 'http://localhost');
 
   if (url.pathname === '/health') {
-    json(response, 200, { ok: true, rules_version: RULES_VERSION, syntax: 'CII' });
+    json(response, 200, {
+      ok: true,
+      rules_version: RULES_VERSION,
+      xrechnung_version: XRECHNUNG_VERSION,
+      syntax: 'CII',
+    });
 
     return;
   }
@@ -223,7 +288,18 @@ const server = createServer(async (request, response) => {
     return;
   }
 
-  json(response, 200, { ...validate(xml), rules_version: RULES_VERSION });
+  /*
+   * Bilinmeyen bir profil sessizce tabana duser. Istemci bizden yeni olabilir;
+   * bu durumda daha az kural calistirmak, hic dogrulamamaktan iyidir -- ve
+   * cevaptaki profile alani hangisinin kosuldugunu soyler.
+   */
+  const profile = payload?.profile === 'xrechnung' ? 'xrechnung' : 'en16931';
+
+  json(response, 200, {
+    ...validate(xml, profile),
+    rules_version: RULES_VERSION,
+    xrechnung_version: XRECHNUNG_VERSION,
+  });
 });
 
 if (process.env.NODE_ENV !== 'test') {

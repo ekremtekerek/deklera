@@ -10,6 +10,7 @@ declare( strict_types = 1 );
 namespace Deklera\Tests\Unit;
 
 use Deklera\License\Plan;
+use Deklera\Invoice\Profile;
 use Deklera\Validation\HostedValidator;
 use PHPUnit\Framework\TestCase;
 
@@ -243,6 +244,45 @@ final class HostedValidatorTest extends TestCase {
 
 		$this->assertSame( 'https://validator.example.test/v1/validate', $istek['url'] );
 		$this->assertSame( 'Bearer anahtar', $istek['args']['headers']['authorization'] );
-		$this->assertSame( '{"xml":"<xml\/>"}', $istek['args']['body'] );
+		// Profil gövdede gider; servis onunla ulusal kural setini seçer.
+		$this->assertSame( '{"xml":"<xml\/>","profile":"en16931"}', $istek['args']['body'] );
+	}
+
+	/**
+	 * Alman belgesi ulusal kural setini ister.
+	 *
+	 * REGRESYON KORUMASI: eklentinin çıktısı EN 16931 taban setini geçerken
+	 * Almanya'nın resmi denetleyicisinden on iki iddiadan düşüyordu
+	 * (docs/adr/0010). Profil gitmezse servis tabanı çalıştırır, Pro müşterisi
+	 * "geçti" cevabı alır ve faturayı kuruma reddettirir.
+	 *
+	 * @return void
+	 */
+	public function test_a_german_document_asks_for_the_national_ruleset(): void {
+		$GLOBALS['deklera_test_http'][] = $this->response( 200, array( 'valid' => true ) );
+
+		( new HostedValidator() )->validate( '<xml/>', Profile::XRECHNUNG );
+
+		$govde = (string) $GLOBALS['deklera_test_http_requests'][0]['args']['body'];
+
+		$this->assertStringContainsString( '"profile":"xrechnung"', $govde );
+	}
+
+	/**
+	 * Fransız belgesi tabanda kalır.
+	 *
+	 * Factur-X bir CIUS değildir; ulusal seti ona uygulamak, standardın izin
+	 * verdiği bir şeyi yasaklamak olurdu.
+	 *
+	 * @return void
+	 */
+	public function test_a_french_document_stays_on_the_base_ruleset(): void {
+		$GLOBALS['deklera_test_http'][] = $this->response( 200, array( 'valid' => true ) );
+
+		( new HostedValidator() )->validate( '<xml/>', Profile::FACTUR_X );
+
+		$govde = (string) $GLOBALS['deklera_test_http_requests'][0]['args']['body'];
+
+		$this->assertStringContainsString( '"profile":"en16931"', $govde );
 	}
 }

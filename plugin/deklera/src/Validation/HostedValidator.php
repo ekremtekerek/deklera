@@ -9,6 +9,8 @@ declare( strict_types = 1 );
 
 namespace Deklera\Validation;
 
+use Deklera\Invoice\Profile;
+
 use Deklera\License\Licensing;
 use Deklera\Queue\Scheduler;
 
@@ -104,15 +106,16 @@ final class HostedValidator {
 	/**
 	 * Belgeyi doğrular.
 	 *
-	 * @param string $xml Fatura XML'i.
+	 * @param string  $xml     Fatura XML'i.
+	 * @param Profile $profile Belge profili; ulusal kural setini seçer.
 	 * @return ValidationResult
 	 */
-	public function validate( string $xml ): ValidationResult {
+	public function validate( string $xml, ?Profile $profile = null ): ValidationResult {
 		if ( ! $this->is_configured() ) {
 			return ValidationResult::skipped();
 		}
 
-		$response = $this->request( $xml );
+		$response = $this->request( $xml, $this->ruleset( $profile ) );
 
 		/*
 		 * Zaman asimi ve baglanti hatasi WP_Error olarak gelir, HTTP durumu
@@ -133,7 +136,7 @@ final class HostedValidator {
 		if ( \is_wp_error( $response ) ) {
 			sleep( self::RETRY_PAUSE );
 
-			$response = $this->request( $xml );
+			$response = $this->request( $xml, $this->ruleset( $profile ) );
 		}
 
 		if ( \is_wp_error( $response ) ) {
@@ -190,12 +193,31 @@ final class HostedValidator {
 	}
 
 	/**
+	 * Belge profilinden servisin kural seti adını türetir.
+	 *
+	 * EN 16931 bir tabandır; Almanya XRechnung ile üstüne daraltma koyar ve
+	 * tabanda isteğe bağlı olan alanları zorunlu kılar. Ölçüldü: eklentinin
+	 * çıktısı taban seti geçerken XRechnung'dan on iki iddiadan düşüyordu,
+	 * bkz. docs/adr/0010. Yani Alman bir müşteriye taban set tek başına
+	 * "bu fatura kabul edilir" diyemez.
+	 *
+	 * Bilinmeyen profil tabana düşer; servis de aynısını yapar.
+	 *
+	 * @param Profile|null $profile Belge profili.
+	 * @return string
+	 */
+	private function ruleset( ?Profile $profile ): string {
+		return Profile::XRECHNUNG === $profile ? 'xrechnung' : 'en16931';
+	}
+
+	/**
 	 * Doğrulama isteğini gönderir.
 	 *
-	 * @param string $xml Fatura XML'i.
+	 * @param string $xml     Fatura XML'i.
+	 * @param string $ruleset Kural seti adı.
 	 * @return array<string,mixed>|\WP_Error
 	 */
-	private function request( string $xml ) {
+	private function request( string $xml, string $ruleset = 'en16931' ) {
 		return \wp_remote_post(
 			\trailingslashit( $this->endpoint() ) . 'v1/validate',
 			array(
@@ -204,7 +226,12 @@ final class HostedValidator {
 					'authorization' => 'Bearer ' . $this->key(),
 					'content-type'  => 'application/json',
 				),
-				'body'    => (string) \wp_json_encode( array( 'xml' => $xml ) ),
+				'body'    => (string) \wp_json_encode(
+					array(
+						'xml'     => $xml,
+						'profile' => $ruleset,
+					)
+				),
 			)
 		);
 	}
