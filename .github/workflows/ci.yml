@@ -28,7 +28,7 @@ jobs:
           tools: composer:v2
 
       - name: Install dependencies
-        working-directory: plugin/konform
+        working-directory: plugin/deklera
         # composer dump-autoload, autoload.classmap'teki vendor-prefixed/
         # dizinini tarar. O dizin Strauss ciktisidir, depoya girmez ve temiz
         # bir kopyada henuz yoktur; bos olarak hazirlanmazsa kurulum patlar.
@@ -37,7 +37,7 @@ jobs:
           composer install --no-interaction --no-progress
 
       - name: Isolate dependencies
-        working-directory: plugin/konform
+        working-directory: plugin/deklera
         # Strauss 4000+ dosya isler; varsayilan islem zaman asimi yetmez.
         env:
           COMPOSER_PROCESS_TIMEOUT: 0
@@ -47,21 +47,21 @@ jobs:
           composer dump-autoload --optimize
 
       - name: Coding standard
-        run: plugin/konform/vendor/bin/phpcs --standard=phpcs.xml.dist
+        run: plugin/deklera/vendor/bin/phpcs --standard=phpcs.xml.dist
 
       - name: Unit tests
-        working-directory: plugin/konform
+        working-directory: plugin/deklera
         run: vendor/bin/phpunit
 
       - name: Verify dependencies are isolated
-        working-directory: plugin/konform
+        working-directory: plugin/deklera
         # Oneksiz bir uretim sinifi yuklenebiliyorsa izolasyon kirilmis
         # demektir ve baska bir eklentiyle cakisma riski geri gelmistir.
         run: |
           php -r '
             require "vendor/autoload.php";
             $bare = "horstoeko" . chr(92) . "zugferd" . chr(92) . "ZugferdDocumentBuilder";
-            $prefixed = "Konform" . chr(92) . "Vendor" . chr(92) . $bare;
+            $prefixed = "Deklera" . chr(92) . "Vendor" . chr(92) . $bare;
             if ( ! class_exists( $prefixed ) ) { fwrite( STDERR, "Prefixed class missing\n" ); exit( 1 ); }
             if ( class_exists( $bare ) ) { fwrite( STDERR, "Unprefixed class leaked\n" ); exit( 1 ); }
             echo "Dependencies are isolated.\n";

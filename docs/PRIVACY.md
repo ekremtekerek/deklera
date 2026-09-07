@@ -1,6 +1,6 @@
 # Privacy Policy
 
-**Konform – EU E-Invoicing for WooCommerce**
+**Deklera – EU E-Invoicing for WooCommerce**
 
 Last updated: 1 September 2026
 
@@ -22,7 +22,7 @@ claim below corresponds to code you can read in this repository.
 
 ## 1. Data the plugin stores on your own server
 
-Konform reads your WooCommerce orders and produces e-invoice documents. Those
+Deklera reads your WooCommerce orders and produces e-invoice documents. Those
 documents contain what any invoice contains: your business details, your
 customer's name, address and VAT number, the items sold and the amounts.
 
@@ -33,7 +33,7 @@ All of it stays on your own server:
 - An index of documents and an audit trail are stored in two database tables
   in your own WordPress database.
 
-Konform never transmits this data anywhere on the free plan.
+Deklera never transmits this data anywhere on the free plan.
 
 **Retention.** Documents are kept for as long as you keep them. Automatic
 deletion after the retention period (ten years by default) is **off unless you
@@ -66,10 +66,10 @@ retained.** Request logs record timing and status codes, not invoice content.
 plan, you have entered a service address and licence key, and a document is
 being generated. If any of these is missing, no request is made.
 
-**Turning it off.** Clear the service address under **WooCommerce → Konform**.
+**Turning it off.** Clear the service address under **WooCommerce → Deklera**.
 Generation continues without validation.
 
-If the service cannot be reached, Konform records why and generates the document
+If the service cannot be reached, Deklera records why and generates the document
 anyway. A network problem should never stop you invoicing.
 
 ---
@@ -95,26 +95,26 @@ You can revoke this at any time from the plugin's Account screen.
 
 ## 4. Language packs
 
-When an invoice needs a language that is not installed, Konform downloads the
+When an invoice needs a language that is not installed, Deklera downloads the
 translation from **WordPress.org**, using WordPress's own update mechanism. This
 is the same request WordPress makes when you change a site's language. No
 invoice data is involved.
 
 ---
 
-## 5. What Konform never does
+## 5. What Deklera never does
 
 - It does not send your customer data to any advertising or analytics service.
 - It does not sell, rent or share your data.
 - It does not phone home on the free plan.
-- It does not transmit invoices to any tax authority. Konform produces and
+- It does not transmit invoices to any tax authority. Deklera produces and
   validates the document; sending it is your own provider's job.
 
 ---
 
 ## 6. Your customers' rights
 
-Under the GDPR you are the data controller for your customers' data. Konform is
+Under the GDPR you are the data controller for your customers' data. Deklera is
 a tool you run on your own infrastructure.
 
 One point deserves attention: **an invoice cannot simply be deleted on request.**
@@ -127,7 +127,7 @@ limitation of the plugin.
 ## 7. Contact
 
 Open an issue at
-[github.com/ekremtekerek/konform/issues](https://github.com/ekremtekerek/konform/issues),
+[github.com/ekremtekerek/deklera/issues](https://github.com/ekremtekerek/deklera/issues),
 or email the address listed on the plugin's Freemius page.
 
 ---

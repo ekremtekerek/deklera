@@ -7,7 +7,7 @@
 # Windows'ta Docker Desktop'in bind mount'u bu yineleyicide buyuk dizinleri
 # EKSIK dondurur (ayni dizinde scandir 99, yineleyici 52 gorebiliyor).
 #
-# Bu, burada teorik bir risk degil: Konform\Vendor\* siniflarinin psr-4
+# Bu, burada teorik bir risk degil: Deklera\Vendor\* siniflarinin psr-4
 # karsiligi YOKTUR, yalnizca classmap uzerinden cozulurler. Budanmis bir
 # classmap, calisma aninda "class not found" demektir.
 #
@@ -22,7 +22,11 @@ set -e
 PLUGIN_DIR=$( cd "$1" && pwd )
 shift
 
-WORK=/tmp/konform-dump
+# TLS'i kesen antivirusun koku (varsa) tanitilir; yoksa sessizce gecer.
+# Bkz. bin/trust-local-ca.sh
+sh "$( dirname "$0" )/trust-local-ca.sh" || true
+
+WORK=/tmp/deklera-dump
 rm -rf "$WORK"
 mkdir -p "$WORK"
 

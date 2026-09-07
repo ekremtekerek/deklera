@@ -10,7 +10,7 @@
  *    dosyaların anahtarlarının gerçek sınıf adlarıyla birebir eşleşmesini
  *    bekler. Önekleme yapılmazsa:
  *      InvalidMetadataException: Expected metadata for class
- *      Konform\Vendor\horstoeko\zugferd\...\CrossIndustryInvoiceType
+ *      Deklera\Vendor\horstoeko\zugferd\...\CrossIndustryInvoiceType
  *
  * 2. STRAUSS'UN ATLADIĞI VARLIKLAR
  *    Strauss paketin kodunu kopyalar, varlıklarını değil. setasign/fpdf
@@ -31,7 +31,7 @@
  *
  * Çalıştır: php bin/post-strauss.php
  *
- * @package Konform
+ * @package Deklera
  */
 
 declare( strict_types = 1 );
@@ -40,7 +40,7 @@ declare( strict_types = 1 );
  * Eklenti dizini varsayilan olarak depodaki kaynaktir. Dagitim arsivi
  * uretilirken (bin/build.sh) hazirlik dizini argumanla verilir.
  */
-$plugin_dir    = $argv[1] ?? dirname( __DIR__ ) . '/plugin/konform';
+$plugin_dir    = $argv[1] ?? dirname( __DIR__ ) . '/plugin/deklera';
 $composer_file = $plugin_dir . '/composer.json';
 
 if ( ! is_readable( $composer_file ) ) {
@@ -63,7 +63,7 @@ if ( ! is_readable( $composer_file ) ) {
  * @param string $dir Taranacak dizin.
  * @return void
  */
-function konform_assert_iterator_sees_all( string $dir ): void {
+function deklera_assert_iterator_sees_all( string $dir ): void {
 	if ( ! is_dir( $dir ) ) {
 		return;
 	}
@@ -138,8 +138,8 @@ if ( ! is_dir( $target ) ) {
 
 // Bu betigin kendi adimlari da yineleyiciye dayanir; once zeminin saglam
 // oldugunu dogrula. Strauss zaten calisti, yani kayip olduysa oradadir.
-konform_assert_iterator_sees_all( $plugin_dir . '/vendor' );
-konform_assert_iterator_sees_all( $target );
+deklera_assert_iterator_sees_all( $plugin_dir . '/vendor' );
+deklera_assert_iterator_sees_all( $target );
 
 /**
  * Dizini yinelemeli olarak gezer.
@@ -147,7 +147,7 @@ konform_assert_iterator_sees_all( $target );
  * @param string $dir Dizin.
  * @return RecursiveIteratorIterator<RecursiveDirectoryIterator>
  */
-function konform_walk( string $dir ): RecursiveIteratorIterator {
+function deklera_walk( string $dir ): RecursiveIteratorIterator {
 	return new RecursiveIteratorIterator(
 		new RecursiveDirectoryIterator( $dir, FilesystemIterator::SKIP_DOTS ),
 		RecursiveIteratorIterator::CHILD_FIRST
@@ -164,11 +164,11 @@ function konform_walk( string $dir ): RecursiveIteratorIterator {
  * @param string $prefix Ad alanı öneki.
  * @return string[]
  */
-function konform_collect_roots( string $target, string $prefix ): array {
+function deklera_collect_roots( string $target, string $prefix ): array {
 	$roots   = array();
 	$pattern = '/^\s*namespace\s+' . preg_quote( $prefix, '/' ) . '([A-Za-z_][A-Za-z0-9_]*)/m';
 
-	foreach ( konform_walk( $target ) as $file ) {
+	foreach ( deklera_walk( $target ) as $file ) {
 		if ( ! $file->isFile() || 'php' !== strtolower( $file->getExtension() ) ) {
 			continue;
 		}
@@ -189,12 +189,12 @@ function konform_collect_roots( string $target, string $prefix ): array {
  * @param string $dir Dizin.
  * @return bool
  */
-function konform_rmdir( string $dir ): bool {
+function deklera_rmdir( string $dir ): bool {
 	if ( ! is_dir( $dir ) ) {
 		return true;
 	}
 
-	foreach ( konform_walk( $dir ) as $item ) {
+	foreach ( deklera_walk( $dir ) as $item ) {
 		$ok = $item->isDir() ? @rmdir( $item->getPathname() ) : @unlink( $item->getPathname() );
 
 		if ( ! $ok ) {
@@ -207,7 +207,7 @@ function konform_rmdir( string $dir ): bool {
 
 // --- 1. Metadata onekleme -----------------------------------------------
 
-$roots = konform_collect_roots( $target, $prefix );
+$roots = deklera_collect_roots( $target, $prefix );
 
 if ( array() === $roots ) {
 	fwrite( STDERR, "Onekli ad alani bulunamadi. Strauss calisti mi?\n" );
@@ -217,7 +217,7 @@ if ( array() === $roots ) {
 $metadata_extensions = array( 'yml', 'yaml', 'xml' );
 $changed_files       = 0;
 
-foreach ( konform_walk( $target ) as $file ) {
+foreach ( deklera_walk( $target ) as $file ) {
 	if ( ! $file->isFile() || ! in_array( strtolower( $file->getExtension() ), $metadata_extensions, true ) ) {
 		continue;
 	}
@@ -321,7 +321,7 @@ foreach ( (array) glob( $target . '/*', GLOB_ONLYDIR ) as $vendor_dir ) {
 			continue;
 		}
 
-		if ( konform_rmdir( $original ) ) {
+		if ( deklera_rmdir( $original ) ) {
 			$removed[] = $relative;
 		} else {
 			$failed[] = $relative;
@@ -368,6 +368,6 @@ if ( array() !== $failed ) {
 		sprintf( '%sUYARI: %d paket silinemedi:%s', PHP_EOL, count( $failed ), PHP_EOL )
 		. implode( '', array_map( static fn ( string $p ): string => '  ' . $p . PHP_EOL, $failed ) )
 		. PHP_EOL . 'Windows bind mount uzerinde silme basarisiz olabilir; '
-		. 'kabuktan "rm -rf plugin/konform/vendor/<paket>" ile temizleyin.' . PHP_EOL
+		. 'kabuktan "rm -rf plugin/deklera/vendor/<paket>" ile temizleyin.' . PHP_EOL
 	);
 }

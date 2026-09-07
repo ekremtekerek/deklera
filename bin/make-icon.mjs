@@ -1,5 +1,5 @@
 /**
- * Konform eklenti ikonunu uretir.
+ * Deklera eklenti ikonunu uretir.
  *
  * Ikon fikri hibrit belgeyi anlatir - Factur-X'in tanimi tam olarak budur:
  * ust yarida insanin okudugu fatura satirlari, alt yarida makinenin okudugu

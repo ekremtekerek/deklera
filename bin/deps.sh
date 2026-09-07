@@ -32,7 +32,11 @@ SCRIPT_DIR=$( cd "$( dirname "$0" )" && pwd )
 PLUGIN_DIR=$( cd "$1" && pwd )
 shift
 
-WORK=/tmp/konform-deps
+# TLS'i kesen antivirusun koku (varsa) tanitilir; yoksa sessizce gecer.
+# Bkz. bin/trust-local-ca.sh
+sh "$( dirname "$0" )/trust-local-ca.sh" || true
+
+WORK=/tmp/deklera-deps
 rm -rf "$WORK"
 mkdir -p "$WORK"
 

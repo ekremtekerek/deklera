@@ -1,9 +1,9 @@
 {
-  "name": "konform-validator",
+  "name": "deklera-validator",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Hosted EN 16931 Schematron validation for Konform.",
+  "description": "Hosted EN 16931 Schematron validation for Deklera.",
   "scripts": {
     "build:rules": "node scripts/build-rules.mjs",
     "start": "node src/server.js",

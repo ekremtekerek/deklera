@@ -1,7 +1,7 @@
 # PHP
-/plugin/konform/vendor/
+/plugin/deklera/vendor/
 # Strauss ciktisi - yapi artefakti, "composer strauss" ile yeniden uretilir
-/plugin/konform/vendor-prefixed/
+/plugin/deklera/vendor-prefixed/
 
 # Node (worker)
 node_modules/
@@ -13,8 +13,8 @@ node_modules/
 *.local
 
 # Derlenmis ceviriler - kaynak .po ve .pot izlenir, ciktilar izlenmez
-/plugin/konform/languages/*.mo
-/plugin/konform/languages/*.l10n.php
+/plugin/deklera/languages/*.mo
+/plugin/deklera/languages/*.l10n.php
 
 # Yapi ciktilari
 /build/
@@ -22,11 +22,11 @@ node_modules/
 *.zip
 
 # Test ciktilari
-/plugin/konform/tests/out-*.xml
+/plugin/deklera/tests/out-*.xml
 
 # Arac ciktilari
 .phpunit.result.cache
-/plugin/konform/.phpunit.cache/
+/plugin/deklera/.phpunit.cache/
 /.phpcs-cache
 coverage/
 

@@ -19,8 +19,8 @@ demoyu göstermek. Fiyattan söz eden tek cümle bile paylaşımı reklama çevi
 
 ## Bağlantılar
 
-- Demo: `https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/ekremtekerek/konform/main/demo/blueprint.json`
-- Kaynak: `https://github.com/ekremtekerek/konform`
+- Demo: `https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/ekremtekerek/deklera/main/demo/blueprint.json`
+- Kaynak: `https://github.com/ekremtekerek/deklera`
 
 ---
 

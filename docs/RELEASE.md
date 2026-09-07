@@ -11,9 +11,9 @@ doğrulaması vardır.
 
 | Yer | Alan |
 |---|---|
-| `plugin/konform/konform.php` | `Version:` başlığı |
-| `plugin/konform/konform.php` | `const VERSION` |
-| `plugin/konform/readme.txt` | `Stable tag:` |
+| `plugin/deklera/deklera.php` | `Version:` başlığı |
+| `plugin/deklera/deklera.php` | `const VERSION` |
+| `plugin/deklera/readme.txt` | `Stable tag:` |
 
 `readme.txt` içindeki `== Changelog ==` bölümüne de bu sürüm girilir.
 `build.sh` sürümü `Version:` başlığından okur; diğer ikisi tutmazsa hiçbir şey
@@ -30,8 +30,8 @@ bash bin/build.sh             # ücretsiz  -> WordPress.org
 bash bin/build.sh --premium   # ücretli   -> Freemius
 ```
 
-Üretilenler: `build/konform-<sürüm>.zip` ve `build/konform-<sürüm>-premium.zip`,
-her ikisinin kökünde `konform/` dizini ile.
+Üretilenler: `build/deklera-<sürüm>.zip` ve `build/deklera-<sürüm>-premium.zip`,
+her ikisinin kökünde `deklera/` dizini ile.
 
 ### Neden iki paket
 
@@ -67,7 +67,7 @@ sürümdür ve öyle kalır. `sed` tutmazsa betik hata verip durur — sessizce
 siler; aksi hâlde ikinci varyant üretilirken birincinin zip'i uçardı.
 
 Betik sırayla: kaynağı kopyalar (testler ve geliştirme dosyaları hariç),
-bağımlılıkları kurar, Strauss ile `Konform\Vendor\` altına önekler,
+bağımlılıkları kurar, Strauss ile `Deklera\Vendor\` altına önekler,
 `post-strauss.php` ile meta verileri ve varlıkları düzeltir, geliştirme
 paketlerini siler, arşivler.
 
@@ -83,7 +83,7 @@ Bunlar CI'nin göremediği, yalnızca üretilmiş pakette görülebilen şeylerd
 
 **Bu denetim atlanamaz.** Windows'ta bind mount, PHP'nin dizin yineleyicisinde
 büyük dizinleri eksik döndürüyor; Strauss sınıf dosyalarını sessizce atlayabilir
-— hata vermeden, `exit 0` dönerek. `Konform\Vendor\*` sınıflarının psr-4
+— hata vermeden, `exit 0` dönerek. `Deklera\Vendor\*` sınıflarının psr-4
 karşılığı olmadığı, yalnızca classmap'ten çözüldükleri için eksik bir dosya
 doğrudan çalışma anında ölümcül hatadır.
 Ayrıntı: [ADR 0007](adr/0007-bind-mount-dosya-kaybi.md).
@@ -94,27 +94,27 @@ konteyner içi diske kopyalanır:
 
 ```sh
 rm -rf build/verify && mkdir -p build/verify
-( cd build/verify && unzip -q ../konform-*.zip )
+( cd build/verify && unzip -q ../deklera-*.zip )
 
 docker compose run --rm -T composer sh -c "
   rm -rf /tmp/pkg && mkdir -p /tmp/pkg
-  cp -r /repo/build/verify/konform /tmp/pkg/konform
-  php /repo/bin/verify-classmap.php /tmp/pkg/konform
+  cp -r /repo/build/verify/deklera /tmp/pkg/deklera
+  php /repo/bin/verify-classmap.php /tmp/pkg/deklera
 "
 # "EKSIK: 0" beklenir. Aksi halde surum cikarilmaz.
 ```
 
 ```sh
 # Bagimlilik izolasyonu: oneksiz sinif sizmamali
-unzip -l build/konform-*.zip | grep -E 'vendor/(horstoeko|jms|smalot|setasign)' 
+unzip -l build/deklera-*.zip | grep -E 'vendor/(horstoeko|jms|smalot|setasign)' 
 # ciktisi bos olmali
 
 # Composer'in kendisi veya test artefakti girmemis olmali
-unzip -l build/konform-*.zip | grep -E 'vendor/composer/composer|phpunit'
+unzip -l build/deklera-*.zip | grep -E 'vendor/composer/composer|phpunit'
 # ciktisi bos olmali
 
 # Freemius SDK oneklenmemis olmali - onek lisanslamayi bozar
-unzip -l build/konform-*.zip | grep 'vendor/freemius'
+unzip -l build/deklera-*.zip | grep 'vendor/freemius'
 # dolu olmali
 ```
 
@@ -124,10 +124,10 @@ görmüyor olabilir. CI bunu kaynak ağacında sınar; dağıtılan pakette ayr�
 sınanmalıdır:
 
 ```sh
-MSYS_NO_PATHCONV=1 docker compose run --rm -T -w /repo/build/konform composer php -r '
+MSYS_NO_PATHCONV=1 docker compose run --rm -T -w /repo/build/deklera composer php -r '
 require "vendor/autoload.php";
 $bare = "horstoeko" . chr(92) . "zugferd" . chr(92) . "ZugferdDocumentBuilder";
-$prefixed = "Konform" . chr(92) . "Vendor" . chr(92) . $bare;
+$prefixed = "Deklera" . chr(92) . "Vendor" . chr(92) . $bare;
 if ( ! class_exists( $prefixed ) ) { echo "HATA: onekli sinif yok\n"; exit(1); }
 if ( class_exists( $bare ) ) { echo "HATA: oneksiz sinif sizmis\n"; exit(1); }
 echo "izolasyon tamam\n";
@@ -143,15 +143,18 @@ WordPress.org'un asıl kapısı budur. Yerel WordPress'te:
 
 ```sh
 docker compose run --rm wpcli wp plugin install plugin-check --activate
-docker compose run --rm wpcli wp plugin check konform \
+docker compose run --rm wpcli wp plugin check deklera \
   --format=csv --fields=file,line,type,code --exclude-directories=tests \
   | grep ',ERROR,'
 ```
 
 Çıktı boş olmalı. Kalması kabul edilen uyarılar:
 
-- `load_plugin_textdomainFound` — Pro sürüm kendi `.mo` dosyalarını taşır,
-  çağrı gereklidir (bkz. `docs/I18N.md` bölüm 4).
+- `load_plugin_textdomainFound` — çağrı kodda duruyor ama **yalnızca premium
+  yapıda çalışıyor**; ücretsiz sürümde `is_premium()` kapısından geçemiyor.
+  Plugin Check statik bakar, koşulu göremez. 0.1.0 incelemesi bu çağrıya itiraz
+  etti; verilen cevap ve gerekçe `docs/wporg-cevap-0.3.0.md` içinde
+  (bkz. `docs/I18N.md` bölüm 4).
 - `PrefixAllGlobals.InvalidPrefixPassed` (`freemius.php`) — SDK köprü
   fonksiyonu; adı Freemius tarafından belirlenir.
 - `DirectDB.UnescapedDBParameter` — tablo adları `$wpdb->prefix` ile kurulur,
@@ -167,7 +170,7 @@ oysa o dosya `build.sh` tarafından paketten dışlanır. Karar vermeden önce
 pakete bakın:
 
 ```sh
-unzip -l build/konform-*.zip | grep -E 'konform/phpunit|konform/tests/'
+unzip -l build/deklera-*.zip | grep -E 'deklera/phpunit|deklera/tests/'
 # ciktisi bos olmali
 ```
 
@@ -179,7 +182,7 @@ geçti.
 
 ## 4. Freemius'a yükle
 
-Dashboard → Konform → Deployment → Add New Version → **`-premium` zip'ini**
+Dashboard → Deklera → Deployment → Add New Version → **`-premium` zip'ini**
 yükle. Ücretsiz paketi buraya yüklemeyin; lisans alan müşteride Pro açılmaz.
 
 Yükledikten sonra sürümün **Release Status'ünü `Released` yapın**. Freemius
@@ -208,6 +211,29 @@ Servis 1 Eylül 2026'da yayına alındı: `konform-validator.onrender.com`.
 
 Yalnızca ücretsiz sürüm gönderilir; Pro Freemius üzerinden dağıtılır.
 
+### İlk gönderimden önce: ad kontrolü
+
+**Bu adım atlanırsa gönderim koddan bağımsız bir sebeple geri döner.** 0.1.0'da
+tam olarak bu oldu: paket temizdi, ad değildi (bkz. `docs/adr/0009`).
+
+İnceleme adı üç ölçütle bakıyor; üçü de gönderimden önce beş dakikada
+denetlenebilir:
+
+```sh
+# 1. WordPress.org'da benzer ad var mi
+curl -s "https://api.wordpress.org/plugins/info/1.2/?action=query_plugins\
+&request[search]=<ad>&request[per_page]=5" | grep -o '"slug":"[^"]*"'
+
+# 2. Web'de ayni adi tasiyan urun/sirket var mi  -> arama motorunda "<ad>"
+# 3. Adin icinde baskasinin markasi geciyor mu   -> WooCommerce, WordPress,
+#    WP, Woo ... yalnizca "... for WooCommerce" kalibiyla, basta asla
+```
+
+Boş sonuç yeterli değil: adın **alan adı** da bakılmalı. Elenen adayların çoğu
+WordPress.org'da boştu ama `.com` adresinde faal bir ürün vardı.
+
+### Gönderim
+
 1. https://wordpress.org/plugins/developers/add/
 2. Aynı zip yüklenir.
 3. İnceleme sırası birkaç gün ile birkaç hafta arasındadır.
@@ -218,9 +244,9 @@ WordPress.org slug'ı **ana eklenti dosyasındaki `Plugin Name` başlığından*
 türetir ve **onaydan sonra değiştirilemez**. Metin alanı da slug ile birebir
 aynı olmak zorundadır.
 
-Bu yüzden gönderimde ad kasıtlı olarak kısadır: `Plugin Name: Konform`.
-Uzun adla gönderilseydi slug `konform-eu-e-invoicing-for-woocommerce` olurdu,
-metin alanımız `konform` olduğu için translate.wordpress.org'dan gelen
+Bu yüzden gönderimde ad kasıtlı olarak kısadır: `Plugin Name: Deklera`.
+Uzun adla gönderilseydi slug `deklera-eu-e-invoicing-for-woocommerce` olurdu,
+metin alanımız `deklera` olduğu için translate.wordpress.org'dan gelen
 çeviriler hiçbir zaman yüklenmezdi — `docs/I18N.md`'nin tamamı boşa giderdi.
 
 Slug gönderimden sonra **bir kez** düzeltilebilir; sonrası için ekiple
@@ -229,10 +255,10 @@ yazışmak gerekir.
 Onay geldikten sonra görünen ad slug'a dokunmadan uzatılabilir. İki dosyada
 birden değiştirin, yoksa eklenti ekranıyla dizin farklı ad gösterir:
 
-- `plugin/konform/konform.php` → `Plugin Name:`
-- `plugin/konform/readme.txt` → `=== ... ===` başlığı
+- `plugin/deklera/deklera.php` → `Plugin Name:`
+- `plugin/deklera/readme.txt` → `=== ... ===` başlığı
 
-Önerilen uzun ad: `Konform – EU E-Invoicing for WooCommerce`.
+Önerilen uzun ad: `Deklera – EU E-Invoicing for WooCommerce`.
 
 `Contributors` alanı da gerçek bir WordPress.org kullanıcı adı olmalıdır
 (`ekremtekerek`); uydurma bir değer yazar bağlantısını boşa düşürür.
@@ -249,9 +275,13 @@ aksi halde eklenti dizinde "güncel değil" uyarısıyla gösterilir.
 
 ## Gönderim kaydı
 
-**0.1.0 — 1 Eylül 2026, WordPress.org'a gönderildi.**
+**0.1.0 — 1 Eylül 2026'da gönderildi, 4 Eylül'de askıya alındı.**
 
-- Atanan slug: **`konform`** (metin alanıyla eşleşiyor, hedef buydu)
+Gönderim **`Konform`** adıyla yapıldı; aşağıdaki kayıtta geçen eski ad budur ve
+tarihsel olduğu için değiştirilmedi. Yazışmanın konu satırı hâlâ eski adı
+taşıyor:
+
+- Atanan slug: **`konform`** (metin alanıyla eşleşiyordu, hedef buydu)
 - Otomatik tarama: **Pass**
 - Tek uyarı: `missing_composer_json_file` — paket `vendor/` taşıyıp
   `composer.json` taşımıyordu. Gönderilen sürüm için düzeltilmedi (sayfa
@@ -259,19 +289,28 @@ aksi halde eklenti dizinde "güncel değil" uyarısıyla gösterilir.
   önerilmiyor); `build.sh` bundan sonraki paketlerde `composer.json`'ı
   bırakıyor.
 - İnceleme yazışması: ekremtekerek@gmail.com, konu
-  *"[WordPress Plugin Directory] Review in Progress: Konform"*
+  *"[WordPress Plugin Directory] Review in Progress: Konform"* —
+  **cevaplar bu konuya, aynı iş parçacığına yazılır; yeni e-posta açılmaz.**
 
-Onay gelene kadar slug bu sayfadan **bir kez** değiştirilebilir; sonrası için
-plugins@wordpress.org ile yazışmak gerekir.
+**İnceleme sonucu (4 Eylül 2026): askıya alındı, üç madde.**
 
-Gönderim ekranındaki "Upload updated plugin for review" ile inceleme
-başlamadan düzeltilmiş paket yüklenebilir. Yeni bir gönderim AÇMAYIN.
+| Madde | Durum |
+|---|---|
+| Ad marka çatışması — "Konform" başka bir kuruluşun tescilli markası | Ad `Deklera` oldu, bkz. `docs/adr/0009-yeniden-adlandirma.md` |
+| `setasign/fpdf` 1.8.2 güncel değil | 1.9.0'a yükseltildi |
+| `load_plugin_textdomain()` .org eklentilerinde gereksiz | Yalnızca Pro yapısında çağrılıyor |
+
+Cevapta **slug açıkça istenmelidir**: yeni slug `deklera`. Görünen adı
+değiştirmek tek başına yetmez, e-posta bunu ayrıca söylüyor.
+
+**0.3.0 — yeniden gönderim.** Gönderim ekranındaki "Upload updated plugin for
+review" ile yüklenir. **Yeni bir gönderim AÇILMAZ.**
 
 ---
 
 ## Temiz kurulum sınavı
 
-**Bunu atlamayın.** Geliştirme kurulumu `plugin/konform` dizinini doğrudan
+**Bunu atlamayın.** Geliştirme kurulumu `plugin/deklera` dizinini doğrudan
 bağlar; müşterinin indirdiği paket başka bir şeydir. Bu adım eklenmeden önce
 üretilen paket hiç kurulmamıştı ve ilk denemede gerçek bir hata çıktı:
 kaldırma temizliği hiç çalışmıyordu.
@@ -284,15 +323,15 @@ eklenti dizini BAĞLANMADAN), sonra:
    üretilmeli, arşiv dosyası diskte olmalı, `is_intact()` doğrulanmalı
 3. `wp option get uninstall_plugins` — eklenti burada görünmeli. Boş `[]`
    dönüyorsa kaldırma temizliği hiç çalışmayacak demektir.
-4. `konform_delete_data_on_uninstall` seçeneğini açıp
-   `wp plugin uninstall konform --deactivate` çalıştırın, sonra ölçün:
+4. `deklera_delete_data_on_uninstall` seçeneğini açıp
+   `wp plugin uninstall deklera --deactivate` çalıştırın, sonra ölçün:
 
 | Ne | Beklenen |
 |---|---|
 | Ayar seçenekleri | silinmiş |
-| `konform_archive_key` | **duruyor** |
+| `deklera_archive_key` | **duruyor** |
 | Arşiv dizini ve dosyaları | **duruyor** |
-| `konform_documents`, `konform_audit` | **duruyor** |
+| `deklera_documents`, `deklera_audit` | **duruyor** |
 
 Ayrımın anlamı: kullanıcı **ayarlarını** silmek istedi, **faturalarını**
 değil. Arşiv dosyaları kaldığına göre bütünlüklerini doğrulayan anahtar da
@@ -318,7 +357,7 @@ Yerel WordPress'te, `api-test` ortamına karşı:
 2. Geçerli bir KSeF jetonu girin ve ortamı **test** bırakın.
 3. Polonyalı alıcılı bir sipariş oluşturup `Generator::generate()` çalıştırın.
 4. Kuyruğu koşturun:
-   `wp action-scheduler run --hooks=konform_submit_to_ksef`
+   `wp action-scheduler run --hooks=deklera_submit_to_ksef`
 5. Denetim izini okuyun. Beklenen sıra:
 
 ```

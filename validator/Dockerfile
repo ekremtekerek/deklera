@@ -1,4 +1,4 @@
-# Konform dogrulama servisi.
+# Deklera dogrulama servisi.
 #
 # Kural seti yapi sirasinda indirilip derlenir; imaj kendi kendine yeter ve
 # calisma aninda ag erisimi gerektirmez.

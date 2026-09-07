@@ -16,7 +16,7 @@
  *
  * SADECE GELİŞTİRME ARACIDIR; eklenti paketine girmez.
  *
- * @package Konform
+ * @package Deklera
  */
 
 declare( strict_types = 1 );
@@ -25,19 +25,19 @@ declare( strict_types = 1 );
  * SIRA ONEMLI: otomatik yukleyici once, ABSPATH sonra. Freemius SDK'si
  * ABSPATH tanimliysa WordPress islevlerini cagirmaya calisir.
  */
-require dirname( __DIR__ ) . '/plugin/konform/vendor/autoload.php';
-require dirname( __DIR__ ) . '/plugin/konform/tests/bootstrap.php';
+require dirname( __DIR__ ) . '/plugin/deklera/vendor/autoload.php';
+require dirname( __DIR__ ) . '/plugin/deklera/tests/bootstrap.php';
 
-use Konform\Invoice\Fa3Builder;
-use Konform\Invoice\Line;
-use Konform\Invoice\Party;
-use Konform\Invoice\Profile;
-use Konform\Invoice\SemanticInvoice;
-use Konform\Invoice\TaxSubtotal;
-use Konform\Ksef\Client;
-use Konform\Ksef\Encryption;
-use Konform\Ksef\Response;
-use Konform\Ksef\Transport;
+use Deklera\Invoice\Fa3Builder;
+use Deklera\Invoice\Line;
+use Deklera\Invoice\Party;
+use Deklera\Invoice\Profile;
+use Deklera\Invoice\SemanticInvoice;
+use Deklera\Invoice\TaxSubtotal;
+use Deklera\Ksef\Client;
+use Deklera\Ksef\Encryption;
+use Deklera\Ksef\Response;
+use Deklera\Ksef\Transport;
 
 /**
  * cURL taşıyıcısı.
@@ -108,11 +108,11 @@ function scenario_invoice( string $nip, string $category, float $rate, string $c
 		 * NUMARASI kabul etmiyor. Bu, kuyrugun ayni belgeyi iki kez
 		 * gondermemesinin neden onemli oldugunun canli kaniti.
 		 */
-		sprintf( 'KONFORM/%s/%s/%d', gmdate( 'YmdHis' ), $category, $index ),
+		sprintf( 'DEKLERA/%s/%s/%d', gmdate( 'YmdHis' ), $category, $index ),
 		new DateTimeImmutable( 'today' ),
 		'380',
 		'PLN',
-		new Party( 'Konform Test', 'PL', 'PL' . $nip, 'ul. Testowa 1', 'Warszawa', '00-001', 'sprzedawca@example.test', true ),
+		new Party( 'Deklera Test', 'PL', 'PL' . $nip, 'ul. Testowa 1', 'Warszawa', '00-001', 'sprzedawca@example.test', true ),
 		new Party( 'Nabywca ' . $country, $country, $buyer_vat, 'ul. Rynek 1', 'Miasto', '30-001', 'nabywca@example.test', true ),
 		array( new Line( '1', 'Lampa biurkowa', 1.0, 'szt.', 100.0, 100.0, $category, $rate ) ),
 		array( new TaxSubtotal( $category, $rate, 100.0, $tax, $reason ) )

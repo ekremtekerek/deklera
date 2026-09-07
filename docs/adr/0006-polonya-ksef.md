@@ -159,7 +159,7 @@ Dört kademe bitince Polonya kullanıcıya açıldı (0.2.0):
 - `Profile::for_country()` içinde `PL` → `Profile::KSEF`
 - `Generator` üreticiyi **profile göre** seçiyor; FA(3) CII olmadığı için
   `ZugferdBuilder` onu üretemez
-- Üretilen her FA(3), `konform/document_generated` üzerinden `KsefQueue`'ya
+- Üretilen her FA(3), `deklera/document_generated` üzerinden `KsefQueue`'ya
   giriyor
 - Ayar ekranında jeton ve ortam; yalnızca satıcı Polonya'daysa görünüyor
 - `readme.txt`'de KSeF **dış servis olarak bildirildi** — WordPress.org bunu

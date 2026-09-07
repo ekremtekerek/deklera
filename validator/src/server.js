@@ -1,5 +1,5 @@
 /**
- * Konform — barındırılan EN 16931 doğrulama servisi.
+ * Deklera — barındırılan EN 16931 doğrulama servisi.
  *
  * Neden ayrı bir servis: EN 16931 ve KoSIT kural setleri XSLT 2.0'a derlenir.
  * PHP'nin ext-xsl uzantısı libxslt'yi sarmalar ve XSLT 1.0'da kalır, dolayısıyla
@@ -228,7 +228,7 @@ const server = createServer(async (request, response) => {
 
 if (process.env.NODE_ENV !== 'test') {
   server.listen(PORT, () => {
-    process.stdout.write(`konform-validator listening on ${PORT}, rules ${RULES_VERSION}\n`);
+    process.stdout.write(`deklera-validator listening on ${PORT}, rules ${RULES_VERSION}\n`);
   });
 }
 

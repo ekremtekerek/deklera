@@ -1,4 +1,4 @@
-# Konform dogrulama servisi - uretim dagitimi.
+# Deklera dogrulama servisi - uretim dagitimi.
 #
 # Kullanim:
 #   cp .env.example .env   ve iceriini doldurun

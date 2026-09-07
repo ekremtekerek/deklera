@@ -3,7 +3,7 @@
  * Dagitilan pakette her onekli sinifin otomatik yukleyiciden cozulup
  * cozulmedigini dogrular.
  *
- * Konform\Vendor\* siniflari YALNIZCA classmap uzerinden cozulur; psr-4
+ * Deklera\Vendor\* siniflari YALNIZCA classmap uzerinden cozulur; psr-4
  * yedegi yoktur. Budanmis bir classmap, calisma aninda olumcul hata demektir.
  */
 

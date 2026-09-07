@@ -21,7 +21,7 @@
  * Çalıştır:
  *   docker compose run --rm -T composer php /repo/bin/ksef-live-test.php
  *
- * @package Konform
+ * @package Deklera
  */
 
 declare( strict_types = 1 );
@@ -144,9 +144,9 @@ function build_certificate( string $nip ): array {
 
 	$dn = array(
 		'countryName'            => 'PL',
-		'organizationName'       => 'Konform Test',
+		'organizationName'       => 'Deklera Test',
 		'organizationIdentifier' => 'VATPL-' . $nip,
-		'commonName'             => 'Konform Test Seal',
+		'commonName'             => 'Deklera Test Seal',
 	);
 
 	$csr  = openssl_csr_new( $dn, $key, array( 'digest_alg' => 'sha256' ) );

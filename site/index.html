@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Konform tells you which of your WooCommerce orders would be rejected as e-invoices, before you issue them. Factur-X for France, XRechnung for Germany, KSeF for Poland, EN 16931 CII elsewhere.">
+<meta name="description" content="Deklera tells you which of your WooCommerce orders would be rejected as e-invoices, before you issue them. Factur-X for France, XRechnung for Germany, KSeF for Poland, EN 16931 CII elsewhere.">
 <meta name="color-scheme" content="light dark">
-<title>Konform</title>
+<title>Deklera</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
   :root {
@@ -165,7 +165,7 @@
 
   <section>
     <h2>It starts by telling you the truth about your data</h2>
-    <p>Konform scans your orders and reports each problem in plain language: what
+    <p>Deklera scans your orders and reports each problem in plain language: what
       happened, why it matters, the exact rule reference, and where to fix it.
       Not <em>“invalid order”</em>.</p>
 
@@ -189,12 +189,12 @@
     <div class="finding">
       <span class="badge b-warn">Needs review</span><span class="f-title">VAT category and rate</span>
       <p class="f-what">This order was treated as an intra-community supply of goods.</p>
-      <p class="f-why">Goods use category K and services use category AE. Konform decides this from whether the items are shippable or virtual, which is a reasonable guess but not always right.</p>
+      <p class="f-why">Goods use category K and services use category AE. Deklera decides this from whether the items are shippable or virtual, which is a reasonable guess but not always right.</p>
       <p class="f-rule">Rule: BT-151</p>
     </div>
 
     <p>Findings are grouped by root cause, so a store-wide problem is reported once —
-      not repeated on every order. And where Konform has to make a judgement call, it
+      not repeated on every order. And where Deklera has to make a judgement call, it
       says so instead of guessing silently.</p>
   </section>
 
@@ -218,7 +218,7 @@
   <section>
     <h2>What it does not do</h2>
     <div class="boundary">
-      <p><strong>It does not transmit invoices, except to KSeF.</strong> Konform
+      <p><strong>It does not transmit invoices, except to KSeF.</strong> Deklera
         produces the document and checks it; delivery goes through your own accredited
         provider — a PDP in France, a Peppol access point elsewhere. Poland is the
         exception, because there an invoice does not legally exist until KSeF has
@@ -275,7 +275,7 @@
     <h2>Try it on your own orders</h2>
     <p>The free version answers the only question that matters right now: is your
       order data ready? Install it, open the report, and find out in a minute.</p>
-    <p><a class="cta" href="https://github.com/ekremtekerek/konform">Source, docs and issues on GitHub</a></p>
+    <p><a class="cta" href="https://github.com/ekremtekerek/deklera">Source, docs and issues on GitHub</a></p>
     <p class="cta-note">The free version is awaiting review for the WordPress.org
       plugin directory. Pro licences are available now through
       <a href="https://checkout.freemius.com/plugin/38206/plan/63639/">Freemius</a>,
@@ -283,7 +283,7 @@
   </section>
 
   <footer>
-    <p>Konform is built by Hasan Ekrem Tekerek. Requires WooCommerce and PHP 8.2.
+    <p>Deklera is built by Hasan Ekrem Tekerek. Requires WooCommerce and PHP 8.2.
       Free version licensed GPL v2 or later.</p>
     <p>Nothing here is tax or legal advice.</p>
   </footer>

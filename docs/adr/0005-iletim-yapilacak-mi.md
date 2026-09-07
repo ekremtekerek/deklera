@@ -5,7 +5,7 @@ Durum: **Karar bekliyor** — ürün sahibinin kararı
 
 ## Bağlam
 
-Konform belgeyi üretiyor ve doğruluyor, ama **ağa göndermiyor**. `TERMS.md` ve
+Deklera belgeyi üretiyor ve doğruluyor, ama **ağa göndermiyor**. `TERMS.md` ve
 `readme.txt` bunu açıkça söylüyor.
 
 Pazar araştırması bu boşluğu somutlaştırdı. WordPress.org'da AB e-faturasına

@@ -49,7 +49,7 @@ desteği ancak v2'de (IT, ES, Peppol BIS) anlam kazanır.
 
 `horstoeko/zugferd` `^1.0.132` kullanılacak.
 
-Kütüphane **doğrudan çağrılmayacak**; `Konform\Invoice\DocumentBuilder` arayüzünün
+Kütüphane **doğrudan çağrılmayacak**; `Deklera\Invoice\DocumentBuilder` arayüzünün
 arkasına alınacak. Böylece:
 
 - v2'de `invoicesuite`'e (o zamana kadar muhtemelen 1.0 olmuş olur) geçmek tek bir
@@ -71,7 +71,7 @@ arkasına alınacak. Böylece:
 
 ## Doğrulama
 
-`plugin/konform/tests/smoke.php` bağımlılığın çalıştığını kanıtlıyor:
+`plugin/deklera/tests/smoke.php` bağımlılığın çalıştığını kanıtlıyor:
 
 ```
 profil       : EN 16931

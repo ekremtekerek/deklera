@@ -1,6 +1,6 @@
 # Terms of Use
 
-**Konform – EU E-Invoicing for WooCommerce**
+**Deklera – EU E-Invoicing for WooCommerce**
 
 Last updated: 1 September 2026
 
@@ -8,7 +8,7 @@ Last updated: 1 September 2026
 
 ## 1. The software
 
-Konform is a WordPress plugin that converts WooCommerce orders into e-invoice
+Deklera is a WordPress plugin that converts WooCommerce orders into e-invoice
 documents conforming to EN 16931, and archives them.
 
 The free version is distributed under the **GPL v2 or later**. You may use,
@@ -24,19 +24,19 @@ as long as your licence is active.
 
 This matters more than anything else on this page, so it is stated plainly.
 
-**Konform does not guarantee legal compliance.** No software can. Whether a
+**Deklera does not guarantee legal compliance.** No software can. Whether a
 specific invoice is accepted depends on your VAT registration, your accredited
 provider, the rules of the country you are invoicing in, and how those rules
-change over time. Konform produces documents that conform to the EN 16931
+change over time. Deklera produces documents that conform to the EN 16931
 standard and, on the Pro plan, verifies them against the official rule set
 before they are issued. That is a strong check. It is not a guarantee.
 
-**Konform does not transmit invoices to any tax authority.** It produces and
+**Deklera does not transmit invoices to any tax authority.** It produces and
 validates the document. Delivery goes through your own accredited provider
 (a PDP in France, a Peppol access point elsewhere). Choosing and contracting
 with that provider is your responsibility.
 
-**Konform is not tax advice.** The pre-flight check reports where your order
+**Deklera is not tax advice.** The pre-flight check reports where your order
 data does not satisfy the standard. It does not tell you what your tax
 obligations are. For that, talk to an accountant.
 
@@ -48,7 +48,7 @@ obligations are. For that, talk to an accountant.
 - Choosing and paying for an accredited e-invoicing provider where the law
   requires one.
 - Retaining invoices for the period your national law requires.
-- Keeping backups. Konform archives documents on your server; it is not a
+- Keeping backups. Deklera archives documents on your server; it is not a
   backup service.
 
 ---
@@ -61,7 +61,7 @@ See the [privacy policy](PRIVACY.md) for exactly what is sent and what happens
 to it.
 
 The service is provided on a best-effort basis. It may be unavailable for
-maintenance or for reasons outside our control. **If it is unreachable, Konform
+maintenance or for reasons outside our control. **If it is unreachable, Deklera
 generates the document anyway** and records that validation did not run — a
 network problem must never stop you invoicing.
 
@@ -111,7 +111,7 @@ the time of your purchase or renewal.
 ## 8. Contact
 
 Open an issue at
-[github.com/ekremtekerek/konform/issues](https://github.com/ekremtekerek/konform/issues).
+[github.com/ekremtekerek/deklera/issues](https://github.com/ekremtekerek/deklera/issues).
 
 ---
 

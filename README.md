@@ -1,4 +1,4 @@
-# Konform
+# Deklera
 
 **EU E-Invoicing for WooCommerce** — WooCommerce siparişlerini satıcının ülkesinde
 yasal geçerli e-faturaya çevirir ve satıcının kendi sağlayıcısına teslim eder.
@@ -15,9 +15,9 @@ yasal geçerli e-faturaya çevirir ve satıcının kendi sağlayıcısına tesli
 ## Depo düzeni
 
 ```
-konform/
-├── plugin/konform/            WordPress eklentisi
-│   ├── konform.php            Ana dosya, başlıklar, önyükleme
+deklera/
+├── plugin/deklera/            WordPress eklentisi
+│   ├── deklera.php            Ana dosya, başlıklar, önyükleme
 │   ├── uninstall.php          Kaldırma (arşiv korunur)
 │   ├── src/
 │   │   ├── Plugin.php         Yaşam döngüsü ve kanca kayıtları
@@ -92,9 +92,9 @@ docker compose run --rm composer composer lint:fix
 
 ```bash
 docker compose run --rm wpcli wp i18n make-pot \
-  wp-content/plugins/konform \
-  wp-content/plugins/konform/languages/konform.pot \
-  --slug=konform --domain=konform
+  wp-content/plugins/deklera \
+  wp-content/plugins/deklera/languages/deklera.pot \
+  --slug=deklera --domain=deklera
 ```
 
 ---
@@ -129,7 +129,7 @@ $screen    = CodeList::label( 'tax_category', 'AE' ); // kullanicinin dilinde
 ### 3. Bağımlılıklar izole edilmiştir
 
 Üretim bağımlılıkları — `jms/serializer`, `symfony/*`, `setasign/fpdf` ve 18 paket
-daha — Strauss ile `Konform\Vendor\` altına taşınır. İzole edilmeselerdi aynı
+daha — Strauss ile `Deklera\Vendor\` altına taşınır. İzole edilmeselerdi aynı
 kütüphaneyi farklı sürümde paketleyen başka bir eklentiyle çakışıp siteyi
 çökertirlerdi.
 

@@ -44,7 +44,7 @@ Buna göre:
   kaldırıldı.
 - Tarama sınırı plandan koparıldı. Tek bir `PREFLIGHT_LIMIT` var; gerekçesi
   fiyatlandırma değil, taramanın bir yönetici isteği içinde çalışması.
-  `konform/preflight_limit` kancasıyla değiştirilebilir.
+  `deklera/preflight_limit` kancasıyla değiştirilebilir.
 - `has_hosted_validation()` kalır.
 
 ## Sonuçları

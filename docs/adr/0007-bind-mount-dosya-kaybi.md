@@ -5,7 +5,7 @@ Durum: **Kabul edildi**
 
 ## Bağlam
 
-Polonya FA(3) üreticisi yazıldıktan sonra testler `Konform\Vendor\Intermedia\
+Polonya FA(3) üreticisi yazıldıktan sonra testler `Deklera\Vendor\Intermedia\
 Ksef\Fa3\Model\FakturaType` sınıfını bulamadı. Sınıf paketin içindeydi ama
 önekli ağaca hiç kopyalanmamıştı.
 
@@ -49,14 +49,14 @@ Aynı Strauss, aynı yapılandırma, tek fark dosya sisteminin bind mount olmama
 
 ## Neden bu kadar tehlikeli
 
-`Konform\Vendor\*` sınıflarının **psr-4 karşılığı yoktur**; `composer.json`
+`Deklera\Vendor\*` sınıflarının **psr-4 karşılığı yoktur**; `composer.json`
 onları `"classmap": ["vendor-prefixed/"]` ile kaydeder. Yani budanmış bir
 classmap, çalışma anında doğrudan "class not found" demektir. Yedek çözüm yolu
 yok.
 
 Yayınlanan 0.1.0 denetlendi: paketteki **959 sınıfın tamamı** classmap'te,
 eksik yok. Pakete girmeyen 40 zugferd dosyasının hepsi `extended` profilinde
-ve Konform o profili hiç kullanmıyor. Yani kullanıcı etkisi olmadı — ama bu
+ve Deklera o profili hiç kullanmıyor. Yani kullanıcı etkisi olmadı — ama bu
 şans eseri, tasarım gereği değil.
 
 ## Karar

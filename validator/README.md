@@ -1,4 +1,4 @@
-# Konform doğrulama servisi
+# Deklera doğrulama servisi
 
 EN 16931 Schematron kural setini çalıştıran küçük bir HTTP servisi.
 
@@ -30,11 +30,11 @@ Yanlışlıkla kimliksiz açılan bir servis çalışır durumda görünmez.
 
 ### Render (şu an kullanılan)
 
-Panelden **New → Web Service**, GitHub deposu `ekremtekerek/konform`:
+Panelden **New → Web Service**, GitHub deposu `ekremtekerek/deklera`:
 
 | Alan | Değer |
 |---|---|
-| Name | `konform-validator` |
+| Name | `deklera-validator` |
 | Language | Docker |
 | Branch | `main` |
 | Region | Frankfurt (EU Central) |
@@ -57,8 +57,8 @@ Gereken: Docker'ı olan herhangi bir sunucu ve alan adının A kaydının o sunu
 bakması. TLS'i Caddy kendisi alır ve yeniler.
 
 ```sh
-git clone https://github.com/ekremtekerek/konform.git
-cd konform/validator
+git clone https://github.com/ekremtekerek/deklera.git
+cd deklera/validator
 cp .env.example .env
 # .env içinde DOMAIN'i yazın ve anahtarı üretin:
 #   openssl rand -hex 32
@@ -78,7 +78,7 @@ curl -s https://<alan-adiniz>/health
 ### Sağlayıcı seçimi
 
 **Şu an yayında:** Render, Frankfurt bölgesi, ücretsiz katman
-(`konform-validator`, `https://konform-validator.onrender.com`). Kaynak GitHub
+(`deklera-validator`, `https://konform-validator.onrender.com`). Kaynak GitHub
 deposundan, kök dizin `validator/`, `main` dalına her gönderimde yeniden
 dağıtılıyor.
 
@@ -165,7 +165,7 @@ Riski tamamen kaldırmak isterseniz Hetzner CX22 (Almanya, ~4 €/ay) aynı
 
 ## Eklenti tarafındaki ayar
 
-**WooCommerce → Konform** sayfasının altındaki "Official validation (Pro)" bölümü:
+**WooCommerce → Deklera** sayfasının altındaki "Official validation (Pro)" bölümü:
 
 - **Doğrulama ucu**: `https://<alan-adiniz>/v1/validate`
 - **Anahtar**: `.env` içindeki `LICENSE_SECRET` değeri

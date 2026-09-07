@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Konform - dagitim arsivi uretir (WordPress.org / Freemius).
+# Deklera - dagitim arsivi uretir (WordPress.org / Freemius).
 #
 # Kullanim: bash bin/build.sh [surum] [--premium]
 #
-# Uretilen zip'in kokunde "konform/" dizini bulunur; WordPress eklenti
+# Uretilen zip'in kokunde "deklera/" dizini bulunur; WordPress eklenti
 # arsivlerinin beklenen bicimi budur.
 #
 # Hazirlik dizini depo icindedir (build/), boylece composer servisinin var
@@ -16,7 +16,7 @@ export MSYS_NO_PATHCONV=1
 cd "$(dirname "$0")/.."
 
 BUILD="build"
-STAGE="$BUILD/konform"
+STAGE="$BUILD/deklera"
 
 # Iki varyant uretilir ve ayrimi tek bir bayrak belirler:
 #
@@ -45,14 +45,14 @@ for arg in "$@"; do
   fi
 done
 
-VERSION="${ARGS[0]:-$(grep -oE '^ \* Version: +[0-9A-Za-z.-]+' plugin/konform/konform.php | awk '{print $3}')}"
+VERSION="${ARGS[0]:-$(grep -oE '^ \* Version: +[0-9A-Za-z.-]+' plugin/deklera/deklera.php | awk '{print $3}')}"
 
 if [ "$PREMIUM" = "1" ]; then
   SUFFIX="-premium"
-  echo "==> Konform $VERSION PREMIUM paketleniyor"
+  echo "==> Deklera $VERSION PREMIUM paketleniyor"
 else
   SUFFIX=""
-  echo "==> Konform $VERSION paketleniyor"
+  echo "==> Deklera $VERSION paketleniyor"
 fi
 
 # Yalnizca hazirlik dizini silinir, build/ dizini degil: ucretsiz ve premium
@@ -75,7 +75,7 @@ fi
 mkdir -p "$STAGE"
 
 echo "==> Kaynak kopyalaniyor"
-tar -cf - -C plugin/konform \
+tar -cf - -C plugin/deklera \
   --exclude=vendor \
   --exclude=vendor-prefixed \
   --exclude=tests \
@@ -144,7 +144,7 @@ done
 
 rm -f "$KEEP"
 # Temizlikten sonra classmap yeniden uretilmeli. Bu adim da izole calisir:
-# Konform\Vendor\* siniflarinin psr-4 karsiligi yoktur, yalnizca classmap'ten
+# Deklera\Vendor\* siniflarinin psr-4 karsiligi yoktur, yalnizca classmap'ten
 # cozulurler; budanmis bir classmap calisma aninda olumcul hatadir.
 compose "." sh bin/dump-autoload.sh "/repo/$STAGE" --no-dev --optimize >/dev/null
 
@@ -161,9 +161,9 @@ rm -f "$STAGE/composer.lock"
 echo "==> Arsivleniyor"
 # zip her makinede kurulu degil (Git Bash'te yok, GNU tar zip uretemez);
 # konteynerdekini kullaniyoruz.
-compose "$BUILD" sh -c "zip -qr konform-$VERSION$SUFFIX.zip konform"
+compose "$BUILD" sh -c "zip -qr deklera-$VERSION$SUFFIX.zip deklera"
 
 echo
-echo "Hazir: $BUILD/konform-$VERSION$SUFFIX.zip"
-printf "  boyut : %s KB\n" "$(du -k "$BUILD/konform-$VERSION$SUFFIX.zip" | cut -f1)"
-printf "  dosya : %s\n" "$(unzip -l "$BUILD/konform-$VERSION$SUFFIX.zip" | tail -1 | awk '{print $2}')"
+echo "Hazir: $BUILD/deklera-$VERSION$SUFFIX.zip"
+printf "  boyut : %s KB\n" "$(du -k "$BUILD/deklera-$VERSION$SUFFIX.zip" | cut -f1)"
+printf "  dosya : %s\n" "$(unzip -l "$BUILD/deklera-$VERSION$SUFFIX.zip" | tail -1 | awk '{print $2}')"

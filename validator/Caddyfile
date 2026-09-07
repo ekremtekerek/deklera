@@ -1,4 +1,4 @@
-# Konform dogrulama servisi - TLS sonlandirma.
+# Deklera dogrulama servisi - TLS sonlandirma.
 #
 # Caddy sertifikayi Let's Encrypt'ten kendisi alir ve yeniler; ayri bir
 # certbot adimi yoktur. DOMAIN ortam degiskeninden gelir.

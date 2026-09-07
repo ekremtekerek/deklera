@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Konform - tek seferlik gelistirme ortami kurulumu.
+# Deklera - tek seferlik gelistirme ortami kurulumu.
 # Kullanim: bash bin/setup.sh
 set -euo pipefail
 
@@ -57,8 +57,8 @@ wp option update woocommerce_default_country "${WC_STORE_COUNTRY}" >/dev/null
 wp option update woocommerce_currency EUR >/dev/null
 wp option update woocommerce_calc_taxes yes >/dev/null
 
-echo "==> Konform etkinlestiriliyor"
-wp plugin activate konform || echo "   UYARI: etkinlestirilemedi"
+echo "==> Deklera etkinlestiriliyor"
+wp plugin activate deklera || echo "   UYARI: etkinlestirilemedi"
 
 echo
 echo "Hazir:  ${WP_URL}/wp-admin"

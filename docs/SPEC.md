@@ -1,4 +1,4 @@
-# Konform — Ürün Spesifikasyonu
+# Deklera — Ürün Spesifikasyonu
 
 > WooCommerce siparişini, satıcının ülkesinde yasal geçerli e-faturaya çeviren ve
 > satıcının kendi sağlayıcısına teslim eden köprü.
@@ -11,7 +11,7 @@
 | **Ekip** | 1 kişi, tam zamanlı |
 | **Kanal** | WordPress.org (ücretsiz) + Freemius (ücretli) |
 | **İlk sürüm hedefi** | 12 hafta |
-| **Çalışma adı** | Konform — değiştirilebilir |
+| **Çalışma adı** | Deklera — değiştirilebilir |
 
 ---
 

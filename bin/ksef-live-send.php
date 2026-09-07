@@ -13,7 +13,7 @@
  *
  * SADECE GELİŞTİRME ARACIDIR; eklenti paketine girmez.
  *
- * @package Konform
+ * @package Deklera
  */
 
 declare( strict_types = 1 );
@@ -25,19 +25,19 @@ declare( strict_types = 1 );
  * otomatik yukleyici once, ABSPATH sonra. PHPUnit de tam olarak bu sirayla
  * calistigi icin testlerde sorun cikmiyor.
  */
-require dirname( __DIR__ ) . '/plugin/konform/vendor/autoload.php';
-require dirname( __DIR__ ) . '/plugin/konform/tests/bootstrap.php';
+require dirname( __DIR__ ) . '/plugin/deklera/vendor/autoload.php';
+require dirname( __DIR__ ) . '/plugin/deklera/tests/bootstrap.php';
 
-use Konform\Invoice\Fa3Builder;
-use Konform\Invoice\Line;
-use Konform\Invoice\Party;
-use Konform\Invoice\Profile;
-use Konform\Invoice\SemanticInvoice;
-use Konform\Invoice\TaxSubtotal;
-use Konform\Ksef\Client;
-use Konform\Ksef\Encryption;
-use Konform\Ksef\Response;
-use Konform\Ksef\Transport;
+use Deklera\Invoice\Fa3Builder;
+use Deklera\Invoice\Line;
+use Deklera\Invoice\Party;
+use Deklera\Invoice\Profile;
+use Deklera\Invoice\SemanticInvoice;
+use Deklera\Invoice\TaxSubtotal;
+use Deklera\Ksef\Client;
+use Deklera\Ksef\Encryption;
+use Deklera\Ksef\Response;
+use Deklera\Ksef\Transport;
 
 /**
  * cURL tabanlı taşıyıcı.
@@ -115,11 +115,11 @@ function info( string $label, string $value ): void {
  */
 function build_invoice( string $nip ): SemanticInvoice {
 	return new SemanticInvoice(
-		'KONFORM/' . gmdate( 'YmdHis' ),
+		'DEKLERA/' . gmdate( 'YmdHis' ),
 		new DateTimeImmutable( 'today' ),
 		'380',
 		'PLN',
-		new Party( 'Konform Test', 'PL', 'PL' . $nip, 'ul. Testowa 1', 'Warszawa', '00-001', 'sprzedawca@example.test', true ),
+		new Party( 'Deklera Test', 'PL', 'PL' . $nip, 'ul. Testowa 1', 'Warszawa', '00-001', 'sprzedawca@example.test', true ),
 		new Party( 'Nabywca Testowy', 'PL', 'PL9876543210', 'ul. Rynek 1', 'Krakow', '30-001', 'nabywca@example.test', true ),
 		array(
 			new Line( '1', 'Lampa biurkowa', 1.0, 'szt.', 100.0, 100.0, 'S', 23.0 ),

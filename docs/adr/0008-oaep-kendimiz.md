@@ -41,7 +41,7 @@ yaygınlaşana kadar beklemek Polonya'yı yıllarca desteklememek demek.
 
 ## Karar
 
-**EME-OAEP kodlaması (RFC 8017, 7.1.1) `Konform\Ksef\Encryption` içinde
+**EME-OAEP kodlaması (RFC 8017, 7.1.1) `Deklera\Ksef\Encryption` içinde
 yapılır; RSA işleminin kendisi OpenSSL'de kalır.** PHP 8.5 ve üstünde yerel
 yol kullanılır.
 
