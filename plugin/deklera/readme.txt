@@ -5,7 +5,7 @@ Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 8.2
 Requires Plugins: woocommerce
-Stable tag: 0.3.0
+Stable tag: 0.3.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -225,6 +225,12 @@ site. See **External services** above.
 
 == Changelog ==
 
+= 0.3.1 =
+* Pro: the first validation after the service has been idle is no longer
+  lost. The hosted validator sleeps when unused and takes longer to answer
+  the request that wakes it; that request now gets a second attempt instead
+  of being reported as unreachable.
+
 = 0.3.0 =
 * The plugin has been renamed. The previous name turned out to conflict with
   a trademark, so it had to change everywhere: the plugin name, the settings,
@@ -263,6 +269,10 @@ site. See **External services** above.
 * Optional validation against the official EN 16931 Schematron rule set.
 
 == Upgrade Notice ==
+
+= 0.3.1 =
+Fixes a Pro-only problem: the first validation of the day could be reported
+as "service unavailable". Nothing to do after upgrading.
 
 = 0.3.0 =
 The plugin is now called Deklera. Settings and the document archive do not
