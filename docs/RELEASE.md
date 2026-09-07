@@ -362,6 +362,50 @@ kalmalıdır.
 
 ---
 
+## Pro müşterisine doğrulama anahtarı nasıl ulaşır
+
+**Bu adım yapılmadan Pro satılamaz.** Eklenti ekranı "anahtar satın alma
+e-postanızda" diyor; o e-posta anahtarı taşımıyorsa müşteri ilk dakikada
+tıkanır ve destek yazar.
+
+Freemius → **Emails → Customization → Specific Email Customization**:
+
+| Alan | Değer |
+|---|---|
+| Email to customize | **New subscription email** (planlar yıllık abonelik; "Lifetime" değil) |
+| Custom section title | One more step: your validation key |
+| Custom section content | Hazır metin panoda değilse bu bölümün altındaki taslak |
+
+Metnin içinde anahtarın yazılacağı yer açıkça işaretli:
+
+```
+Validation key:  [[REPLACE-THIS-WITH-THE-VALIDATION-KEY]]
+```
+
+Anahtar `validator/.env` içindeki `SECRET` değeridir. Yer tutucuyu gerçek
+değerle **değiştirmeden kaydetmeyin** — kaydedilirse her müşteriye o dizge
+gider ve boş bırakmaktan kötü olur.
+
+Metin, lisans anahtarıyla doğrulama anahtarının **ayrı şeyler** olduğunu ayrıca
+söylüyor; ikisini karıştırmak en sık yapılan kurulum hatası.
+
+### Bu tasarımın bilinen zayıflığı
+
+Servis **tek paylaşılan anahtarla** çalışıyor: her Pro müşterisi aynı dizgeyi
+alıyor. Sonuçları:
+
+- Anahtar bir kez sızarsa herkes servisi bedava kullanır.
+- Tek bir müşterinin erişimi iptal edilemez; anahtar değişirse **hepsi** kırılır.
+- Abonelik biten müşteri, anahtarı sakladığı sürece kullanmaya devam eder.
+
+Müşteri sayısı bir avuçken kabul edilebilir, ölçeklenince değil. Doğrusu,
+doğrulayıcının Bearer olarak **Freemius lisans anahtarını** alıp geçerliliğini
+Freemius'a sorması olurdu: ayrı bir anahtar, ayrı bir e-posta adımı ve bu
+bölümün tamamı ortadan kalkar. Yapılmadı, çünkü servis kodu ve dağıtımı
+değişiyor; ilk satışları geciktirmemek için sonraya bırakıldı.
+
+---
+
 ## Pro: gerçek doğrulama sınavı
 
 **Bunu da atlamayın.** Pro tek bir şey satıyor: belgenin **resmi** EN 16931
