@@ -5,7 +5,7 @@ Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 8.2
 Requires Plugins: woocommerce
-Stable tag: 0.3.2
+Stable tag: 0.3.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -239,6 +239,29 @@ site. See **External services** above.
 3. The e-invoice box on the order screen, with document versions and history.
 
 == Changelog ==
+
+= 0.3.3 =
+* Invoices now pass the national validators, not only the EU baseline. This
+  release began as a question — would a real tax authority accept what we
+  produce? — and the answer, measured against the official rule sets, was
+  no in two places.
+* Germany: the output failed the official XRechnung 3.0.2 rules on six
+  counts. Every one of them is a field the EU standard leaves optional and
+  Germany makes mandatory: the seller contact name and phone, the seller and
+  buyer electronic addresses, and the payment means. All six are now filled,
+  and the same document passes the official rule set with nothing left.
+* A new pre-flight check tells a German store when its billing phone number
+  is missing, because that one cannot be filled in for you — and if it is
+  missing you would only find out when the invoice is refused.
+* France: the Factur-X PDF failed PDF/A-3 validation. The cause was a single
+  line in the specification — every font used must be embedded in the file —
+  and the built-in template used fonts that, by design, are not. The template
+  now embeds its own font, and the finished document passes.
+* The same change lifts the old Latin-1 limit. The built-in template writes
+  any European alphabet: Polish, Czech, Hungarian, Romanian, Greek, Cyrillic.
+  It no longer refuses to produce a PDF because of a customer's name.
+* Pro: validation now checks German documents against Germany's own rules,
+  not just the EU baseline. Other countries are unaffected.
 
 = 0.3.2 =
 * A user guide, linked from the settings screen and the readme: what the
