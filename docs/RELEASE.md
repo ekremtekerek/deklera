@@ -315,8 +315,31 @@ bağlar; müşterinin indirdiği paket başka bir şeydir. Bu adım eklenmeden �
 üretilen paket hiç kurulmamıştı ve ilk denemede gerçek bir hata çıktı:
 kaldırma temizliği hiç çalışmıyordu.
 
-Temiz bir WordPress + WooCommerce ayağa kaldırın (ayrı veritabanı, ayrı hacim,
-eklenti dizini BAĞLANMADAN), sonra:
+Ortam hazır: `docker-compose.clean.yml`. Eklenti dizinini BAĞLAMAZ, yalnızca
+`build/` dizinini salt okunur bağlar; paket `wp plugin install` ile kurulur.
+
+```sh
+C="docker compose -f docker-compose.clean.yml -p deklera-clean"
+$C down -v && $C up -d
+$C run --rm -T --user root wpcli wp core install --url=http://localhost:8090 \
+  --title=Sinav --admin_user=admin --admin_password=admin \
+  --admin_email=test@example.test --skip-email --allow-root --path=/var/www/html
+$C run --rm -T --user root wpcli wp plugin install woocommerce --activate \
+  --allow-root --path=/var/www/html
+$C run --rm -T --user root wpcli wp plugin install /build/deklera-*.zip \
+  --activate --allow-root --path=/var/www/html
+```
+
+Antivirüsün TLS'i kestiği makinede WooCommerce indirilemez; `wpcli`
+konteynerinde önce `bin/trust-local-ca.sh` çalıştırılmalıdır (`/build` altındaki
+`local-ca.pem` oradan görünür).
+
+Mağaza adresi boş bırakılırsa üretim **doğru şekilde** engellenir
+("Your store postal address is incomplete"); sınav için
+`woocommerce_store_address`, `_city`, `_postcode` ve `woocommerce_default_country`
+ayarlanmalıdır.
+
+Sonra:
 
 1. `wp plugin install <zip> --activate` — hatasız kurulmalı
 2. Ürün + sipariş oluşturup `Generator::generate()` çalıştırın — belge

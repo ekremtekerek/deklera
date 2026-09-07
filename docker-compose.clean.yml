@@ -1,0 +1,75 @@
+# Temiz kurulum sınavı ortamı.
+#
+# NEDEN AYRI BİR DOSYA
+#
+# docker-compose.yml eklenti dizinini doğrudan bağlar (`./plugin/deklera`).
+# Müşterinin kurduğu şey o dizin değil, `build/*.zip` paketidir; ikisi
+# birbirinden farklı olabilir ve bir kez gerçekten farklı çıktı (kaldırma
+# temizliği pakette hiç çalışmıyordu). Bu yüzden sınav ortamında eklenti
+# dizini BAĞLANMAZ — paket `wp plugin install` ile kurulur.
+#
+# Kullanım:
+#   docker compose -f docker-compose.clean.yml -p deklera-clean up -d
+#   docker compose -f docker-compose.clean.yml -p deklera-clean run --rm wpcli ...
+#   docker compose -f docker-compose.clean.yml -p deklera-clean down -v
+#
+# Son satırdaki -v önemli: sınav her seferinde sıfırdan başlamalı.
+
+name: deklera-clean
+
+services:
+  db:
+    image: mariadb:11
+    environment:
+      MARIADB_DATABASE: wordpress
+      MARIADB_USER: wordpress
+      MARIADB_PASSWORD: wordpress
+      MARIADB_ROOT_PASSWORD: wordpress
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    volumes:
+      - clean_db:/var/lib/mysql
+
+  wordpress:
+    image: wordpress:php8.3-apache
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "${CLEAN_PORT:-8090}:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DEBUG: 1
+      WORDPRESS_CONFIG_EXTRA: |
+        define( 'WP_DEBUG_LOG', true );
+        define( 'WP_DEBUG_DISPLAY', false );
+    volumes:
+      - clean_wp:/var/www/html
+      # Paketler okunabilsin diye; eklenti dizini BAGLANMAZ.
+      - ./build:/build:ro
+
+  wpcli:
+    image: wordpress:cli-php8.3
+    depends_on:
+      db:
+        condition: service_healthy
+    user: "33:33"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+    volumes:
+      - clean_wp:/var/www/html
+      - ./build:/build:ro
+    working_dir: /var/www/html
+
+volumes:
+  clean_db:
+  clean_wp:
