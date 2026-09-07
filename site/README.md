@@ -5,8 +5,14 @@ başka hiçbir dış kaynak yoktur.
 
 ## Nerede barındırılır
 
-Herhangi bir statik barındırmada çalışır. En kolayı GitHub Pages:
-depo ayarlarından Pages → Source: `main` dalı, klasör `/site`.
+Herhangi bir statik barındırmada çalışır. Şu an GitHub Pages'te:
+https://ekremtekerek.github.io/deklera/
+
+**Dal seçerek yayınlanmıyor, iş akışıyla yayınlanıyor** — Pages'in dal
+kaynağı klasör olarak yalnızca `/` veya `/docs` kabul ediyor, `site/` kabul
+etmiyor. Dağıtımı `.github/workflows/pages.yml` yapıyor ve depo ayarlarında
+Pages → Source **"GitHub Actions"** olmak zorunda. `site/` altında bir şey
+değişince kendiliğinden çalışır.
 
 Kendi alan adınıza koyacaksanız dosyayı olduğu gibi kopyalamak yeterlidir.
 
