@@ -38,6 +38,22 @@ final class HostedValidator {
 	public const OPTION_KEY = 'deklera_validator_key';
 
 	/**
+	 * Doğrulama servisinin varsayılan adresi.
+	 *
+	 * NEDEN GÖMÜLÜ
+	 *
+	 * Adres bir sır değil; kapıyı anahtar tutuyor. Boş bırakıldığında Pro'yu
+	 * satın alan kişi ayarlarda iki boş alan ve `validator.example.com` gibi
+	 * bir yer tutucu görüyordu — ne yazacağını söyleyen hiçbir şey yoktu.
+	 * Parayı ödedikten sonra karşılaşılacak en kötü ekran budur.
+	 *
+	 * Kendi kopyasını çalıştırmak isteyen (kurumsal müşteri, veri ikametgâhı)
+	 * ayardan ya da `deklera/validator_endpoint` süzgecinden değiştirebilir;
+	 * servis açık kaynak, kurulumu validator/README.md'de.
+	 */
+	public const DEFAULT_ENDPOINT = 'https://konform-validator.onrender.com';
+
+	/**
 	 * Etkileşimli istekte zaman aşımı, saniye.
 	 *
 	 * Bir yönetici ekran başında bekliyor. Doğrulamanın kendisi ısınmış
@@ -232,7 +248,7 @@ final class HostedValidator {
 		 */
 		return (string) \apply_filters(
 			'deklera/validator_endpoint',
-			(string) \get_option( self::OPTION_ENDPOINT, '' )
+			(string) \get_option( self::OPTION_ENDPOINT, self::DEFAULT_ENDPOINT )
 		);
 	}
 

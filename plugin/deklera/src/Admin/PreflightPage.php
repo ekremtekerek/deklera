@@ -43,6 +43,15 @@ final class PreflightPage {
 	private const MAX_LINKS = 10;
 
 	/**
+	 * Kullanım kılavuzu.
+	 *
+	 * Ekranda anlatılamayacak kadar uzun olan her şey orada: ön uçuş
+	 * bulgularının ne anlama geldiği, belgelerin nereye yazıldığı, iade
+	 * faturaları, Polonya akışı, süzgeçler.
+	 */
+	private const GUIDE_URL = 'https://github.com/ekremtekerek/deklera/blob/main/docs/GUIDE.md';
+
+	/**
 	 * Kancaları kaydeder.
 	 *
 	 * @return void
@@ -511,21 +520,38 @@ final class PreflightPage {
 				'<p class="description">%s</p>',
 				esc_html__( 'Validation against the official EN 16931 rule set requires the Pro plan. It cannot run inside WordPress because the rule set needs XSLT 2.0, which PHP does not support.', 'deklera' )
 			);
+		} elseif ( '' === $key ) {
+			/*
+			 * Pro'yu yeni almis birinin gordugu ilk ekran burasi. Onceden bu
+			 * bolum iki bos alandan ve "validator.example.com" yer
+			 * tutucusundan ibaretti; ne yazilacagini soyleyen hicbir sey
+			 * yoktu. Para odendikten hemen sonra karsilasilacak en kotu ekran
+			 * budur.
+			 */
+			printf(
+				'<div class="notice notice-warning inline"><p>%1$s</p><p><a href="%2$s" target="_blank" rel="noopener">%3$s</a></p></div>',
+				esc_html__( 'One step left: paste your validation key below. It is in the email you received when you bought Pro. The service address is already filled in.', 'deklera' ),
+				esc_url( self::GUIDE_URL ),
+				esc_html__( 'Read the setup guide', 'deklera' )
+			);
 		}
 
 		printf(
-			'<p><label for="deklera_validator_endpoint">%1$s</label><br/><input type="url" id="deklera_validator_endpoint" name="deklera_validator_endpoint" value="%2$s" class="regular-text" placeholder="https://validator.example.com"%3$s/></p>',
+			'<p><label for="deklera_validator_endpoint">%1$s</label><br/><input type="url" id="deklera_validator_endpoint" name="deklera_validator_endpoint" value="%2$s" class="regular-text"%3$s/><br/><span class="description">%4$s</span></p>',
 			esc_html__( 'Validation service address', 'deklera' ),
-			esc_attr( (string) get_option( HostedValidator::OPTION_ENDPOINT, '' ) ),
-			$has_pro ? '' : ' disabled'
+			esc_attr( (string) get_option( HostedValidator::OPTION_ENDPOINT, HostedValidator::DEFAULT_ENDPOINT ) ),
+			$has_pro ? '' : ' disabled',
+			esc_html__( 'Already set to the service run by the plugin author. Change it only if you run your own copy of it.', 'deklera' )
 		);
 
 		printf(
 			'<p><label for="deklera_validator_key">%1$s</label><br/><input type="password" id="deklera_validator_key" name="deklera_validator_key" value="" class="regular-text" placeholder="%2$s" autocomplete="new-password"%3$s/><br/><span class="description">%4$s</span></p>',
-			esc_html__( 'Licence key', 'deklera' ),
+			esc_html__( 'Validation key', 'deklera' ),
 			esc_attr( '' === $key ? __( 'Not set', 'deklera' ) : str_repeat( '•', 12 ) ),
 			$has_pro ? '' : ' disabled',
-			esc_html__( 'Leave empty to keep the saved key.', 'deklera' )
+			'' === $key
+				? esc_html__( 'From your Pro purchase email. This is not the licence key that activated the plugin.', 'deklera' )
+				: esc_html__( 'Saved. Leave empty to keep it.', 'deklera' )
 		);
 	}
 

@@ -5,7 +5,7 @@ Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 8.2
 Requires Plugins: woocommerce
-Stable tag: 0.3.1
+Stable tag: 0.3.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -143,8 +143,24 @@ pack downloads that WordPress itself makes.
 
 1. Install and activate WooCommerce.
 2. Install and activate Deklera.
-3. Go to **WooCommerce → Deklera** and enter your VAT number.
-4. Read the pre-flight report.
+3. Go to **WooCommerce → Deklera** and enter your VAT number, with the country
+   prefix — `FR40303265045`, not `40303265045`. WooCommerce has no field for
+   this, so Deklera stores it.
+4. Check that your store address is complete under **WooCommerce → Settings →
+   General**. Street, city, postcode and country are all mandatory on an
+   invoice; if one is missing, Deklera will refuse to produce documents and
+   tell you why.
+5. Read the pre-flight report.
+
+On the Pro plan there is one more step: paste your validation key under
+**Official validation (Pro)**. The service address is already filled in; the
+key is in your purchase email, and it is not the same string as the licence
+key that activated the plugin.
+
+**The full guide** — what the findings mean, when documents are produced and
+where they are stored, credit notes, the Polish KSeF flow, and the available
+filters — is at
+https://github.com/ekremtekerek/deklera/blob/main/docs/GUIDE.md
 
 == Frequently Asked Questions ==
 
@@ -225,6 +241,14 @@ site. See **External services** above.
 
 == Changelog ==
 
+= 0.3.2 =
+* A user guide, linked from the settings screen and the readme: what the
+  pre-flight findings mean, when documents are produced and where they are
+  stored, credit notes, the Polish KSeF flow, and the available filters.
+* Pro setup no longer asks you to guess. The validation service address is
+  filled in by default, and the screen says where the validation key comes
+  from and that it is not the licence key that activated the plugin.
+
 = 0.3.1 =
 * Pro: the first validation after the service has been idle is no longer
   lost. The hosted validator sleeps when unused and takes longer to answer
@@ -269,6 +293,10 @@ site. See **External services** above.
 * Optional validation against the official EN 16931 Schematron rule set.
 
 == Upgrade Notice ==
+
+= 0.3.2 =
+Adds a user guide and fixes the Pro setup screen, which previously left you
+with two empty fields and no explanation. Nothing to do after upgrading.
 
 = 0.3.1 =
 Fixes a Pro-only problem: the first validation of the day could be reported
