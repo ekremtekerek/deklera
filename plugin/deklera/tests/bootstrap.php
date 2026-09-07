@@ -315,3 +315,24 @@ if ( ! function_exists( 'trailingslashit' ) ) {
 		return rtrim( $value, "/\\" ) . '/';
 	}
 }
+
+if ( ! function_exists( 'wc_get_base_location' ) ) {
+	/**
+	 * WooCommerce'in mağaza konumu.
+	 *
+	 * Çekirdek, ülke ve bölgeyi tek seçenekte "DE:BE" biçiminde saklar ve bu
+	 * fonksiyonda ayırır. Kural kodu ayrımı kendisi yapmasın diye taklit de
+	 * aynısını yapar.
+	 *
+	 * @return array{country:string,state:string}
+	 */
+	function wc_get_base_location(): array {
+		$raw   = (string) get_option( 'woocommerce_default_country', '' );
+		$parts = explode( ':', $raw );
+
+		return array(
+			'country' => $parts[0],
+			'state'   => $parts[1] ?? '',
+		);
+	}
+}

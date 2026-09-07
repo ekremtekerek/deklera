@@ -116,11 +116,40 @@ final class ZugferdBuilder implements DocumentBuilder {
 		$this->apply_buyer( $document, $invoice->buyer );
 		$this->apply_preceding_invoice( $document, $invoice );
 		$this->apply_delivery( $document, $invoice );
+		$this->apply_payment_means( $document );
 		$this->apply_lines( $document, $invoice );
 		$this->apply_tax_breakdown( $document, $invoice );
 		$this->apply_summation( $document, $invoice );
 
 		return $document;
+	}
+
+	/**
+	 * Ödeme talimatlarını yazar (BG-16).
+	 *
+	 * EN 16931'de isteğe bağlı, XRechnung'da ZORUNLU (BR-DE-1). Bu blok
+	 * olmadan Almanya'nın resmi denetleyicisi faturayı reddediyor.
+	 *
+	 * Kod **68 — çevrimiçi ödeme servisi**. Bir WooCommerce mağazasında para
+	 * zaten sipariş anında tahsil edilmiş oluyor; alıcıya "şu IBAN'a havale
+	 * yapın" demek yanlış olurdu. 58 (SEPA havalesi) ve 59 (SEPA otomatik
+	 * ödeme) seçilseydi XRechnung ayrıca IBAN ya da mandat isterdi
+	 * (BR-DE-19, BR-DE-20) — elimizde olmayan ve uydurulamayacak veriler.
+	 *
+	 * Havaleyle çalışan mağazalar `deklera/payment_means` ile değiştirebilir.
+	 *
+	 * @param ZugferdDocumentBuilder $document Belge.
+	 * @return void
+	 */
+	private function apply_payment_means( ZugferdDocumentBuilder $document ): void {
+		/**
+		 * Ödeme aracı kodunu değiştirir (BT-81, UNTDID 4461).
+		 *
+		 * @param string $code Ödeme aracı kodu.
+		 */
+		$code = (string) \apply_filters( 'deklera/payment_means', '68' );
+
+		$document->addDocumentPaymentMean( $code );
 	}
 
 	/**
@@ -188,8 +217,25 @@ final class ZugferdBuilder implements DocumentBuilder {
 			$seller->country
 		);
 
+		/*
+		 * Iletisim (BT-41/42/43) ile ELEKTRONIK ADRES (BT-34) ayri alanlardir.
+		 * Once yalnizca iletisim e-postasi yaziliyordu; Almanya'nin resmi
+		 * denetleyicisi bu yuzden PEPPOL-EN16931-R020 ile reddediyordu.
+		 * Olcum ve gerekce: docs/adr/0010-ulusal-kurallar.md
+		 */
+		if ( '' !== $seller->contact || '' !== $seller->phone || '' !== $seller->email ) {
+			$document->setDocumentSellerContact(
+				'' !== $seller->contact ? $seller->contact : null,
+				null,
+				'' !== $seller->phone ? $seller->phone : null,
+				null,
+				'' !== $seller->email ? $seller->email : null
+			);
+		}
+
 		if ( '' !== $seller->email ) {
-			$document->setDocumentSellerContact( null, null, null, null, $seller->email );
+			// EM = elektronik posta; EN 16931 EAS kod listesi.
+			$document->setDocumentSellerCommunication( 'EM', $seller->email );
 		}
 	}
 
@@ -218,6 +264,9 @@ final class ZugferdBuilder implements DocumentBuilder {
 
 		if ( '' !== $buyer->email ) {
 			$document->setDocumentBuyerContact( null, null, null, null, $buyer->email );
+
+			// BT-49. Satici tarafiyla ayni gerekce: PEPPOL-EN16931-R010.
+			$document->setDocumentBuyerCommunication( 'EM', $buyer->email );
 		}
 	}
 

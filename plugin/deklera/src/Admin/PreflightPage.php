@@ -98,6 +98,18 @@ final class PreflightPage {
 
 		update_option( 'deklera_seller_vat_number', $vat_number );
 
+		$contact = isset( $_POST['deklera_seller_contact'] )
+			? sanitize_text_field( wp_unslash( $_POST['deklera_seller_contact'] ) )
+			: '';
+
+		update_option( 'deklera_seller_contact', $contact );
+
+		$phone = isset( $_POST['deklera_seller_phone'] )
+			? sanitize_text_field( wp_unslash( $_POST['deklera_seller_phone'] ) )
+			: '';
+
+		update_option( 'deklera_seller_phone', $phone );
+
 		$endpoint = isset( $_POST['deklera_validator_endpoint'] )
 			? esc_url_raw( wp_unslash( $_POST['deklera_validator_endpoint'] ) )
 			: '';
@@ -428,6 +440,25 @@ final class PreflightPage {
 			esc_html__( 'Your VAT number', 'deklera' ),
 			esc_attr( (string) get_option( 'deklera_seller_vat_number', '' ) ),
 			esc_html__( 'WooCommerce has no field for this, so Deklera stores it. Include the country prefix.', 'deklera' )
+		);
+
+		/*
+		 * Bu iki alan EN 16931'de istege bagli, XRechnung'da ZORUNLU
+		 * (BR-DE-5, BR-DE-6). Almanya'nin resmi denetleyicisi bunlar olmadan
+		 * faturayi reddediyor; olcum docs/adr/0010-ulusal-kurallar.md'de.
+		 */
+		printf(
+			'<p><label for="deklera_seller_contact">%1$s</label><br/><input type="text" id="deklera_seller_contact" name="deklera_seller_contact" value="%2$s" class="regular-text"/><br/><span class="description">%3$s</span></p>',
+			esc_html__( 'Contact name on the invoice', 'deklera' ),
+			esc_attr( (string) get_option( 'deklera_seller_contact', '' ) ),
+			esc_html__( 'Leave empty to use the store name. Germany requires this field to be present.', 'deklera' )
+		);
+
+		printf(
+			'<p><label for="deklera_seller_phone">%1$s</label><br/><input type="text" id="deklera_seller_phone" name="deklera_seller_phone" value="%2$s" class="regular-text" placeholder="+49 30 123456"/><br/><span class="description">%3$s</span></p>',
+			esc_html__( 'Contact telephone number', 'deklera' ),
+			esc_attr( (string) get_option( 'deklera_seller_phone', '' ) ),
+			esc_html__( 'Required for German invoices (XRechnung). There is no sensible default, so it cannot be filled in for you.', 'deklera' )
 		);
 
 		self::render_validator_settings();

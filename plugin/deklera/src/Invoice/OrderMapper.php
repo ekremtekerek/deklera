@@ -167,15 +167,27 @@ final class OrderMapper {
 		 */
 		$vat_number = (string) \apply_filters( 'deklera/seller_vat_number', (string) \get_option( 'deklera_seller_vat_number', '' ) );
 
+		$store = (string) \get_option( 'blogname', '' );
+
+		/*
+		 * İletişim kişisi boşsa mağaza adına düşülür. XRechnung alanın DOLU
+		 * olmasını istiyor (BR-DE-5); mağaza adı doğru ve yanıltıcı olmayan
+		 * bir cevaptır. Telefonun (BR-DE-6) böyle bir yedeği yok — uydurmak
+		 * faturaya yanlış bilgi yazmak olurdu, o yüzden ön uçuş onu arıyor.
+		 */
+		$contact = (string) \get_option( 'deklera_seller_contact', '' );
+
 		return new Party(
-			(string) \get_option( 'blogname', '' ),
+			$store,
 			$country,
 			$vat_number,
 			trim( $address ),
 			(string) \get_option( 'woocommerce_store_city', '' ),
 			(string) \get_option( 'woocommerce_store_postcode', '' ),
 			(string) \get_option( 'admin_email', '' ),
-			true
+			true,
+			'' !== $contact ? $contact : $store,
+			(string) \get_option( 'deklera_seller_phone', '' )
 		);
 	}
 

@@ -42,6 +42,7 @@ final class Scanner {
 
 		$rules = array(
 			new Rules\SellerIdentity(),
+			new Rules\NationalProfile(),
 			new Rules\InvoiceBasics(),
 			new Rules\BuyerIdentity(),
 			new Rules\TaxCategoryConsistency(),

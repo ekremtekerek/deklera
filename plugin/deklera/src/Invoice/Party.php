@@ -20,6 +20,11 @@ final class Party {
 	/**
 	 * Kurucu.
 	 *
+	 * $contact ve $phone EN 16931'de isteğe bağlı, XRechnung'da ZORUNLU
+	 * (BR-DE-5, BR-DE-6). Almanya'nın resmi denetleyicisi bunlar olmadan
+	 * faturayı reddediyor — ölçüldü, bkz. docs/adr/0010. Sonda ve
+	 * varsayılanlı duruyorlar ki mevcut çağrılar bozulmasın.
+	 *
 	 * @param string $name       Ticari unvan. Satıcı BT-27, alıcı BT-44.
 	 * @param string $country    ISO 3166-1 alpha-2. Satıcı BT-40, alıcı BT-55.
 	 * @param string $vat_number KDV numarası. Satıcı BT-31, alıcı BT-48.
@@ -28,6 +33,8 @@ final class Party {
 	 * @param string $postcode   Posta kodu. Satıcı BT-38, alıcı BT-53.
 	 * @param string $email      E-posta. Satıcı BT-34, alıcı BT-49.
 	 * @param bool   $is_company Tüzel kişi mi (B2B ayrımı için).
+	 * @param string $contact    İletişim kişisi. Satıcı BT-41, alıcı BT-56.
+	 * @param string $phone      İletişim telefonu. Satıcı BT-42, alıcı BT-57.
 	 */
 	public function __construct(
 		public readonly string $name,
@@ -38,6 +45,8 @@ final class Party {
 		public readonly string $postcode,
 		public readonly string $email,
 		public readonly bool $is_company,
+		public readonly string $contact = '',
+		public readonly string $phone = '',
 	) {}
 
 	/**
