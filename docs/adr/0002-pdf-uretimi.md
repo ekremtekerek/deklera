@@ -42,7 +42,15 @@ gerekiyor; "önce şu eklentiyi kur" diyen bir ürün huniyi kırar.
    kurulum). Mağazanın kendi şablonunu, logosunu ve düzenini taşır; tam UTF-8.
 2. `BuiltinPdfSource` — FPDF ile sade şablon. Son çare.
 
-## Kabul edilen sınır: yerleşik şablon Latin-1'dir
+## Kabul edilen sınır: yerleşik şablon Latin-1'dir  ~~(geçerli değil)~~
+
+> **Bu bölüm 7 Eylül 2026'da geçersiz kaldı.** Yerleşik şablon artık gömülü
+> TrueType (DejaVuSans) ile çiziliyor ve UTF-8 yazıyor; Latin-1 kapısı ve
+> `assert_representable()` kaldırıldı. Sebep yalnızca dil desteği değildi:
+> gömülmeyen font yüzünden ürettiğimiz Factur-X, PDF/A-3 denetiminden
+> düşüyordu. Ölçüm ve gerekçe için bkz. [ADR 0011](0011-pdfa-ve-gomulu-font.md).
+
+Aşağıdaki metin tarihsel kayıt olarak duruyor.
 
 `setasign/fpdf` yalnızca CP1252 destekler. Kod tabanında `iconv`, `mb_convert`
 veya UTF-8 işleme **hiç yok** — kontrol edildi.
@@ -68,8 +76,7 @@ Kullanıcı için çözüm tek adımdır ve zaten ücretsizdir.
 - ✅ Sürüm 1 hedefi (FR Factur-X) yerleşik şablonla karşılanıyor.
 - ✅ Eklenti ağırlığı artmıyor; ek bağımlılık yok.
 - ✅ Mağazanın kendi fatura tasarımı korunuyor — kimsenin şablonunu ezmiyoruz.
-- ⚠️ Latin-1 dışı alıcı adı olan Fransız mağazası yerleşik şablonu kullanamaz.
-  Ön uçuş raporunda bunu önceden uyarmak **yapılacaklar listesinde**.
+- ✅ Latin-1 sınırı kalktı; bkz. ADR 0011.
 - ℹ️ Almanya ve Polonya bu ADR'den etkilenmez; saf XML üretilir.
 - ℹ️ Talep gelirse bir sonraki adım `wp-content` içine indirilen isteğe bağlı
   bir Unicode font paketi olabilir; eklenti zip'ini şişirmez.

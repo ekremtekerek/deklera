@@ -170,10 +170,9 @@ Yes. Deklera includes a plain fallback template. If you already use a PDF
 invoice plugin such as WooCommerce PDF Invoices & Packing Slips, Deklera embeds
 the XML into that plugin's PDF instead, so your own design and branding are kept.
 
-The built-in fallback template is limited to the Latin-1 character set. If a
-customer's name contains characters outside it, Deklera refuses to produce the
-PDF and tells you which field is affected, rather than printing the name wrongly.
-Installing a PDF invoice plugin removes that limit.
+The built-in template embeds its own font, so it writes any European alphabet
+and the finished Factur-X passes PDF/A-3 validation, which France requires. When
+another plugin produces the PDF, PDF/A conformance is up to that plugin.
 
 = Will my invoices be accepted? =
 

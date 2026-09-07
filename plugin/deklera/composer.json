@@ -8,7 +8,8 @@
         "ext-dom": "*",
         "freemius/wordpress-sdk": "^2.13",
         "horstoeko/zugferd": "^1.0.132",
-        "intermedia/ksef-fa3": "^1.0"
+        "intermedia/ksef-fa3": "^1.0",
+        "setasign/tfpdf": "^1.33"
     },
     "require-dev": {
         "brianhenryie/strauss": "^0.22",
@@ -67,6 +68,7 @@
             },
             "packages": [
                 "horstoeko/zugferd",
+                "setasign/tfpdf",
                 "intermedia/ksef-fa3"
             ]
         }

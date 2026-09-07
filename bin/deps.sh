@@ -71,3 +71,10 @@ for tree in vendor vendor-prefixed; do
   fi
   echo "$tree: $dst dosya"
 done
+
+# Font onbellegi. Strauss agaci her yenilendiginde silinir, cunku
+# vendor-prefixed/ bastan kurulur. Burada yeniden uretilmezse yerlesik PDF
+# sablonu her faturada 750 KB'lik TTF'i ayristirir (~1,9 sn). Bkz. font-cache.php
+if [ -d "$PLUGIN_DIR/vendor-prefixed/setasign/tfpdf" ]; then
+  php "$SCRIPT_DIR/font-cache.php" "$PLUGIN_DIR"
+fi

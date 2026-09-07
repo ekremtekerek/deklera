@@ -522,3 +522,84 @@ bırakmayın.
 Windows'ta konteynere yol geçirirken `MSYS_NO_PATHCONV=1` gerekir; yoksa
 Git Bash `/pkg/...` yolunu Windows yoluna çevirir ve WP-CLI "Invalid plugin
 slug" der.
+
+---
+
+## Ulusal denetleyici sınavı
+
+EN 16931 bir tabandır; ülkeler üstüne kendi daraltmalarını koyar. Kendi
+testlerimiz yeşilken belgenin bir ülkede reddedilmesi mümkündür — Almanya'da
+tam olarak bu oldu, bkz. [ADR 0010](adr/0010-almanya-ulusal-kurallari.md).
+
+Bu bölüm ölçümü nasıl tekrarlayacağınızı anlatır. **Kural setleri ve
+denetleyiciler sürüm alır**; yılda bir kez yeniden çalıştırın.
+
+### Örnek belgeleri üret
+
+Örnekleri geliştirme sitesinden üretin, temiz kurulumdan değil: temiz kurulum
+**paketlenmiş** eklentiyi çalıştırır, dolayısıyla henüz paketlenmemiş bir
+düzeltmeyi göremezsiniz. Bir gün bu şekilde kaybedildi.
+
+```sh
+docker compose run --rm -T wpcli eval-file - < build/ornek-uret.php
+```
+
+### Almanya — XRechnung 3.0.2 (KoSIT)
+
+Resmi yapılandırma KoSIT'in `validator-configuration-xrechnung` deposundan
+indirilir; içindeki Schematron doğrudan çalıştırılabilir:
+
+```sh
+docker run --rm -v "$(pwd):/w" -w /w/validator node:22-alpine \
+  node node_modules/xslt3/xslt3.js \
+  -s:/w/build/ornek-xrechnung.xml \
+  -xsl:/w/build/xrechnung/resources/xrechnung/3.0.2/xsl/XRechnung-CII-validation.xsl \
+  -o:/w/build/xr-rapor.xml
+
+grep -c failed-assert build/xr-rapor.xml
+```
+
+Beklenen: `0`. Sıfırdan büyükse rapordaki `id="..."` değerleri hangi BR-DE
+kuralının düştüğünü söyler.
+
+### Fransa — Factur-X
+
+Fransa'da denetlenen şey yalnızca veri değil, **dosyanın kendisi**: Factur-X,
+XML'i PDF/A-3 uyumlu bir PDF'e gömer. Üç şeyin ayrı ayrı ölçülmesi gerekir.
+
+**1. PDF/A-3 uygunluğu** — veraPDF, PDF/A'nın referans denetleyicisidir:
+
+```sh
+docker run --rm -v "$(pwd)/build:/data" verapdf/cli \
+  --format text /data/ornek-facturx.pdf
+```
+
+Beklenen: `PASS /data/ornek-facturx.pdf 3b`. `FAIL` alırsanız `--format mrr`
+ile ayrıntı raporu üretip `<description>` ve `<context>` satırlarına bakın;
+`context` kusurlu nesneyi doğrudan gösterir.
+
+**2. XML'in EN 16931 uyumu** — CII söz dizimi kural seti:
+
+```sh
+docker run --rm -v "$(pwd):/w" -w /w/validator node:22-alpine \
+  node node_modules/xslt3/xslt3.js \
+  -s:/w/build/ornek-facturx-fr.xml \
+  -xsl:/w/build/xrechnung/resources/cii/16b/xsl/EN16931-CII-validation.xsl \
+  -o:/w/build/fr-rapor.xml
+```
+
+**3. Factur-X'e özgü iliştirme** — PDF içindeki dört işaret doğru olmalı:
+
+```sh
+tr -c '[:print:]\n' '\n' < build/ornek-facturx.pdf \
+  | grep -E 'factur-x\.xml|/AFRelationship|fx:(DocumentType|Version|ConformanceLevel)'
+```
+
+Beklenen: `/AFRelationship /Data`, gömülü dosya adı `factur-x.xml`,
+`fx:DocumentType INVOICE`, `fx:Version 1.0`, `fx:ConformanceLevel EN 16931`.
+
+### Polonya — KSeF
+
+Polonya'da belge, KSeF numara verene kadar hukuken **var olmaz**. O yüzden
+buradaki sınav şema doğrulaması değil, gerçek gönderimdir — bkz. yukarıdaki
+"Polonya: gerçek gönderim sınavı".

@@ -131,17 +131,19 @@ change. What it can honestly promise is narrower: it tells you when your data
 will fail the standard, and on Pro it checks the finished document against the
 official rule set before you issue it.
 
-### The built-in PDF template and Latin-1
+### The built-in PDF template
 
 If you have no PDF invoice plugin, Deklera uses a plain built-in template. It
-is limited to the **Latin-1 character set**. If a customer's name contains a
-character outside it — Polish, Turkish, Greek, Cyrillic — Deklera **refuses to
-produce the PDF** and tells you which field is affected, rather than printing
-the name wrongly on a legal document.
+embeds its own font, so it writes any European alphabet — Polish, Czech,
+Hungarian, Romanian, Greek, Cyrillic — and the finished Factur-X passes
+**PDF/A-3** validation, which France requires.
 
-Installing a PDF invoice plugin removes that limit. Deklera detects
+If you already use a PDF invoice plugin, Deklera prefers it. It detects
 **WooCommerce PDF Invoices & Packing Slips** and embeds the XML into that
-plugin's PDF, so your own design and branding are kept.
+plugin's PDF, so your own design and branding are kept. One caveat worth
+knowing: in that case the PDF is produced by the other plugin, so whether it
+meets PDF/A-3 is up to that plugin, not to Deklera. If you sell into France
+and are unsure, the built-in template is the safe choice.
 
 ---
 
