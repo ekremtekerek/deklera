@@ -263,6 +263,9 @@ site. See **External services** above.
   empty settings and an empty document archive. The old rows are left in the
   database untouched, but the plugin no longer reads them. See the upgrade
   notice.
+* Pro licences must be activated again after upgrading. The licence record is
+  stored under the plugin slug, and the slug changed with the name, so the
+  plugin cannot find the old one.
 * The built-in PDF template now uses FPDF 1.9.0 instead of 1.8.2.
 * The free version no longer calls load_plugin_textdomain(). WordPress loads
   translations for wordpress.org plugins on its own; the call remains in the
@@ -305,7 +308,9 @@ as "service unavailable". Nothing to do after upgrading.
 = 0.3.0 =
 The plugin is now called Deklera. Settings and the document archive do not
 carry over from the previous version: re-enter your VAT number, and for Polish
-stores your KSeF token. Invoices already registered with KSeF keep their numbers at the
+stores your KSeF token. On Pro, the licence also has to be
+activated again — the rename moved where the licence is stored, so the plugin
+no longer sees the old one. Invoices already registered with KSeF keep their numbers at the
 tax office and are not affected.
 
 = 0.2.1 =

@@ -84,7 +84,10 @@ başlık onaydan sonra slug'a dokunmadan uzatılabilir.
 ## Sonuçlar
 
 **Veri:** Seçenek adları ve tablolar değiştiği için 0.2.0'ı kurmuş bir sitede
-ayarlar ve belge arşivi görünmez olur. Geçiş kodu yazılmadı — yazılsaydı
+ayarlar ve belge arşivi görünmez olur. **Lisans da öyle:** Freemius kaydını
+eklenti slug'una göre saklıyor (`fs_accounts['sites']['konform']`), slug
+değişince SDK `deklera` altına bakıyor ve bulamıyor — Pro lisansı yeniden
+etkinleştirilmek zorunda. Geliştirme sitesinde birebir gözlendi. Geçiş kodu yazılmadı — yazılsaydı
 `konform_` dizileri kod tabanında kalacaktı, ki bütün amaç onlardan
 kurtulmaktı. Bilinen kurulum sayısı sıfır.
 
