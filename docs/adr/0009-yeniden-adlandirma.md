@@ -5,7 +5,7 @@ Durum: **Kabul edildi**
 
 ## Bağlam
 
-`konform-0.1.0.zip` WordPress.org'a 1 Eylül 2026'da gönderildi. 4 Eylül'de
+`konform-0.1.0.zip` WordPress.org'a 1 Eylül 2026'da gönderildi. 5 Eylül'de
 inceleme, gönderimi askıya alarak geri döndü. Gerekçelerden biri kod değil,
 **ad**:
 
@@ -90,12 +90,25 @@ kurtulmaktı. Bilinen kurulum sayısı sıfır.
 
 **Depo dışında kalanlar** (bu ADR'nin kapsamadığı, elle yapılacak işler):
 
-- Freemius panosundaki ürün slug'ı `konform` → `deklera`. Koddaki
-  `fs_dynamic_init` slug'ı ile eşleşmezse lisans etkinleştirme bozulur.
-- GitHub deposunun adı. Kod içindeki tüm bağlantılar
-  `github.com/ekremtekerek/deklera` olarak güncellendi; depo adı
-  değiştirilmezse bu bağlantılar kırılır (GitHub yönlendirme yapar ama
-  `raw.githubusercontent.com` için bu güvenilir değil).
+- Freemius panosundaki ürün slug'ı. 7 Eylül'de denendi: **kabul edilmedi**.
+  Premium slug `deklera-premium` oldu, ücretsiz slug ve başlık `konform`
+  olarak kaldı; form alanı yeni değeri gösterse de sunucu eskisini döndürüyor
+  (SDK entegrasyon kodu ve yan menü ile doğrulandı). Alanın kendi ipucu
+  sebebi söylüyor: "If your item is listed on the WordPress.org repository,
+  use the exact same slug." Yani sıra ters: önce WordPress.org `deklera`'yı
+  ayırmalı, sonra Freemius kabul eder. Bugün bir şey kırmıyor — ücretsiz sürüm
+  zaten .org'dan gelmiyor ve Freemius ürünü `id` + `public_key` ile tanıyor.
+- GitHub deposunun adı. 7 Eylül'de `gh repo rename` ile `deklera` yapıldı;
+  readme'deki TERMS.md ve PRIVACY.md bağlantıları doğrulandı (HTTP 200).
+
+**Yapılanlar (7 Eylül):** 0.3.0 paketi WordPress.org'a "Upload updated plugin
+for review" ile yüklendi ve gönderim artık **Deklera** adıyla görünüyor; atanan
+slug hâlâ `konform`, cevapta açıkça `deklera` isteniyor. Freemius'ta 0.3.0
+premium dağıtıldı ve **Released** yapıldı. WordPress.org'un kendi Plugin
+Check'i pakette 175 hata gösteriyor; hepsi tek bir sebepten —
+`TextDomainMismatch`, "Expected 'konform' but got 'deklera'" — ve slug
+ayrılınca sıfırlanacak. İnceleme e-postası bu uyarıyı zaten öngörmüştü.
+Paketteki çeviri çağrısı sayısı 176; hata sayısıyla örtüşüyor.
 
 **Değişmeyen:** doğrulama servisinin adresi (`konform-validator.onrender.com`).
 Dış bir servis, adı Render üzerinde ayrıca değiştirilmeli ve değiştirildiğinde

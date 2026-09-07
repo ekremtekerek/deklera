@@ -1,6 +1,6 @@
 # WordPress.org inceleme cevabı — 0.3.0
 
-**Nasıl gönderilir:** 4 Eylül 2026 tarihli inceleme e-postasına, **aynı iş
+**Nasıl gönderilir:** 5 Eylül 2026 tarihli inceleme e-postasına, **aynı iş
 parçacığında** yanıt olarak. Yeni e-posta açılmaz, gönderim onay e-postasına
 cevap yazılmaz.
 

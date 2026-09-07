@@ -275,7 +275,7 @@ aksi halde eklenti dizinde "güncel değil" uyarısıyla gösterilir.
 
 ## Gönderim kaydı
 
-**0.1.0 — 1 Eylül 2026'da gönderildi, 4 Eylül'de askıya alındı.**
+**0.1.0 — 1 Eylül 2026'da gönderildi, 5 Eylül'de askıya alındı.**
 
 Gönderim **`Konform`** adıyla yapıldı; aşağıdaki kayıtta geçen eski ad budur ve
 tarihsel olduğu için değiştirilmedi. Yazışmanın konu satırı hâlâ eski adı
@@ -292,7 +292,7 @@ taşıyor:
   *"[WordPress Plugin Directory] Review in Progress: Konform"* —
   **cevaplar bu konuya, aynı iş parçacığına yazılır; yeni e-posta açılmaz.**
 
-**İnceleme sonucu (4 Eylül 2026): askıya alındı, üç madde.**
+**İnceleme sonucu (5 Eylül 2026): askıya alındı, üç madde.**
 
 | Madde | Durum |
 |---|---|
