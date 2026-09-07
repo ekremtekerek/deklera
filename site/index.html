@@ -135,6 +135,8 @@
   .cta { display: inline-block; background: var(--green); color: var(--paper);
          font-weight: 600; text-decoration: none; padding: 0.75rem 1.4rem; border-radius: 3px; }
   .cta:hover { filter: brightness(1.08); }
+  .cta-2 { background: transparent; color: var(--green);
+           box-shadow: inset 0 0 0 1px var(--green); margin-left: 0.6rem; }
   .cta-note { font-size: 0.88rem; color: var(--ink-soft); margin-top: 0.9rem; }
 
   footer { border-top: 1px solid var(--rule); padding: 2.5rem 0 4rem; color: var(--ink-soft); font-size: 0.9rem; }
@@ -253,12 +255,12 @@
           </tr>
           <tr>
             <td class="plan">Pro</td>
-            <td class="price">€149/yr</td>
+            <td class="price"><a href="https://checkout.freemius.com/plugin/38206/plan/63639/">€149/yr</a></td>
             <td>Validation against the <strong>official</strong> EN 16931 rule set before a document is issued.</td>
           </tr>
           <tr>
             <td class="plan">Agency</td>
-            <td class="price">€399/yr</td>
+            <td class="price"><a href="https://checkout.freemius.com/plugin/38206/plan/63641/">€399/yr</a></td>
             <td>Everything in Pro, across all the stores you manage.</td>
           </tr>
         </tbody>
@@ -275,11 +277,20 @@
     <h2>Try it on your own orders</h2>
     <p>The free version answers the only question that matters right now: is your
       order data ready? Install it, open the report, and find out in a minute.</p>
-    <p><a class="cta" href="https://github.com/ekremtekerek/deklera">Source, docs and issues on GitHub</a></p>
+    <p>
+      <a class="cta" href="https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/ekremtekerek/deklera/main/demo/blueprint.json">Open the live demo</a>
+      <a class="cta cta-2" href="https://github.com/ekremtekerek/deklera/releases/latest">Download the free version</a>
+    </p>
+    <p class="cta-note">The demo runs a real WordPress and WooCommerce inside your
+      browser, seeded with orders that are not ready to be invoiced. Nothing is
+      installed and nothing leaves your machine.</p>
     <p class="cta-note">The free version is awaiting review for the WordPress.org
-      plugin directory. Pro licences are available now through
+      plugin directory; until it is listed there, install the zip above by hand.
+      Pro licences are available now through
       <a href="https://checkout.freemius.com/plugin/38206/plan/63639/">Freemius</a>,
       who handle payment and EU VAT as merchant of record.</p>
+    <p class="cta-note">Source, docs and issues are
+      <a href="https://github.com/ekremtekerek/deklera">on GitHub</a>.</p>
   </section>
 
   <footer>
