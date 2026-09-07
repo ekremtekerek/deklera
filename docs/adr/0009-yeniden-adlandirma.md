@@ -90,14 +90,23 @@ kurtulmaktı. Bilinen kurulum sayısı sıfır.
 
 **Depo dışında kalanlar** (bu ADR'nin kapsamadığı, elle yapılacak işler):
 
-- Freemius panosundaki ürün slug'ı. 7 Eylül'de denendi: **kabul edilmedi**.
-  Premium slug `deklera-premium` oldu, ücretsiz slug ve başlık `konform`
-  olarak kaldı; form alanı yeni değeri gösterse de sunucu eskisini döndürüyor
-  (SDK entegrasyon kodu ve yan menü ile doğrulandı). Alanın kendi ipucu
-  sebebi söylüyor: "If your item is listed on the WordPress.org repository,
-  use the exact same slug." Yani sıra ters: önce WordPress.org `deklera`'yı
-  ayırmalı, sonra Freemius kabul eder. Bugün bir şey kırmıyor — ücretsiz sürüm
-  zaten .org'dan gelmiyor ve Freemius ürünü `id` + `public_key` ile tanıyor.
+- Freemius panosunda ürün ADI ve SLUG'u. 7 Eylül'de ikisi de denendi,
+  sonuç farklı çıktı:
+
+  **Ad değişti.** İlk üç deneme sessizce geri döndü ve "kilitli" sanıldı;
+  değilmiş. Sebep arayüzdeydi: Update düğmesine referansla tıklamak istek
+  üretmiyordu (ağ izleyicisinde tek istek yok). Gerçek fare tıklamasıyla
+  kaydedildi. Ürün artık her yerde **Deklera – EU E-Invoicing for
+  WooCommerce**; checkout sayfasında sekme başlığı ve sepet satırı dahil
+  eski addan iz yok.
+
+  **Slug değişmedi ve gerçekten kilitli.** Slug alanına `deklera` yazılınca
+  Update düğmesi **devre dışı** kalıyor — uygulama kaydı baştan reddediyor.
+  Alanın kendi ipucu sebebi söylüyor: "If your item is listed on the
+  WordPress.org repository, use the exact same slug." Yani sıra ters: önce
+  WordPress.org `deklera`'yı ayırmalı. Bugün bir şey kırmıyor — Freemius
+  ürünü `id` + `public_key` ile tanıyor ve premium slug zaten
+  `deklera-premium`.
 - GitHub deposunun adı. 7 Eylül'de `gh repo rename` ile `deklera` yapıldı;
   readme'deki TERMS.md ve PRIVACY.md bağlantıları doğrulandı (HTTP 200).
 
