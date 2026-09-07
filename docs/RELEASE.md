@@ -362,6 +362,52 @@ kalmalıdır.
 
 ---
 
+## Pro: gerçek doğrulama sınavı
+
+**Bunu da atlamayın.** Pro tek bir şey satıyor: belgenin **resmi** EN 16931
+kural setine karşı doğrulanması. O halka çalışmıyorsa satılan şey yok demektir,
+ve testler bunu yakalamaz — servis ayrı bir makinede.
+
+Sınav `docker-compose.clean.yml` ortamında, **premium paketle** yapılır:
+
+```sh
+C="docker compose -f docker-compose.clean.yml -p deklera-clean"
+$C run --rm -T --user root wpcli wp plugin install /build/deklera-*-premium.zip \
+  --activate --allow-root --path=/var/www/html
+```
+
+Doğrulama servisinin adresi ve anahtarı geliştirme sitesinden taşınır; anahtar
+**hiçbir yere yazılmaz**, kabuk değişkeninde kalır:
+
+```sh
+K=$(docker compose run --rm -T wpcli option get deklera_validator_key)
+E=$(docker compose run --rm -T wpcli option get deklera_validator_endpoint)
+$C run --rm -T --user root -e "VK=$K" -e "VE=$E" wpcli sh -c '
+  wp option update deklera_validator_endpoint "$VE" --allow-root --path=/var/www/html
+  wp option update deklera_validator_key      "$VK" --allow-root --path=/var/www/html'
+```
+
+Plan, eklentinin kendi `deklera/plan` filtresiyle Pro'ya zorlanır — bu lisansın
+yerine geçmez, yalnızca lisans açıldığında müşterinin aldığı özelliği ölçer.
+
+**İki yönlü ölçülmeli.** Yalnızca geçerli bir belge göndermek hiçbir şey
+kanıtlamaz; servis her şeye "geçerli" diyor olabilir.
+
+| Gönderilen | Beklenen |
+|---|---|
+| Eklentinin ürettiği gerçek fatura | `valid`, 0 hata, kural seti sürümü dolu |
+| Aynı faturanın `GrandTotalAmount` alanı bozulmuş hâli | `invalid`, **BR-CO-15** ve **BR-CO-16** |
+
+7 Eylül 2026'da 0.3.0 premium paketiyle ölçülen sonuç: kural seti **1.3.16**,
+geçerli belge 0 bulgu (servis tarafı 2,5 sn), bozuk belge iki ölümcül bulguyla
+reddedildi. Sonda betikleri `build/pro-probe.php` ve `build/pro-negatif.php`.
+
+**Render ücretsiz katmanı uyuyor.** İlk istek 12 saniye sürebilir; bu bir hata
+değil, soğuk başlangıç. Eklenti zaman aşımını buna göre veriyor, ama müşteriye
+ilk doğrulamanın yavaş olabileceğini söylemek gerekir.
+
+---
+
 ## Polonya: gerçek gönderim sınavı
 
 **Bu da atlanamaz** ve sebebi somut: 0.2.0 hazırlanırken 85 birim test
