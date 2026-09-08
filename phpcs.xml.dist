@@ -6,6 +6,12 @@
 	<exclude-pattern>*/vendor/*</exclude-pattern>
 	<exclude-pattern>*/vendor-prefixed/*</exclude-pattern>
 	<exclude-pattern>*/node_modules/*</exclude-pattern>
+	<!--
+	Uretilmis ceviri ciktilari. .po dosyalarindan "wp i18n make-php" ile
+	uretilirler, elle duzenlenmezler ve surum kontrolune girmezler; kodlama
+	standardina uymalari beklenemez.
+	-->
+	<exclude-pattern>*/languages/*</exclude-pattern>
 
 	<arg name="extensions" value="php"/>
 	<arg name="colors"/>

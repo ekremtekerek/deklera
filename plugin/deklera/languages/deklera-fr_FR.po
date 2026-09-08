@@ -2,797 +2,797 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Deklera 0.3.3\n"
+"Project-Id-Version: Deklera\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/deklera\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-08T05:35:59+00:00\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.12.0\n"
+"Language: fr_FR\n"
+"Language-Team: French\n"
+"PO-Revision-Date: 2026-09-08 05:47:21+0000\n"
+"Last-Translator: Hasan Ekrem Tekerek\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Domain: deklera\n"
 
 #. Plugin Name of the plugin
 #: deklera.php
 #: src/Admin/PreflightPage.php:74
 msgid "Deklera"
-msgstr ""
+msgstr "Deklera"
 
 #. Plugin URI of the plugin
 #: deklera.php
 msgid "https://github.com/ekremtekerek/deklera"
-msgstr ""
+msgstr "https://github.com/ekremtekerek/deklera"
 
 #. Description of the plugin
 #: deklera.php
 msgid "Turns WooCommerce orders into legally valid e-invoices for the seller's country and delivers them through the seller's own e-invoicing provider."
-msgstr ""
+msgstr "Transforme les commandes WooCommerce en factures électroniques valables juridiquement pour le pays du vendeur et les transmet via le propre prestataire de facturation électronique du vendeur."
 
 #. Author of the plugin
 #: deklera.php
 msgid "Hasan Ekrem Tekerek"
-msgstr ""
+msgstr "Hasan Ekrem Tekerek"
 
 #. translators: 1: required PHP version, 2: PHP version running on the server.
 #: deklera.php:97
 #, php-format
 msgid "Deklera requires PHP %1$s or later. This server is running PHP %2$s."
-msgstr ""
+msgstr "Deklera nécessite PHP %1$s ou une version ultérieure. Ce serveur exécute PHP %2$s."
 
 #: deklera.php:108
 msgid "Deklera dependencies are missing. Run \"composer install\" in the plugin directory."
-msgstr ""
+msgstr "Les dépendances de Deklera sont absentes. Exécutez « composer install » dans le répertoire de l'extension."
 
 #: src/Admin/OrderDocuments.php:51
 msgid "E-invoice"
-msgstr ""
+msgstr "Facture électronique"
 
 #: src/Admin/OrderDocuments.php:98
 msgid "No document generated yet."
-msgstr ""
+msgstr "Aucun document généré pour le moment."
 
 #: src/Admin/OrderDocuments.php:105
 msgid "This order cannot be invoiced yet:"
-msgstr ""
+msgstr "Cette commande ne peut pas encore être facturée :"
 
 #. translators: %d: document version number.
 #: src/Admin/OrderDocuments.php:133
 #, php-format
 msgid "Version %d"
-msgstr ""
+msgstr "Version %d"
 
 #: src/Admin/OrderDocuments.php:147
 msgid "File missing or modified"
-msgstr ""
+msgstr "Fichier absent ou modifié"
 
 #: src/Admin/OrderDocuments.php:174
 msgid "KSeF number:"
-msgstr ""
+msgstr "Numéro KSeF :"
 
 #: src/Admin/OrderDocuments.php:179
 msgid "Not registered with KSeF yet — this file is not a legal invoice."
-msgstr ""
+msgstr "Pas encore enregistré auprès de KSeF — ce fichier n'est pas une facture légale."
 
 #: src/Admin/OrderDocuments.php:198
 msgid "Generate new version"
-msgstr ""
+msgstr "Générer une nouvelle version"
 
 #: src/Admin/OrderDocuments.php:198
 msgid "Generate document"
-msgstr ""
+msgstr "Générer le document"
 
 #: src/Admin/OrderDocuments.php:217
 msgid "History"
-msgstr ""
+msgstr "Historique"
 
 #: src/Admin/OrderDocuments.php:237
 msgid "You are not allowed to download this document."
-msgstr ""
+msgstr "Vous n'êtes pas autorisé à télécharger ce document."
 
 #: src/Admin/OrderDocuments.php:247
 msgid "Document not found."
-msgstr ""
+msgstr "Document introuvable."
 
 #: src/Admin/OrderDocuments.php:252
 msgid "The archived file is missing or has been modified since it was created. It cannot be served."
-msgstr ""
+msgstr "Le fichier archivé est absent ou a été modifié depuis sa création. Il ne peut pas être délivré."
 
 #: src/Admin/OrderDocuments.php:280
 msgid "You are not allowed to generate documents."
-msgstr ""
+msgstr "Vous n'êtes pas autorisé à générer des documents."
 
 #: src/Admin/PreflightPage.php:73
 msgid "Deklera e-invoicing"
-msgstr ""
+msgstr "Facturation électronique Deklera"
 
 #: src/Admin/PreflightPage.php:88
 msgid "You are not allowed to change these settings."
-msgstr ""
+msgstr "Vous n'êtes pas autorisé à modifier ces réglages."
 
 #: src/Admin/PreflightPage.php:169
 msgid "You are not allowed to run this scan."
-msgstr ""
+msgstr "Vous n'êtes pas autorisé à lancer cette analyse."
 
 #: src/Admin/PreflightPage.php:193
 msgid "Deklera — e-invoicing pre-flight check"
-msgstr ""
+msgstr "Deklera — contrôle préalable de facturation électronique"
 
 #: src/Admin/PreflightPage.php:198
 msgid "Settings saved. The check was run again."
-msgstr ""
+msgstr "Réglages enregistrés. Le contrôle a été relancé."
 
 #: src/Admin/PreflightPage.php:225
 msgid "There are no completed orders to check yet. Come back once you have taken your first order."
-msgstr ""
+msgstr "Il n'y a pas encore de commandes terminées à contrôler. Revenez une fois votre première commande enregistrée."
 
 #. translators: %s: number of orders that were checked.
 #: src/Admin/PreflightPage.php:233
 #, php-format
 msgid "All %s recent order would be accepted."
 msgid_plural "All %s recent orders would be accepted."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "La %s commande récente serait acceptée."
+msgstr[1] "Les %s commandes récentes seraient toutes acceptées."
 
 #. translators: 1: number of orders that would be rejected, 2: number of orders checked.
 #: src/Admin/PreflightPage.php:249
 #, php-format
 msgid "%1$s of your last %2$s orders would be rejected."
 msgid_plural "%1$s of your last %2$s orders would be rejected."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%1$s de vos %2$s dernières commandes serait rejetée."
+msgstr[1] "%1$s de vos %2$s dernières commandes seraient rejetées."
 
 #: src/Admin/PreflightPage.php:263
 msgid "Checked"
-msgstr ""
+msgstr "Contrôlées"
 
 #: src/Admin/PreflightPage.php:264
 #: src/Preflight/Severity.php:45
 msgid "Would be rejected"
-msgstr ""
+msgstr "Seraient rejetées"
 
 #: src/Admin/PreflightPage.php:265
 #: src/Preflight/Severity.php:48
 msgid "Needs review"
-msgstr ""
+msgstr "À vérifier"
 
 #: src/Admin/PreflightPage.php:266
 msgid "Ready to invoice"
-msgstr ""
+msgstr "Prêtes à facturer"
 
 #: src/Admin/PreflightPage.php:285
 msgid "Run the check again"
-msgstr ""
+msgstr "Relancer le contrôle"
 
 #: src/Admin/PreflightPage.php:307
 msgid "Fix these once, for the whole store"
-msgstr ""
+msgstr "À corriger une seule fois, pour toute la boutique"
 
 #: src/Admin/PreflightPage.php:329
 msgid "Order data that needs attention"
-msgstr ""
+msgstr "Données de commande à corriger"
 
 #. translators: %s: number of affected orders.
 #: src/Admin/PreflightPage.php:336
 #, php-format
 msgid "%s order"
 msgid_plural "%s orders"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s commande"
+msgstr[1] "%s commandes"
 
 #: src/Admin/PreflightPage.php:367
 msgid "How to fix:"
-msgstr ""
+msgstr "Comment corriger :"
 
 #: src/Admin/PreflightPage.php:374
 msgid "Rule:"
-msgstr ""
+msgstr "Règle :"
 
 #: src/Admin/PreflightPage.php:397
 msgid "Affected orders:"
-msgstr ""
+msgstr "Commandes concernées :"
 
 #. translators: %s: number of additional affected orders.
 #: src/Admin/PreflightPage.php:416
 #, php-format
 msgid "and %s more"
 msgid_plural "and %s more"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "et %s autre"
+msgstr[1] "et %s autres"
 
 #: src/Admin/PreflightPage.php:432
 msgid "Settings"
-msgstr ""
+msgstr "Réglages"
 
 #: src/Admin/PreflightPage.php:440
 msgid "Your VAT number"
-msgstr ""
+msgstr "Votre numéro de TVA"
 
 #: src/Admin/PreflightPage.php:442
 msgid "WooCommerce has no field for this, so Deklera stores it. Include the country prefix."
-msgstr ""
+msgstr "WooCommerce ne prévoit pas de champ pour cela, Deklera l'enregistre donc. Indiquez le préfixe du pays."
 
 #: src/Admin/PreflightPage.php:452
 msgid "Contact name on the invoice"
-msgstr ""
+msgstr "Nom du contact sur la facture"
 
 #: src/Admin/PreflightPage.php:454
 msgid "Leave empty to use the store name. Germany requires this field to be present."
-msgstr ""
+msgstr "Laissez vide pour utiliser le nom de la boutique. L'Allemagne exige que ce champ soit renseigné."
 
 #: src/Admin/PreflightPage.php:459
 msgid "Contact telephone number"
-msgstr ""
+msgstr "Numéro de téléphone du contact"
 
 #: src/Admin/PreflightPage.php:461
 msgid "Required for German invoices (XRechnung). There is no sensible default, so it cannot be filled in for you."
-msgstr ""
+msgstr "Obligatoire pour les factures allemandes (XRechnung). Il n'existe pas de valeur par défaut raisonnable, ce champ ne peut donc pas être rempli à votre place."
 
 #: src/Admin/PreflightPage.php:467
 msgid "Save"
-msgstr ""
+msgstr "Enregistrer"
 
 #: src/Admin/PreflightPage.php:488
 msgid "KSeF (Poland)"
-msgstr ""
+msgstr "KSeF (Pologne)"
 
 #: src/Admin/PreflightPage.php:492
 msgid "An FA(3) invoice does not legally exist until KSeF has accepted it and assigned a number. Deklera sends each invoice automatically and records the number."
-msgstr ""
+msgstr "Une facture FA(3) n'existe juridiquement qu'une fois acceptée par KSeF et dotée d'un numéro. Deklera envoie chaque facture automatiquement et enregistre le numéro."
 
 #: src/Admin/PreflightPage.php:500
 msgid "KSeF token"
-msgstr ""
+msgstr "Jeton KSeF"
 
 #: src/Admin/PreflightPage.php:502
 msgid "Saved — leave blank to keep it"
-msgstr ""
+msgstr "Enregistré — laissez vide pour le conserver"
 
 #: src/Admin/PreflightPage.php:503
 #: src/Admin/PreflightPage.php:581
 msgid "Not set"
-msgstr ""
+msgstr "Non défini"
 
 #: src/Admin/PreflightPage.php:504
 msgid "Generate the token in your KSeF account. It is stored on this site and never shown again."
-msgstr ""
+msgstr "Générez le jeton dans votre compte KSeF. Il est conservé sur ce site et n'est plus jamais affiché."
 
 #: src/Admin/PreflightPage.php:511
 msgid "Environment"
-msgstr ""
+msgstr "Environnement"
 
 #: src/Admin/PreflightPage.php:516
 msgid "Test — invoices have no legal effect"
-msgstr ""
+msgstr "Test — les factures sont sans effet juridique"
 
 #: src/Admin/PreflightPage.php:517
 msgid "Production — invoices are real"
-msgstr ""
+msgstr "Production — les factures sont réelles"
 
 #: src/Admin/PreflightPage.php:518
 msgid "Start with Test. Invoices sent to Production are legally issued and cannot be withdrawn."
-msgstr ""
+msgstr "Commencez par Test. Les factures envoyées en Production sont juridiquement émises et ne peuvent pas être retirées."
 
 #: src/Admin/PreflightPage.php:547
 msgid "Official validation (Pro)"
-msgstr ""
+msgstr "Validation officielle (Pro)"
 
 #: src/Admin/PreflightPage.php:552
 msgid "Validation against the official EN 16931 rule set requires the Pro plan. It cannot run inside WordPress because the rule set needs XSLT 2.0, which PHP does not support."
-msgstr ""
+msgstr "La validation face au jeu de règles officiel EN 16931 requiert la formule Pro. Elle ne peut pas s'exécuter dans WordPress car ce jeu de règles nécessite XSLT 2.0, que PHP ne prend pas en charge."
 
 #: src/Admin/PreflightPage.php:564
 msgid "One step left: paste your validation key below. It is in the email you received when you bought Pro. The service address is already filled in."
-msgstr ""
+msgstr "Une dernière étape : collez votre clé de validation ci-dessous. Elle figure dans l'e-mail reçu lors de votre achat Pro. L'adresse du service est déjà renseignée."
 
 #: src/Admin/PreflightPage.php:566
 msgid "Read the setup guide"
-msgstr ""
+msgstr "Lire le guide de configuration"
 
 #: src/Admin/PreflightPage.php:572
 msgid "Validation service address"
-msgstr ""
+msgstr "Adresse du service de validation"
 
 #: src/Admin/PreflightPage.php:575
 msgid "Already set to the service run by the plugin author. Change it only if you run your own copy of it."
-msgstr ""
+msgstr "Renseignée sur le service exploité par l'auteur de l'extension. Ne la modifiez que si vous hébergez votre propre instance."
 
 #: src/Admin/PreflightPage.php:580
 msgid "Validation key"
-msgstr ""
+msgstr "Clé de validation"
 
 #: src/Admin/PreflightPage.php:584
 msgid "From your Pro purchase email. This is not the licence key that activated the plugin."
-msgstr ""
+msgstr "Issue de votre e-mail d'achat Pro. Ce n'est pas la clé de licence qui a activé l'extension."
 
 #: src/Admin/PreflightPage.php:585
 msgid "Saved. Leave empty to keep it."
-msgstr ""
+msgstr "Enregistrée. Laissez vide pour la conserver."
 
 #: src/I18n/CodeList.php:100
 msgid "Standard rate"
-msgstr ""
+msgstr "Taux normal"
 
 #: src/I18n/CodeList.php:101
 msgid "Zero rated goods"
-msgstr ""
+msgstr "Biens au taux zéro"
 
 #: src/I18n/CodeList.php:102
 msgid "Exempt from VAT"
-msgstr ""
+msgstr "Exonéré de TVA"
 
 #: src/I18n/CodeList.php:103
 msgid "VAT reverse charge"
-msgstr ""
+msgstr "Autoliquidation de la TVA"
 
 #: src/I18n/CodeList.php:104
 msgid "VAT exempt intra-community supply"
-msgstr ""
+msgstr "Livraison intracommunautaire exonérée de TVA"
 
 #: src/I18n/CodeList.php:105
 msgid "Export, outside the scope of VAT"
-msgstr ""
+msgstr "Exportation, hors champ de la TVA"
 
 #: src/I18n/CodeList.php:106
 msgid "Services outside the scope of VAT"
-msgstr ""
+msgstr "Prestations hors champ de la TVA"
 
 #: src/I18n/CodeList.php:107
 msgid "Canary Islands general indirect tax"
-msgstr ""
+msgstr "Impôt général indirect des îles Canaries (IGIC)"
 
 #: src/I18n/CodeList.php:108
 msgid "Ceuta and Melilla tax"
-msgstr ""
+msgstr "Taxe de Ceuta et Melilla (IPSI)"
 
 #: src/I18n/CodeList.php:113
 msgid "Commercial invoice"
-msgstr ""
+msgstr "Facture commerciale"
 
 #: src/I18n/CodeList.php:114
 msgid "Credit note"
-msgstr ""
+msgstr "Facture d'avoir"
 
 #: src/I18n/CodeList.php:115
 msgid "Corrected invoice"
-msgstr ""
+msgstr "Facture rectificative"
 
 #: src/I18n/CodeList.php:116
 msgid "Self-billed invoice"
-msgstr ""
+msgstr "Facture établie par le client (autofacturation)"
 
 #: src/Invoice/CreditNote.php:180
 msgid "Refund"
-msgstr ""
+msgstr "Remboursement"
 
 #: src/Invoice/ExemptionReason.php:54
 msgid "Reverse charge: VAT is due from the recipient."
-msgstr ""
+msgstr "Autoliquidation : la TVA est due par le preneur."
 
 #: src/Invoice/ExemptionReason.php:55
 msgid "Intra-Community supply, exempt under Article 138 of Council Directive 2006/112/EC."
-msgstr ""
+msgstr "Livraison intracommunautaire exonérée en application de l'article 138 de la directive 2006/112/CE du Conseil."
 
 #: src/Invoice/ExemptionReason.php:56
 msgid "Export outside the European Union, exempt from VAT."
-msgstr ""
+msgstr "Exportation hors de l'Union européenne, exonérée de TVA."
 
 #: src/Invoice/ExemptionReason.php:57
 msgid "Exempt from VAT."
-msgstr ""
+msgstr "Exonéré de TVA."
 
 #: src/Invoice/ExemptionReason.php:58
 msgid "Not subject to VAT."
-msgstr ""
+msgstr "Non soumis à la TVA."
 
 #: src/Invoice/TaxCategoryResolver.php:83
 msgid "The store is based outside the EU, so the supply is outside the scope of EU VAT."
-msgstr ""
+msgstr "La boutique est établie hors de l'UE ; l'opération est donc hors du champ de la TVA de l'UE."
 
 #: src/Invoice/TaxCategoryResolver.php:86
 msgid "Domestic sale with a VAT rate applied."
-msgstr ""
+msgstr "Vente nationale avec application d’un taux de TVA."
 
 #: src/Invoice/TaxCategoryResolver.php:89
 msgid "Cross-border sale to an EU consumer, taxed at the destination rate under OSS."
-msgstr ""
+msgstr "Vente transfrontalière à un consommateur de l'UE, taxée au taux du pays de destination dans le cadre du guichet unique (OSS)."
 
 #: src/Invoice/TaxCategoryResolver.php:92
 msgid "The buyer is outside the EU, so the supply is treated as an export."
-msgstr ""
+msgstr "L'acheteur se trouve hors de l'UE ; l'opération est donc traitée comme une exportation."
 
 #: src/Invoice/TaxCategoryResolver.php:95
 msgid "Assumed to be a service because every item is virtual or downloadable."
-msgstr ""
+msgstr "Considérée comme une prestation de services car tous les articles sont virtuels ou téléchargeables."
 
 #: src/Invoice/TaxCategoryResolver.php:98
 msgid "Assumed to be goods because the order contains shippable items."
-msgstr ""
+msgstr "Considérée comme une livraison de biens car la commande contient des articles expédiables."
 
 #: src/Invoice/TaxCategoryResolver.php:101
 msgid "Cross-border EU sale with no VAT and no valid buyer VAT number."
-msgstr ""
+msgstr "Vente transfrontalière dans l'UE sans TVA et sans numéro de TVA valable pour l'acheteur."
 
 #: src/Invoice/TaxCategoryResolver.php:104
 msgid "Domestic sale with no VAT applied."
-msgstr ""
+msgstr "Vente nationale sans application de TVA."
 
 #: src/Pdf/BuiltinPdfSource.php:78
 msgid "Deklera built-in template"
-msgstr ""
+msgstr "Modèle intégré Deklera"
 
 #: src/Pdf/BuiltinPdfSource.php:128
 msgid "Invoice"
-msgstr ""
+msgstr "Facture"
 
 #: src/Pdf/BuiltinPdfSource.php:135
 msgid "Number"
-msgstr ""
+msgstr "Numéro"
 
 #: src/Pdf/BuiltinPdfSource.php:152
 msgid "Date"
-msgstr ""
+msgstr "Date"
 
 #: src/Pdf/BuiltinPdfSource.php:162
 #: src/Pdf/BuiltinPdfSource.php:221
 msgid "VAT number"
-msgstr ""
+msgstr "N° TVA"
 
 #: src/Pdf/BuiltinPdfSource.php:183
 msgid "Bill to"
-msgstr ""
+msgstr "Facturé à"
 
 #: src/Pdf/BuiltinPdfSource.php:236
 msgid "Description"
-msgstr ""
+msgstr "Désignation"
 
 #: src/Pdf/BuiltinPdfSource.php:237
 msgid "Qty"
-msgstr ""
+msgstr "Qté"
 
 #: src/Pdf/BuiltinPdfSource.php:238
 msgid "Unit price"
-msgstr ""
+msgstr "Prix unitaire"
 
 #: src/Pdf/BuiltinPdfSource.php:239
 #: src/Pdf/BuiltinPdfSource.php:287
 msgid "VAT"
-msgstr ""
+msgstr "TVA"
 
 #: src/Pdf/BuiltinPdfSource.php:240
 msgid "Net"
-msgstr ""
+msgstr "Montant HT"
 
 #: src/Pdf/BuiltinPdfSource.php:286
 msgid "Net total"
-msgstr ""
+msgstr "Total HT"
 
 #: src/Pdf/BuiltinPdfSource.php:288
 msgid "Total"
-msgstr ""
+msgstr "Total TTC"
 
 #: src/Preflight/Rules/BuyerIdentity.php:49
 msgid "Customer identity"
-msgstr ""
+msgstr "Identité du client"
 
 #: src/Preflight/Rules/BuyerIdentity.php:70
 msgid "The order has no customer name."
-msgstr ""
+msgstr "La commande ne comporte pas de nom de client."
 
 #: src/Preflight/Rules/BuyerIdentity.php:71
 msgid "The buyer name is mandatory on every invoice."
-msgstr ""
+msgstr "Le nom de l'acheteur est obligatoire sur toute facture."
 
 #: src/Preflight/Rules/BuyerIdentity.php:72
 msgid "Open the order and fill in the billing name or company."
-msgstr ""
+msgstr "Ouvrez la commande et renseignez le nom ou la société de facturation."
 
 #: src/Preflight/Rules/BuyerIdentity.php:83
 msgid "The order has no billing country."
-msgstr ""
+msgstr "La commande ne comporte pas de pays de facturation."
 
 #: src/Preflight/Rules/BuyerIdentity.php:84
 msgid "The buyer country determines the VAT treatment. Without it the tax category cannot be decided."
-msgstr ""
+msgstr "Le pays de l'acheteur détermine le traitement TVA. Sans lui, la catégorie de taxe ne peut pas être déterminée."
 
 #: src/Preflight/Rules/BuyerIdentity.php:85
 msgid "Open the order and set the billing country."
-msgstr ""
+msgstr "Ouvrez la commande et renseignez le pays de facturation."
 
 #: src/Preflight/Rules/BuyerIdentity.php:102
 msgid "This is a cross-border EU business sale with no VAT, but the customer VAT number is missing."
-msgstr ""
+msgstr "Il s'agit d'une vente transfrontalière entre entreprises de l'UE sans TVA, mais le numéro de TVA du client est absent."
 
 #: src/Preflight/Rules/BuyerIdentity.php:103
 msgid "When VAT is not charged on an intra-community supply, the buyer VAT identifier is mandatory. Without it the exemption cannot be justified and the invoice is rejected."
-msgstr ""
+msgstr "Lorsqu'une livraison intracommunautaire est facturée sans TVA, le numéro de TVA de l'acheteur est obligatoire. Sans lui, l'exonération ne peut pas être justifiée et la facture est rejetée."
 
 #: src/Preflight/Rules/BuyerIdentity.php:104
 msgid "Open the order and add the VAT number to the billing details, then start collecting it at checkout."
-msgstr ""
+msgstr "Ouvrez la commande, ajoutez le numéro de TVA aux informations de facturation, puis collectez-le désormais à la commande."
 
 #. translators: %s: the VAT number stored on the order.
 #: src/Preflight/Rules/BuyerIdentity.php:119
 #, php-format
 msgid "The customer VAT number \"%s\" is not in a valid EU format."
-msgstr ""
+msgstr "Le numéro de TVA « %s » du client n'est pas dans un format européen valable."
 
 #: src/Preflight/Rules/BuyerIdentity.php:122
 msgid "An EU VAT number starts with the two-letter country code, for example DE123456789."
-msgstr ""
+msgstr "Un numéro de TVA européen commence par le code pays à deux lettres, par exemple DE123456789."
 
 #: src/Preflight/Rules/BuyerIdentity.php:123
 msgid "Open the order and correct the VAT number in the billing details."
-msgstr ""
+msgstr "Ouvrez la commande et corrigez le numéro de TVA dans les informations de facturation."
 
 #. translators: 1: country code taken from the VAT number, 2: billing country code.
 #: src/Preflight/Rules/BuyerIdentity.php:140
 #, php-format
 msgid "The VAT number is registered in %1$s but the billing country is %2$s."
-msgstr ""
+msgstr "Le numéro de TVA est enregistré en %1$s alors que le pays de facturation est %2$s."
 
 #: src/Preflight/Rules/BuyerIdentity.php:144
 msgid "A mismatch is legitimate for branch offices, but it is also a common sign of a mistyped VAT number."
-msgstr ""
+msgstr "Un écart est légitime pour un établissement secondaire, mais c'est aussi un signe fréquent de numéro de TVA mal saisi."
 
 #: src/Preflight/Rules/BuyerIdentity.php:145
 msgid "Open the order and confirm both values with the customer."
-msgstr ""
+msgstr "Ouvrez la commande et confirmez les deux valeurs avec le client."
 
 #: src/Preflight/Rules/InvoiceBasics.php:40
 msgid "Invoice essentials"
-msgstr ""
+msgstr "Mentions essentielles de la facture"
 
 #: src/Preflight/Rules/InvoiceBasics.php:60
 msgid "The order has no invoice number."
-msgstr ""
+msgstr "La commande ne comporte pas de numéro de facture."
 
 #: src/Preflight/Rules/InvoiceBasics.php:61
 msgid "Every e-invoice must carry a unique invoice number. Without it the document cannot be issued."
-msgstr ""
+msgstr "Toute facture électronique doit porter un numéro de facture unique. Sans lui, le document ne peut pas être émis."
 
 #: src/Preflight/Rules/InvoiceBasics.php:62
 msgid "Check your order numbering plugin, or set a number with the deklera/invoice_number filter."
-msgstr ""
+msgstr "Vérifiez votre extension de numérotation des commandes, ou définissez un numéro avec le filtre deklera/invoice_number."
 
 #. translators: %s: currency code stored on the order.
 #: src/Preflight/Rules/InvoiceBasics.php:75
 #, php-format
 msgid "The order currency \"%s\" is not a valid ISO 4217 code."
-msgstr ""
+msgstr "La devise « %s » de la commande n'est pas un code ISO 4217 valable."
 
 #: src/Preflight/Rules/InvoiceBasics.php:78
 msgid "The invoice currency must be a three-letter ISO 4217 code such as EUR or PLN."
-msgstr ""
+msgstr "La devise de la facture doit être un code ISO 4217 à trois lettres, par exemple EUR ou PLN."
 
 #: src/Preflight/Rules/InvoiceBasics.php:79
 msgid "Fix the store currency under WooCommerce > Settings > General."
-msgstr ""
+msgstr "Corrigez la devise de la boutique dans WooCommerce > Réglages > Général."
 
 #: src/Preflight/Rules/InvoiceBasics.php:90
 msgid "The order has no billable lines."
-msgstr ""
+msgstr "La commande ne comporte aucune ligne facturable."
 
 #: src/Preflight/Rules/InvoiceBasics.php:91
 msgid "An invoice must contain at least one line. Orders with only zero-value items cannot be invoiced."
-msgstr ""
+msgstr "Une facture doit contenir au moins une ligne. Les commandes composées uniquement d’articles à valeur nulle ne peuvent pas être facturées."
 
 #: src/Preflight/Rules/InvoiceBasics.php:92
 msgid "Open the order and check that it still contains its products."
-msgstr ""
+msgstr "Ouvrez la commande et vérifiez qu'elle contient toujours ses produits."
 
 #: src/Preflight/Rules/NationalProfile.php:48
 msgid "National profile requirements"
-msgstr ""
+msgstr "Exigences du profil national"
 
 #: src/Preflight/Rules/NationalProfile.php:73
 msgid "Your store has no billing phone number."
-msgstr ""
+msgstr "Aucun numéro de téléphone de facturation n’est renseigné pour votre boutique."
 
 #: src/Preflight/Rules/NationalProfile.php:74
 msgid "Germany's XRechnung profile makes the seller contact phone mandatory (BR-DE-6). Without it the official validator rejects the invoice, even though the EU standard itself allows it to be empty."
-msgstr ""
+msgstr "Le profil allemand XRechnung rend obligatoire le téléphone du contact vendeur (BR-DE-6). Sans lui, le validateur officiel rejette la facture, alors même que la norme européenne autorise ce champ vide."
 
 #: src/Preflight/Rules/NationalProfile.php:75
 #: src/Preflight/Rules/SellerIdentity.php:107
 msgid "Add it in the Settings box at the bottom of this page."
-msgstr ""
+msgstr "Ajoutez-le dans le bloc Réglages en bas de cette page."
 
 #: src/Preflight/Rules/SellerIdentity.php:48
 msgid "Store identity"
-msgstr ""
+msgstr "Identité de la boutique"
 
 #: src/Preflight/Rules/SellerIdentity.php:66
 msgid "Your store has no business name."
-msgstr ""
+msgstr "Aucune raison sociale n’est renseignée pour votre boutique."
 
 #: src/Preflight/Rules/SellerIdentity.php:67
 msgid "The seller name appears on every invoice and is mandatory."
-msgstr ""
+msgstr "Le nom du vendeur figure sur chaque facture et il est obligatoire."
 
 #: src/Preflight/Rules/SellerIdentity.php:68
 msgid "Set the site title under Settings > General."
-msgstr ""
+msgstr "Renseignez le titre du site dans Réglages > Général."
 
 #: src/Preflight/Rules/SellerIdentity.php:79
 msgid "Your store has no country set."
-msgstr ""
+msgstr "Aucun pays n’est renseigné pour votre boutique."
 
 #: src/Preflight/Rules/SellerIdentity.php:80
 msgid "The seller country decides which national e-invoicing rules apply to you. Nothing can be generated without it."
-msgstr ""
+msgstr "Le pays du vendeur détermine les règles nationales de facturation électronique qui vous sont applicables. Rien ne peut être généré sans lui."
 
 #: src/Preflight/Rules/SellerIdentity.php:81
 msgid "Set it under WooCommerce > Settings > General > Store address."
-msgstr ""
+msgstr "Renseignez-le dans WooCommerce > Réglages > Général > Adresse de la boutique."
 
 #: src/Preflight/Rules/SellerIdentity.php:92
 msgid "Your store postal address is incomplete."
-msgstr ""
+msgstr "L'adresse postale de votre boutique est incomplète."
 
 #: src/Preflight/Rules/SellerIdentity.php:93
 msgid "The seller street address and city are mandatory on every EU e-invoice."
-msgstr ""
+msgstr "La rue et la ville du vendeur sont obligatoires sur toute facture électronique de l'UE."
 
 #: src/Preflight/Rules/SellerIdentity.php:94
 msgid "Complete the address under WooCommerce > Settings > General > Store address."
-msgstr ""
+msgstr "Complétez l'adresse dans WooCommerce > Réglages > Général > Adresse de la boutique."
 
 #: src/Preflight/Rules/SellerIdentity.php:105
 msgid "Your store has no VAT number configured."
-msgstr ""
+msgstr "Aucun numéro de TVA n'est configuré pour votre boutique."
 
 #: src/Preflight/Rules/SellerIdentity.php:106
 msgid "A seller VAT identifier is required on EU e-invoices. WooCommerce has no field for it, so Deklera stores it separately."
-msgstr ""
+msgstr "Un numéro de TVA du vendeur est requis sur les factures électroniques de l'UE. WooCommerce ne prévoit pas de champ pour cela, Deklera l'enregistre donc séparément."
 
 #. translators: %s: the VAT number configured for the store.
 #: src/Preflight/Rules/SellerIdentity.php:118
 #, php-format
 msgid "Your store VAT number \"%s\" is not in a valid EU format."
-msgstr ""
+msgstr "Le numéro de TVA « %s » de votre boutique n'est pas dans un format européen valable."
 
 #: src/Preflight/Rules/SellerIdentity.php:121
 msgid "An EU VAT number starts with the two-letter country code, for example FR12345678901."
-msgstr ""
+msgstr "Un numéro de TVA européen commence par le code pays à deux lettres, par exemple FR12345678901."
 
 #: src/Preflight/Rules/SellerIdentity.php:122
 msgid "Correct it in the Settings box at the bottom of this page."
-msgstr ""
+msgstr "Corrigez-le dans le bloc Réglages en bas de cette page."
 
 #: src/Preflight/Rules/TaxCategoryConsistency.php:51
 msgid "VAT category and rate"
-msgstr ""
+msgstr "Catégorie et taux de TVA"
 
 #. translators: 1: VAT category code, 2: VAT rate as a percentage.
 #: src/Preflight/Rules/TaxCategoryConsistency.php:74
 #, php-format
 msgid "VAT category %1$s is used together with a rate of %2$s%%."
-msgstr ""
+msgstr "La catégorie de TVA %1$s est utilisée avec un taux de %2$s %%."
 
 #: src/Preflight/Rules/TaxCategoryConsistency.php:78
 msgid "Categories that carry no VAT must have a rate of exactly zero. A non-zero rate makes the invoice internally inconsistent."
-msgstr ""
+msgstr "Les catégories sans TVA doivent porter un taux strictement nul. Un taux non nul rend la facture incohérente."
 
 #: src/Preflight/Rules/TaxCategoryConsistency.php:79
 msgid "Review the tax rates under WooCommerce > Settings > Tax for this customer country."
-msgstr ""
+msgstr "Vérifiez les taux de taxe pour ce pays client dans WooCommerce > Réglages > TVA."
 
 #: src/Preflight/Rules/TaxCategoryConsistency.php:90
 msgid "A standard-rate VAT line carries a rate of zero."
-msgstr ""
+msgstr "Une ligne au taux normal porte un taux nul."
 
 #: src/Preflight/Rules/TaxCategoryConsistency.php:91
 msgid "The standard category requires a rate above zero. A zero rate here usually means no tax rule matched the customer address."
-msgstr ""
+msgstr "La catégorie normale exige un taux supérieur à zéro. Un taux nul signifie généralement qu'aucune règle de taxe ne correspondait à l'adresse du client."
 
 #: src/Preflight/Rules/TaxCategoryConsistency.php:92
 msgid "Check that a tax rate exists for this country under WooCommerce > Settings > Tax."
-msgstr ""
+msgstr "Vérifiez qu'un taux de taxe existe pour ce pays dans WooCommerce > Réglages > TVA."
 
 #. translators: %s: buyer country code.
 #: src/Preflight/Rules/TaxCategoryConsistency.php:141
 #, php-format
 msgid "No VAT was charged on a sale to a private customer in %s."
-msgstr ""
+msgstr "Aucune TVA n'a été facturée sur une vente à un particulier en %s."
 
 #: src/Preflight/Rules/TaxCategoryConsistency.php:144
 msgid "Under the One Stop Shop rules a sale to an EU consumer is taxed at the rate of their country. Charging no VAT means either the tax rate is missing or the exemption cannot be justified."
-msgstr ""
+msgstr "Dans le cadre du guichet unique (OSS), une vente à un consommateur de l'UE est taxée au taux de son pays. Ne pas facturer de TVA signifie soit que le taux est absent, soit que l'exonération ne peut pas être justifiée."
 
 #: src/Preflight/Rules/TaxCategoryConsistency.php:145
 msgid "Add a tax rate for this country under WooCommerce > Settings > Tax, or confirm you are below the OSS threshold."
-msgstr ""
+msgstr "Ajoutez un taux pour ce pays dans WooCommerce > Réglages > TVA, ou confirmez que vous êtes sous le seuil OSS."
 
 #: src/Preflight/Rules/TaxCategoryConsistency.php:175
 msgid "This order was treated as an intra-community service."
-msgstr ""
+msgstr "Cette commande a été traitée comme une prestation de services intracommunautaire."
 
 #: src/Preflight/Rules/TaxCategoryConsistency.php:176
 msgid "This order was treated as an intra-community supply of goods."
-msgstr ""
+msgstr "Cette commande a été traitée comme une livraison intracommunautaire de biens."
 
 #: src/Preflight/Rules/TaxCategoryConsistency.php:177
 msgid "Goods use category K and services use category AE. Deklera decides this from whether the items are shippable or virtual, which is a reasonable guess but not always right."
-msgstr ""
+msgstr "Les biens relèvent de la catégorie K et les services de la catégorie AE. Deklera tranche selon que les articles sont expédiables ou virtuels : une supposition raisonnable, mais pas toujours exacte."
 
 #: src/Preflight/Rules/TaxCategoryConsistency.php:178
 msgid "If the classification is wrong, override it with the deklera/tax_category filter."
-msgstr ""
+msgstr "Si le classement est erroné, remplacez-le avec le filtre deklera/tax_category."
 
 #: src/Preflight/Rules/TotalsConsistency.php:49
 msgid "Invoice totals"
-msgstr ""
+msgstr "Totaux de la facture"
 
 #. translators: 1: total calculated from the invoice lines, 2: order total in WooCommerce, 3: the difference.
 #: src/Preflight/Rules/TotalsConsistency.php:75
 #, php-format
 msgid "The invoice lines add up to %1$s but the order total is %2$s, a difference of %3$s."
-msgstr ""
+msgstr "Les lignes de facture totalisent %1$s alors que le total de la commande est %2$s, soit un écart de %3$s."
 
 #: src/Preflight/Rules/TotalsConsistency.php:80
 msgid "Validators reject an invoice whose totals do not reconcile, even by one cent. This usually comes from an order-level discount, a coupon or a refund that is not represented on any line."
-msgstr ""
+msgstr "Les validateurs rejettent une facture dont les totaux ne se recoupent pas, ne serait-ce que d'un centime. Cela provient généralement d'une remise au niveau de la commande, d'un code promo ou d'un remboursement qui n'apparaît sur aucune ligne."
 
 #: src/Preflight/Rules/TotalsConsistency.php:81
 msgid "Open the order and compare the line totals with the order total."
-msgstr ""
+msgstr "Ouvrez la commande et comparez les totaux des lignes avec le total de la commande."
 
 #. translators: 1: VAT total from the VAT breakdown, 2: VAT total recorded by WooCommerce.
 #: src/Preflight/Rules/TotalsConsistency.php:97
 #, php-format
 msgid "The VAT breakdown totals %1$s but WooCommerce recorded %2$s."
-msgstr ""
+msgstr "La ventilation de TVA totalise %1$s alors que WooCommerce a enregistré %2$s."
 
 #: src/Preflight/Rules/TotalsConsistency.php:101
 msgid "The sum of the VAT breakdown must equal the VAT charged. A gap means a rate was applied that Deklera could not reconstruct from the order."
-msgstr ""
+msgstr "La somme de la ventilation de TVA doit être égale à la TVA facturée. Un écart signifie qu'un taux a été appliqué que Deklera n'a pas pu reconstituer à partir de la commande."
 
 #: src/Preflight/Rules/TotalsConsistency.php:102
 msgid "Review the tax lines on the order and the rounding setting under WooCommerce > Settings > Tax."
-msgstr ""
+msgstr "Vérifiez les lignes de taxe de la commande et le réglage d’arrondi dans WooCommerce > Réglages > TVA."
 
 #: src/Preflight/Severity.php:51
 msgid "For information"
-msgstr ""
+msgstr "Pour information"
 
 #: src/Storage/AuditLog.php:141
 msgid "Document generated"
-msgstr ""
+msgstr "Document généré"
 
 #: src/Storage/AuditLog.php:142
 msgid "Generation failed"
-msgstr ""
+msgstr "Échec de la génération"
 
 #: src/Storage/AuditLog.php:143
 msgid "Document downloaded"
-msgstr ""
+msgstr "Document téléchargé"
 
 #: src/Storage/AuditLog.php:144
 msgid "Queued for generation"
-msgstr ""
+msgstr "En file d’attente pour génération"
 
 #: src/Storage/AuditLog.php:145
 msgid "Rejected by official validation"
-msgstr ""
+msgstr "Rejeté par la validation officielle"
 
 #: src/Storage/AuditLog.php:146
 msgid "Attached to customer email"
-msgstr ""
+msgstr "Joint à l'e-mail client"
 
 #: src/Storage/AuditLog.php:147
 msgid "Removed after the retention period"
-msgstr ""
+msgstr "Supprimé après la durée de conservation"
 
 #: src/Storage/AuditLog.php:148
 msgid "Sent to KSeF"
-msgstr ""
+msgstr "Envoyé à KSeF"
 
 #: src/Storage/AuditLog.php:149
 msgid "Registered by KSeF"
-msgstr ""
+msgstr "Enregistré par KSeF"
 
 #: src/Storage/AuditLog.php:150
 msgid "Rejected by KSeF"
-msgstr ""
+msgstr "Rejeté par KSeF"

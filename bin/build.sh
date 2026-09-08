@@ -158,6 +158,32 @@ compose "." sh bin/dump-autoload.sh "/repo/$STAGE" --no-dev --optimize >/dev/nul
 # composer.json'daki strauss bolumu acikliyor.
 rm -f "$STAGE/composer.lock"
 
+
+# Ceviriler derleniyor.
+#
+# .po dosyalari depoda izlenir, .mo ve .l10n.php izlenmez: ikisi de uretilmis
+# ciktidir. Bu adim olmazsa paket cevirileri TASIR ama WordPress OKUYAMAZ --
+# ve eksiklik hicbir hata vermez, arayuz sessizce Ingilizce kalir.
+#
+# Yalnizca Pro pakette ise yarar; ucretsiz surumde ceviriler
+# translate.wordpress.org'dan dil paketi olarak gelir (bkz. docs/I18N.md 9).
+# Yine de her iki pakete de konuyor: ayirmak, ayni zip'in iki farkli icerige
+# sahip olmasi demek olurdu ve hangisinin nerede oldugu karisirdi.
+echo "==> Ceviriler derleniyor"
+MSYS_NO_PATHCONV=1 docker compose run --rm -T \
+  -v "$(pwd)/$STAGE/languages:/lang" \
+  --entrypoint sh wpcli -c \
+  "wp i18n make-mo /lang >/dev/null && wp i18n make-php /lang >/dev/null"
+
+mo_sayisi=$(find "$STAGE/languages" -name '*.mo' | wc -l)
+po_sayisi=$(find "$STAGE/languages" -name '*.po' | wc -l)
+
+if [ "$mo_sayisi" != "$po_sayisi" ]; then
+  echo "HATA: $po_sayisi .po dosyasi var ama $mo_sayisi .mo uretildi." >&2
+  exit 1
+fi
+
+echo "    $mo_sayisi dil derlendi"
 echo "==> Arsivleniyor"
 # zip her makinede kurulu degil (Git Bash'te yok, GNU tar zip uretemez);
 # konteynerdekini kullaniyoruz.
