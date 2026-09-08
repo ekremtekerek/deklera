@@ -20,7 +20,7 @@ gerçek XRechnung çıktısı bu kural setinden geçirildi.
 
 ## Ölçüm
 
-İlk çalıştırma **12 başarısız iddia / 6 ayrı kural** verdi:
+İlk çalıştırma **6 başarısız iddia / 6 ayrı kural** verdi (her kural bir kez):
 
 | Kural | Ne istiyor |
 | --- | --- |
@@ -30,6 +30,14 @@ gerçek XRechnung çıktısı bu kural setinden geçirildi.
 | BR-DE-27 | Telefon numarası boş bırakılamaz |
 | PEPPOL-EN16931-R020 | Satıcı elektronik adresi (BT-34) zorunlu |
 | PEPPOL-EN16931-R010 | Alıcı elektronik adresi (BT-49) zorunlu |
+
+> **Sayma kuralı.** Rapordaki `svrl:failed-assert` *öğeleri* sayılır. Etiket
+> araması (`grep -c failed-assert`) açılış ve kapanışı ayrı saydığı için
+> sayıyı ikiye katlar; bu ADR ilk yazıldığında 6 yerine 12 denmesinin
+> sebebi buydu, 8 Eylül 2026'da düzeltildi. Ölçüm, düzeltme öncesi çıktı
+> yeniden kurularak (satıcı iletişim adı/telefonu, iki elektronik adres ve
+> ödeme aracı çıkarılarak) tekrarlandı ve tabloyla birebir aynı altı kuralı
+> verdi.
 
 Hiçbiri EN 16931'de zorunlu değil. Yani kendi testlerimiz haklıydı ve fatura
 yine de Almanya'da reddedilirdi. Bir CIUS'u okuyarak tahmin etmek ile resmi

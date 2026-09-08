@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="de" data-root="../../" data-page="check/">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Fügen Sie eine E-Rechnung ein und sehen Sie, was das offizielle Regelwerk dazu sagt. EN 16931 und die deutsche XRechnung 3.0.2, geprüft mit den Validatoren der Behörden.">
+<meta name="color-scheme" content="light dark">
+<title>E-Rechnung prüfen · Deklera</title>
+<link rel="canonical" href="https://ekremtekerek.github.io/deklera/de/check/">
+<link rel="alternate" hreflang="en" href="https://ekremtekerek.github.io/deklera/check/">
+<link rel="alternate" hreflang="de" href="https://ekremtekerek.github.io/deklera/de/check/">
+<link rel="alternate" hreflang="fr" href="https://ekremtekerek.github.io/deklera/fr/check/">
+<link rel="alternate" hreflang="pl" href="https://ekremtekerek.github.io/deklera/pl/check/">
+<link rel="alternate" hreflang="x-default" href="https://ekremtekerek.github.io/deklera/check/">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../../style.css">
+<script src="../../lang.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+
+  <section>
+    <p class="eyebrow">Kostenlos · ohne Anmeldung</p>
+    <h1>E-Rechnung am offiziellen Regelwerk prüfen</h1>
+    <p class="lede">Fügen Sie das XML einer E-Rechnung ein — aus einem beliebigen
+      Plugin, aus einem beliebigen System — und sehen Sie, was das von den Behörden
+      veröffentlichte Regelwerk tatsächlich dazu sagt.</p>
+
+    <label for="xml" class="muted">Rechnungs-XML (CII-Syntax: Factur-X, ZUGFeRD, XRechnung)</label>
+    <textarea id="xml" spellcheck="false" placeholder="&lt;rsm:CrossIndustryInvoice …&gt;"></textarea>
+
+    <div class="row">
+      <select id="profile" aria-label="Regelwerk">
+        <option value="en16931">EN 16931 — die europäische Grundlage</option>
+        <option value="xrechnung">Deutschland — XRechnung 3.0.2</option>
+      </select>
+      <button class="cta" id="go" type="button">Prüfen</button>
+      <span class="muted" id="status"></span>
+    </div>
+
+    <div id="out"></div>
+  </section>
+
+  <section>
+    <h2>Warum es diese Seite gibt</h2>
+    <p>Die meisten WooCommerce-Rechnungs-Plugins erzeugen die Datei, mehrere tun es
+      kostenlos. Nur wenige prüfen sie. Das Regelwerk, das über die Annahme eines
+      Dokuments entscheidet, kompiliert zu XSLT&nbsp;2.0, das PHP nicht ausführen
+      kann — es ist also leicht, eine Rechnung zu erzeugen, die richtig aussieht und
+      abgelehnt wird.</p>
+    <p>Wir haben unsere eigene Ausgabe vor der Veröffentlichung am offiziellen
+      deutschen Validator gemessen, und der erste Durchlauf scheiterte an sechs
+      seiner Regeln. Wir haben sie behoben. Diese Seite führt dieselbe Prüfung aus,
+      auf allem, was Sie einfügen — damit Sie selbst sehen, wo Ihre Dokumente
+      stehen.</p>
+    <p><strong>Fragen Sie Ihr jetziges Plugin nach seinem Prüfbericht.</strong> Das
+      ist eine faire Frage an jeden Anbieter, uns eingeschlossen — unserer liegt im
+      <a href="https://github.com/ekremtekerek/deklera/blob/main/docs/adr/0010-almanya-ulusal-kurallari.md">Repository</a>.</p>
+  </section>
+
+  <section>
+    <h2>Was das hier nicht ist</h2>
+    <div class="boundary">
+      <p>Diese Seite prüft <strong>ein Dokument auf Anfrage</strong> und ist auf
+        wenige Prüfungen pro Stunde begrenzt. Sie ist eine Demonstration, kein
+        Dienst.</p>
+      <p>Deklera Pro ist das andere: dasselbe offizielle Regelwerk, laufend in
+        WordPress, bei <em>jeder</em> Rechnung, <em>bevor</em> sie ausgestellt wird —
+        damit ein Dokument, das abgelehnt würde, Ihren Shop nie verlässt. Das
+        kostenlose Plugin erstellt die Vorabprüfung Ihrer Bestelldaten, und dort
+        beginnen die meisten Ablehnungen.</p>
+      <p>Nichts von dem, was Sie einfügen, wird gespeichert. Das Dokument wird im
+        Arbeitsspeicher geprüft und das Ergebnis an Ihren Browser zurückgegeben.</p>
+    </div>
+    <p style="margin-top:1.5rem">
+      <a class="cta" href="../">Was Deklera macht</a>
+      <a class="cta cta-2" href="https://github.com/ekremtekerek/deklera/releases/latest">Kostenlose Version laden</a>
+    </p>
+  </section>
+
+  <footer>
+    <p class="langs"><a href="../../check/" hreflang="en">English</a><strong>Deutsch</strong><a href="../../fr/check/" hreflang="fr">Français</a><a href="../../pl/check/" hreflang="pl">Polski</a></p>
+    <p>Deklera wird von Hasan Ekrem Tekerek entwickelt. Nichts hiervon ist Steuer-
+      oder Rechtsberatung.</p>
+  </footer>
+
+</div>
+
+<script>
+window.DEKLERA_METIN = {
+  oncePyapistir: 'Fügen Sie zuerst eine Rechnung ein.',
+  kontrolEdiliyor: 'Wird geprüft… der Dienst schläft bei Leerlauf, die erste Prüfung kann bis zu einer Minute dauern.',
+  temiz: 'Keine Befunde. Dieses Dokument besteht das Regelwerk.',
+  birBulgu: '1 Befund — dieses Dokument würde abgelehnt.',
+  bulgular: '%d Befunde — dieses Dokument würde abgelehnt.',
+  kuralSeti: 'Regelwerk:',
+  kalan: 'Noch %d Prüfungen in dieser Stunde.',
+  reddedilir: 'Würde abgelehnt',
+  uyari: 'Hinweis',
+  uyariNotu: 'Hinweise unten führen nicht zur Ablehnung.',
+  gecersizBelge: 'Kein gültiges Dokument',
+  kotaDoldu: 'Das ist das Limit für diese Stunde (%d). Es wird in etwa %m Minuten zurückgesetzt. Das Plugin hat kein solches Limit.',
+  okunamadi: 'Der Dienst konnte das nicht lesen:',
+  cevapYok: 'Der Dienst hat nicht geantwortet. Er schläft bei Leerlauf — versuchen Sie es noch einmal.',
+};
+</script>
+<script src="../../check.js" defer></script>
+</body>
+</html>

@@ -4,14 +4,17 @@ Bağımlılıksız statik HTML. Dört dil, ortak bir stil dosyası:
 
 ```
 site/
-  index.html      en
-  de/index.html   de
-  fr/index.html   fr
-  pl/index.html   pl
-  style.css       dördü de bunu kullanır
+  index.html            en   açılış
+  de|fr|pl/index.html        açılış
+  check/index.html      en   kontrol aracı
+  de|fr|pl/check/index.html  kontrol aracı
+  style.css             sekizi de bunu kullanır
+  check.js              kontrol aracının mantığı, sekizi için ortak
+  lang.js               dil şeridi
 ```
 
 Yazı tipleri Google Fonts'tan gelir, başka hiçbir dış kaynak yoktur.
+Kontrol aracı doğrulama servisine `POST /v1/try` atar; başka çağrı yoktur.
 
 **Stil neden ayrı dosyada:** eskiden tek dosyaydı ve CSS `<style>` içindeydi.
 Dört dile çıkınca bu, her renk değişikliğinde dört dosyayı düzenlemek demeye
@@ -66,10 +69,22 @@ reklam verip yönetici ekranını İngilizce bırakmak, sayfanın verdiği söz�
 bozar.
 
 Her sayfada `hreflang` bağlantıları ve altbilgide dil seçici vardır; yeni dil
-eklenirse **dört dosyanın da** bağlantı listesi güncellenmelidir.
+eklenirse **sekiz dosyanın da** bağlantı listesi güncellenmelidir.
+
+### Dil şeridi hedefi nasıl bulur
+
+Her sayfanın `<html>` etiketi iki şey bildirir: `data-root` (site köküne
+göreli yol) ve `data-page` (kökten sonraki konum, açılış için boş, kontrol
+aracı için `check/`). `lang.js` hedefi bunlardan kurar.
+
+Yol, dilin sondan kesilmesiyle bulunamaz: `/de/` için işe yarardı ama
+`/de/check/` için yanlış sonuç verirdi. **Yeni sayfa eklerken bu iki
+öznitelik unutulmamalıdır**; yoksa şerit hiç görünmez.
 
 ## Güncellenmesi gerekenler
 
 - WordPress.org onaylandığında: eklenti dizini bağlantısı eklenir, "awaiting
   review" cümlesi dört dilden de kaldırılır.
 - Fiyat veya plan değişirse tablolar elle güncellenir (dört dosya).
+- Ölçüm sayıları değişirse dört açılış **ve** dört kontrol sayfası birlikte
+  güncellenir; sayı iki yerde geçiyor.

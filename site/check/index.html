@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-root="../" data-page="check/">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,26 +7,14 @@
 <meta name="color-scheme" content="light dark">
 <title>Check an e-invoice · Deklera</title>
 <link rel="canonical" href="https://ekremtekerek.github.io/deklera/check/">
+<link rel="alternate" hreflang="en" href="https://ekremtekerek.github.io/deklera/check/">
+<link rel="alternate" hreflang="de" href="https://ekremtekerek.github.io/deklera/de/check/">
+<link rel="alternate" hreflang="fr" href="https://ekremtekerek.github.io/deklera/fr/check/">
+<link rel="alternate" hreflang="pl" href="https://ekremtekerek.github.io/deklera/pl/check/">
+<link rel="alternate" hreflang="x-default" href="https://ekremtekerek.github.io/deklera/check/">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="../style.css">
-<style>
-  textarea {
-    width: 100%; min-height: 14rem; padding: 0.9rem 1rem;
-    background: var(--card); color: var(--ink);
-    border: 1px solid var(--rule); border-radius: 3px;
-    font: 400 0.85rem/1.5 var(--mono); resize: vertical;
-  }
-  .row { display: flex; flex-wrap: wrap; gap: 0.8rem; align-items: center; margin: 1rem 0 0; }
-  select {
-    padding: 0.7rem 0.8rem; border: 1px solid var(--rule); border-radius: 3px;
-    background: var(--card); color: var(--ink); font: 400 0.95rem var(--sans);
-  }
-  button.cta { border: 0; cursor: pointer; font-size: 1rem; font-family: var(--sans); }
-  button.cta[disabled] { opacity: 0.55; cursor: default; }
-  .verdict-ok { border-left-color: var(--green); }
-  .verdict-ok .verdict-line { color: var(--green); }
-  .muted { font-size: 0.88rem; color: var(--ink-soft); }
-</style>
+<script src="../lang.js" defer></script>
 </head>
 <body>
 <div class="wrap">
@@ -59,7 +47,7 @@
       accepted compiles to XSLT&nbsp;2.0, which PHP cannot execute — so it is easy to
       generate an invoice that looks right and is refused.</p>
     <p>We measured our own output against Germany's official validator before we
-      shipped, and the first run failed twelve assertions. We fixed them. This page
+      shipped, and the first run failed six of its rules. We fixed them. This page
       runs the same check, on whatever you paste, so you can see for yourself where
       your documents stand.</p>
     <p><strong>Ask your current plugin for its validator report.</strong> That is a
@@ -87,122 +75,30 @@
   </section>
 
   <footer>
-    <p class="langs"><a href="../" hreflang="en">English</a><a href="../de/" hreflang="de">Deutsch</a><a href="../fr/" hreflang="fr">Français</a><a href="../pl/" hreflang="pl">Polski</a></p>
+    <p class="langs"><strong>English</strong><a href="../de/check/" hreflang="de">Deutsch</a><a href="../fr/check/" hreflang="fr">Français</a><a href="../pl/check/" hreflang="pl">Polski</a></p>
     <p>Deklera is built by Hasan Ekrem Tekerek. Nothing here is tax or legal advice.</p>
   </footer>
 
 </div>
 
 <script>
-(function () {
-  'use strict';
-
-  var UC = 'https://konform-validator.onrender.com/v1/try';
-
-  var xml = document.getElementById('xml');
-  var profile = document.getElementById('profile');
-  var go = document.getElementById('go');
-  var durum = document.getElementById('status');
-  var out = document.getElementById('out');
-
-  /**
-   * Metni guvenle ekler; yanit disaridan gelen bir belgeden turer.
-   */
-  function el(tag, cls, text) {
-    var n = document.createElement(tag);
-    if (cls) n.className = cls;
-    if (text !== undefined) n.textContent = text;
-    return n;
-  }
-
-  function temizle() {
-    while (out.firstChild) out.removeChild(out.firstChild);
-  }
-
-  function bulgu(f) {
-    var kart = el('div', 'finding');
-    kart.appendChild(el('span', 'badge ' + (f.flag === 'warning' ? 'b-warn' : 'b-bad'),
-      f.flag === 'warning' ? 'Warning' : 'Would be rejected'));
-    kart.appendChild(el('span', 'f-title', f.rule || 'Not a valid document'));
-    kart.appendChild(el('p', 'f-what', f.message || ''));
-    if (f.location) kart.appendChild(el('p', 'f-rule', f.location));
-    return kart;
-  }
-
-  function goster(veri) {
-    temizle();
-
-    var hatalar = veri.errors || [];
-    var uyarilar = veri.warnings || [];
-    var kutu = el('div', 'verdict' + (veri.valid ? ' verdict-ok' : ''));
-
-    kutu.appendChild(el('p', 'verdict-line', veri.valid
-      ? 'No findings. This document passes the rule set.'
-      : hatalar.length + (hatalar.length === 1 ? ' finding' : ' findings') + ' — this document would be rejected.'));
-
-    var alt = el('p', 'muted', 'Rule set: EN 16931 ' + veri.rules_version
-      + (veri.profile === 'xrechnung' ? ' + XRechnung 3.0.2 (' + veri.xrechnung_version + ')' : '')
-      + ' · ' + veri.duration_ms + ' ms');
-    alt.style.margin = '0';
-    kutu.appendChild(alt);
-    out.appendChild(kutu);
-
-    hatalar.concat(uyarilar).forEach(function (f) {
-      out.appendChild(bulgu(f));
-    });
-
-    if (typeof veri.remaining === 'number') {
-      out.appendChild(el('p', 'muted', veri.remaining + ' checks left this hour.'));
-    }
-  }
-
-  go.addEventListener('click', function () {
-    var metin = xml.value.trim();
-
-    if (metin === '') {
-      durum.textContent = 'Paste an invoice first.';
-      return;
-    }
-
-    temizle();
-    go.disabled = true;
-    durum.textContent = 'Checking… the service sleeps when idle, so the first check can take up to a minute.';
-
-    fetch(UC, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ xml: metin, profile: profile.value }),
-    })
-      .then(function (r) {
-        return r.json().then(function (veri) { return { ok: r.ok, status: r.status, veri: veri }; });
-      })
-      .then(function (c) {
-        durum.textContent = '';
-
-        if (c.status === 429) {
-          out.appendChild(el('p', 'muted',
-            'That is the limit for this hour (' + c.veri.limit + (c.veri.limit === 1 ? ' check). ' : ' checks). ')
-            + 'It resets in about ' + Math.ceil((c.veri.retry_after_seconds || 0) / 60) + ' minutes. '
-            + 'The plugin has no such limit.'));
-          return;
-        }
-
-        if (!c.ok) {
-          out.appendChild(el('p', 'muted', 'The service could not read that: ' + (c.veri.error || c.status)));
-          return;
-        }
-
-        goster(c.veri);
-      })
-      .catch(function () {
-        durum.textContent = '';
-        out.appendChild(el('p', 'muted', 'The service did not answer. It sleeps when idle — try once more.'));
-      })
-      .finally(function () {
-        go.disabled = false;
-      });
-  });
-})();
+window.DEKLERA_METIN = {
+  oncePyapistir: 'Paste an invoice first.',
+  kontrolEdiliyor: 'Checking… the service sleeps when idle, so the first check can take up to a minute.',
+  temiz: 'No findings. This document passes the rule set.',
+  birBulgu: '1 finding — this document would be rejected.',
+  bulgular: '%d findings — this document would be rejected.',
+  kuralSeti: 'Rule set:',
+  kalan: '%d checks left this hour.',
+  reddedilir: 'Would be rejected',
+  uyari: 'Warning',
+  uyariNotu: 'Warnings below do not cause rejection.',
+  gecersizBelge: 'Not a valid document',
+  kotaDoldu: 'That is the limit for this hour (%d). It resets in about %m minutes. The plugin has no such limit.',
+  okunamadi: 'The service could not read that:',
+  cevapYok: 'The service did not answer. It sleeps when idle — try once more.',
+};
 </script>
+<script src="../check.js" defer></script>
 </body>
 </html>

@@ -9,6 +9,14 @@
  * bağlantısı /de/ diyorsa oraya gitmelidir, betiğin fikrine göre değil.
  *
  * Bu yüzden yalnızca haber verir. Kapatılınca bir daha görünmez.
+ *
+ * HEDEFİ SAYFA SÖYLER
+ *
+ * Yol, dil kısmını yolun SONUNDAN keserek bulunamaz: /de/ için işe yarardı
+ * ama /de/check/ için yanlış sonuç verirdi. Bunun yerine her sayfa iki şey
+ * bildirir: site köküne göreli yolu (data-root) ve kendi konumu (data-page).
+ * Böylece hedef doğrudan kurulur ve site bir alt dizinde barındırılsa da
+ * (GitHub Pages'te /deklera/) çalışır.
  */
 (function () {
   'use strict';
@@ -22,6 +30,13 @@
     pl: ['Ta strona jest dostępna także po polsku.', 'Zobacz wersję polską'],
   };
 
+  var kok = document.documentElement.getAttribute('data-root');
+
+  if (null === kok) {
+    return;
+  }
+
+  var sayfa = document.documentElement.getAttribute('data-page') || '';
   var burada = (document.documentElement.lang || 'en').slice(0, 2);
 
   // Tarayıcının ilk tercihi; 'de-AT' gibi değerlerden dil kısmı alınır.
@@ -41,19 +56,7 @@
     // Depolama kapalıysa şerit yine gösterilir; kapatma kalıcı olmaz sadece.
   }
 
-  /*
-   * Kök yol, sayfanın kendi konumundan türetilir. Site bir alt dizinde
-   * barındırılabilir (GitHub Pages'te /deklera/), bu yüzden mutlak yol
-   * yazılamaz.
-   */
-  var yol = location.pathname;
-  var kok = burada === 'en' ? yol : yol.replace(/[a-z]{2}\/?$/, '');
-
-  if (kok.slice(-1) !== '/') {
-    kok += '/';
-  }
-
-  var hedef = kok + (istenen === 'en' ? '' : istenen + '/');
+  var hedef = kok + (istenen === 'en' ? '' : istenen + '/') + sayfa;
 
   var serit = document.createElement('div');
   serit.className = 'langbar';

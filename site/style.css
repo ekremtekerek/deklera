@@ -110,7 +110,8 @@
   .f-title { font-weight: 600; }
   .f-what { font-weight: 600; margin: 0.9rem 0 0.35rem; }
   .f-why, .f-fix { color: var(--ink-soft); margin: 0 0 0.35rem; font-size: 0.95rem; }
-  .f-rule { font: 400 0.82rem/1 var(--mono); color: var(--ink-soft); margin: 0.7rem 0 0; }
+  .f-rule { font: 400 0.82rem/1.4 var(--mono); color: var(--ink-soft); margin: 0.7rem 0 0;
+            overflow-wrap: anywhere; }
 
   ul { padding-left: 1.15rem; margin: 0 0 1.1rem; max-width: 40rem; }
   li { margin-bottom: 0.5rem; }
@@ -161,3 +162,21 @@
     font: 400 1.3rem/1 var(--sans); padding: 0 0.2rem;
   }
   .langbar-x:hover { color: var(--ink); }
+
+  /* --- kontrol sayfasi --- */
+  textarea {
+    width: 100%; min-height: 14rem; padding: 0.9rem 1rem;
+    background: var(--card); color: var(--ink);
+    border: 1px solid var(--rule); border-radius: 3px;
+    font: 400 0.85rem/1.5 var(--mono); resize: vertical;
+  }
+  .row { display: flex; flex-wrap: wrap; gap: 0.8rem; align-items: center; margin: 1rem 0 0; }
+  select {
+    padding: 0.7rem 0.8rem; border: 1px solid var(--rule); border-radius: 3px;
+    background: var(--card); color: var(--ink); font: 400 0.95rem var(--sans);
+  }
+  button.cta { border: 0; cursor: pointer; font-size: 1rem; font-family: var(--sans); }
+  button.cta[disabled] { opacity: 0.55; cursor: default; }
+  .verdict-ok { border-left-color: var(--green); }
+  .verdict-ok .verdict-line { color: var(--green); }
+  .muted { font-size: 0.88rem; color: var(--ink-soft); }

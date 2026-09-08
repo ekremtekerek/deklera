@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="fr" data-root="../../" data-page="check/">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Collez une facture électronique et voyez ce qu’en dit le jeu de règles officiel. EN 16931 et la XRechnung 3.0.2 allemande, contrôlées avec les validateurs publiés par les autorités.">
+<meta name="color-scheme" content="light dark">
+<title>Vérifier une facture électronique · Deklera</title>
+<link rel="canonical" href="https://ekremtekerek.github.io/deklera/fr/check/">
+<link rel="alternate" hreflang="en" href="https://ekremtekerek.github.io/deklera/check/">
+<link rel="alternate" hreflang="de" href="https://ekremtekerek.github.io/deklera/de/check/">
+<link rel="alternate" hreflang="fr" href="https://ekremtekerek.github.io/deklera/fr/check/">
+<link rel="alternate" hreflang="pl" href="https://ekremtekerek.github.io/deklera/pl/check/">
+<link rel="alternate" hreflang="x-default" href="https://ekremtekerek.github.io/deklera/check/">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../../style.css">
+<script src="../../lang.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+
+  <section>
+    <p class="eyebrow">Gratuit · sans inscription</p>
+    <h1>Vérifier une facture face aux règles officielles</h1>
+    <p class="lede">Collez le XML d’une facture électronique — issue de n’importe
+      quelle extension, de n’importe quel système — et voyez ce que le jeu de règles
+      publié par les autorités en dit vraiment.</p>
+
+    <label for="xml" class="muted">XML de la facture (syntaxe CII&nbsp;: Factur-X, ZUGFeRD, XRechnung)</label>
+    <textarea id="xml" spellcheck="false" placeholder="&lt;rsm:CrossIndustryInvoice …&gt;"></textarea>
+
+    <div class="row">
+      <select id="profile" aria-label="Jeu de règles">
+        <option value="en16931">EN 16931 — le socle européen</option>
+        <option value="xrechnung">Allemagne — XRechnung 3.0.2</option>
+      </select>
+      <button class="cta" id="go" type="button">Vérifier</button>
+      <span class="muted" id="status"></span>
+    </div>
+
+    <div id="out"></div>
+  </section>
+
+  <section>
+    <h2>Pourquoi cette page existe</h2>
+    <p>La plupart des extensions de facturation WooCommerce produisent le fichier, et
+      plusieurs le font gratuitement. Très peu le contrôlent. Le jeu de règles qui
+      décide si un document est accepté se compile en XSLT&nbsp;2.0, que PHP ne peut
+      pas exécuter — il est donc facile de produire une facture qui a l’air correcte
+      et qui est refusée.</p>
+    <p>Nous avons mesuré notre propre sortie face au validateur officiel allemand
+      avant de publier, et la première exécution a échoué sur six de ses règles. Nous
+      les avons corrigées. Cette page lance le même contrôle, sur ce que vous collez,
+      pour que vous voyiez vous-même où en sont vos documents.</p>
+    <p><strong>Demandez son rapport de validation à votre extension actuelle.</strong>
+      C’est une question légitime à poser à n’importe quel éditeur, nous compris — le
+      nôtre est dans le
+      <a href="https://github.com/ekremtekerek/deklera/blob/main/docs/adr/0010-almanya-ulusal-kurallari.md">dépôt</a>.</p>
+  </section>
+
+  <section>
+    <h2>Ce que ceci n’est pas</h2>
+    <div class="boundary">
+      <p>Cette page contrôle <strong>un document à la demande</strong> et se limite à
+        quelques vérifications par heure. C’est une démonstration, pas un service.</p>
+      <p>Deklera Pro est autre chose&nbsp;: le même jeu de règles officiel, exécuté
+        dans WordPress, sur <em>chaque</em> facture, <em>avant</em> son émission — pour
+        qu’un document qui serait refusé ne quitte jamais votre boutique. L’extension
+        gratuite fait le contrôle préalable de vos données de commande, et c’est là que
+        commencent la plupart des rejets.</p>
+      <p>Rien de ce que vous collez n’est conservé. Le document est validé en mémoire
+        et le résultat est renvoyé à votre navigateur.</p>
+    </div>
+    <p style="margin-top:1.5rem">
+      <a class="cta" href="../">Ce que fait Deklera</a>
+      <a class="cta cta-2" href="https://github.com/ekremtekerek/deklera/releases/latest">Télécharger la version gratuite</a>
+    </p>
+  </section>
+
+  <footer>
+    <p class="langs"><a href="../../check/" hreflang="en">English</a><a href="../../de/check/" hreflang="de">Deutsch</a><strong>Français</strong><a href="../../pl/check/" hreflang="pl">Polski</a></p>
+    <p>Deklera est développé par Hasan Ekrem Tekerek. Rien de ce qui figure ici ne
+      constitue un conseil fiscal ou juridique.</p>
+  </footer>
+
+</div>
+
+<script>
+window.DEKLERA_METIN = {
+  oncePyapistir: 'Collez d’abord une facture.',
+  kontrolEdiliyor: 'Vérification… le service se met en veille lorsqu’il est inactif, la première vérification peut prendre jusqu’à une minute.',
+  temiz: 'Aucun constat. Ce document passe le jeu de règles.',
+  birBulgu: '1 constat — ce document serait rejeté.',
+  bulgular: '%d constats — ce document serait rejeté.',
+  kuralSeti: 'Jeu de règles :',
+  kalan: 'Il reste %d vérifications cette heure-ci.',
+  reddedilir: 'Serait rejeté',
+  uyari: 'Avertissement',
+  uyariNotu: 'Les avertissements ci-dessous n’entraînent pas de rejet.',
+  gecersizBelge: 'Document non valable',
+  kotaDoldu: 'C’est la limite pour cette heure (%d). Elle se réinitialise dans environ %m minutes. L’extension n’a pas cette limite.',
+  okunamadi: 'Le service n’a pas pu lire cela :',
+  cevapYok: 'Le service n’a pas répondu. Il se met en veille lorsqu’il est inactif — réessayez.',
+};
+</script>
+<script src="../../check.js" defer></script>
+</body>
+</html>

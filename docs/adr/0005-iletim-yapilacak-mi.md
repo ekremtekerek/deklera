@@ -96,7 +96,7 @@ Aynı Alman siparişi, aynı satıcı verisi, aynı resmi denetleyici
 
 | | Başarısız iddia | Kural |
 |---|---|---|
-| E-Invoicing For WooCommerce 1.x (8 Eylül 2026) | **26** | 10 |
+| E-Invoicing For WooCommerce 1.x (8 Eylül 2026) | **13** | 10 |
 | Deklera 0.3.5 | **0** | — |
 
 Düşen kurallar Almanya'nın zorunlu kıldıkları: BR-DE-1 (ödeme talimatları),
@@ -104,10 +104,14 @@ BR-DE-7 (satıcı e-postası), BR-DE-15 (alıcı referansı), BR-DE-21, BR-DE-27
 BR-DE-28, ve PEPPOL-EN16931-R001 / R008 (boş elemanlar, dört kez) / R010 /
 R020.
 
-Adil olmak için rakibin okuduğu bütün ayarlar dolduruldu; eksik bırakılan
-`wooei_id_vat` sonradan eklendiğinde 28 → 26'ya indi, sıfıra inmedi.
+Sayılar `svrl:failed-assert` öğeleridir: 13 iddia, 10 ayrı kural (10 ölümcül,
+3 uyarı). Aynı dosya herkese açık kontrol sayfasına yapıştırıldığında da aynı
+13 bulguyu verir.
 
-**Bu, ürünün varlık sebebinin kanıtıdır.** Bizim ilk çıktımız da 12
+Adil olmak için rakibin okuduğu bütün ayarlar dolduruldu; eksik bırakılan
+`wooei_id_vat` sonradan eklendiğinde 14 → 13'e indi, sıfıra inmedi.
+
+**Bu, ürünün varlık sebebinin kanıtıdır.** Bizim ilk çıktımız da 6
 iddiadan düşüyordu (ADR 0010); fark, ölçmüş olmamız. Rakip bunu düzeltmek
 isterse resmi kural setini çalıştırması gerekir — yani tam olarak Pro'nun
 sattığı şeyi.

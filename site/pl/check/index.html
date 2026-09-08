@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="pl" data-root="../../" data-page="check/">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Wklej e-fakturę i zobacz, co mówi o niej urzędowy zestaw reguł. EN 16931 i niemiecka XRechnung 3.0.2, sprawdzane walidatorami publikowanymi przez urzędy.">
+<meta name="color-scheme" content="light dark">
+<title>Sprawdź e-fakturę · Deklera</title>
+<link rel="canonical" href="https://ekremtekerek.github.io/deklera/pl/check/">
+<link rel="alternate" hreflang="en" href="https://ekremtekerek.github.io/deklera/check/">
+<link rel="alternate" hreflang="de" href="https://ekremtekerek.github.io/deklera/de/check/">
+<link rel="alternate" hreflang="fr" href="https://ekremtekerek.github.io/deklera/fr/check/">
+<link rel="alternate" hreflang="pl" href="https://ekremtekerek.github.io/deklera/pl/check/">
+<link rel="alternate" hreflang="x-default" href="https://ekremtekerek.github.io/deklera/check/">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../../style.css">
+<script src="../../lang.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+
+  <section>
+    <p class="eyebrow">Za darmo · bez rejestracji</p>
+    <h1>Sprawdź e-fakturę wobec urzędowych reguł</h1>
+    <p class="lede">Wklej XML e-faktury — z dowolnej wtyczki, z dowolnego systemu — i
+      zobacz, co naprawdę mówi o niej zestaw reguł publikowany przez urzędy.</p>
+
+    <label for="xml" class="muted">XML faktury (składnia CII: Factur-X, ZUGFeRD, XRechnung)</label>
+    <textarea id="xml" spellcheck="false" placeholder="&lt;rsm:CrossIndustryInvoice …&gt;"></textarea>
+
+    <div class="row">
+      <select id="profile" aria-label="Zestaw reguł">
+        <option value="en16931">EN 16931 — europejska podstawa</option>
+        <option value="xrechnung">Niemcy — XRechnung 3.0.2</option>
+      </select>
+      <button class="cta" id="go" type="button">Sprawdź</button>
+      <span class="muted" id="status"></span>
+    </div>
+
+    <div id="out"></div>
+  </section>
+
+  <section>
+    <h2>Po co ta strona</h2>
+    <p>Większość wtyczek fakturowych do WooCommerce tworzy ten plik, a kilka robi to
+      za darmo. Mało która go sprawdza. Zestaw reguł, który rozstrzyga o przyjęciu
+      dokumentu, kompiluje się do XSLT&nbsp;2.0, którego PHP nie potrafi uruchomić —
+      łatwo więc wygenerować fakturę, która wygląda poprawnie, a zostaje odrzucona.</p>
+    <p>Zanim wydaliśmy wtyczkę, zmierzyliśmy własny wynik wobec urzędowego
+      walidatora niemieckiego; pierwsze uruchomienie nie przeszło sześciu jego reguł.
+      Poprawiliśmy je. Ta strona przeprowadza tę samą kontrolę na tym, co wkleisz,
+      żebyś sam zobaczył, jak stoją Twoje dokumenty.</p>
+    <p><strong>Poproś swoją obecną wtyczkę o raport z walidacji.</strong> To uczciwe
+      pytanie do każdego dostawcy, nas także — nasz jest w
+      <a href="https://github.com/ekremtekerek/deklera/blob/main/docs/adr/0010-almanya-ulusal-kurallari.md">repozytorium</a>.</p>
+  </section>
+
+  <section>
+    <h2>Czym to nie jest</h2>
+    <div class="boundary">
+      <p>Ta strona sprawdza <strong>jeden dokument na żądanie</strong> i ma limit kilku
+        kontroli na godzinę. To pokaz, a nie usługa.</p>
+      <p>Deklera Pro to co innego: ten sam urzędowy zestaw reguł, działający wewnątrz
+        WordPressa, przy <em>każdej</em> fakturze, <em>zanim</em> zostanie wystawiona —
+        żeby dokument, który zostałby odrzucony, nigdy nie opuścił Twojego sklepu.
+        Wersja darmowa robi kontrolę wstępną danych zamówień, a to właśnie tam zaczyna
+        się większość odrzuceń.</p>
+      <p>Nic, co wkleisz, nie jest przechowywane. Dokument jest walidowany w pamięci, a
+        wynik wraca do Twojej przeglądarki.</p>
+    </div>
+    <p style="margin-top:1.5rem">
+      <a class="cta" href="../">Co robi Deklera</a>
+      <a class="cta cta-2" href="https://github.com/ekremtekerek/deklera/releases/latest">Pobierz wersję darmową</a>
+    </p>
+  </section>
+
+  <footer>
+    <p class="langs"><a href="../../check/" hreflang="en">English</a><a href="../../de/check/" hreflang="de">Deutsch</a><a href="../../fr/check/" hreflang="fr">Français</a><strong>Polski</strong></p>
+    <p>Deklerę tworzy Hasan Ekrem Tekerek. Nic tutaj nie stanowi porady podatkowej ani
+      prawnej.</p>
+  </footer>
+
+</div>
+
+<script>
+window.DEKLERA_METIN = {
+  oncePyapistir: 'Najpierw wklej fakturę.',
+  kontrolEdiliyor: 'Sprawdzanie… usługa zasypia przy bezczynności, więc pierwsza kontrola może potrwać do minuty.',
+  temiz: 'Brak ustaleń. Ten dokument przechodzi zestaw reguł.',
+  birBulgu: '1 ustalenie — ten dokument zostałby odrzucony.',
+  bulgular: 'Ustalenia: %d — ten dokument zostałby odrzucony.',
+  kuralSeti: 'Zestaw reguł:',
+  kalan: 'Pozostało kontroli w tej godzinie: %d.',
+  reddedilir: 'Zostałoby odrzucone',
+  uyari: 'Do przejrzenia',
+  uyariNotu: 'Poniższe ostrzeżenia nie powodują odrzucenia.',
+  gecersizBelge: 'To nie jest prawidłowy dokument',
+  kotaDoldu: 'To limit na tę godzinę (%d). Zeruje się za około %m min. Wtyczka nie ma takiego limitu.',
+  okunamadi: 'Usługa nie potrafiła tego odczytać:',
+  cevapYok: 'Usługa nie odpowiedziała. Zasypia przy bezczynności — spróbuj jeszcze raz.',
+};
+</script>
+<script src="../../check.js" defer></script>
+</body>
+</html>
