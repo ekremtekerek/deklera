@@ -5,7 +5,7 @@ Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 8.2
 Requires Plugins: woocommerce
-Stable tag: 0.3.5
+Stable tag: 0.3.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -265,6 +265,15 @@ site. See **External services** above.
 3. The e-invoice box on the order screen, with document versions and history.
 
 == Changelog ==
+
+= 0.3.6 =
+* Clearer about what is and is not covered. France, Germany and Poland are
+  measured against each country's own official validator before a release
+  goes out; everywhere else you get EN 16931 CII, which is the European
+  baseline and not a national profile. Some member states mandate their own
+  format and their own platform — Italy's FatturaPA through the SdI is the
+  clearest example — and Deklera does not produce those. Better to know that
+  before you buy than after.
 
 = 0.3.5 =
 * Your customer now actually receives the invoice. The attachment feature was
