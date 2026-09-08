@@ -6,143 +6,14 @@
 <meta name="description" content="Deklera tells you which of your WooCommerce orders would be rejected as e-invoices, before you issue them. Factur-X for France, XRechnung for Germany, KSeF for Poland, EN 16931 CII elsewhere.">
 <meta name="color-scheme" content="light dark">
 <title>Deklera</title>
+<link rel="canonical" href="https://ekremtekerek.github.io/deklera/">
+<link rel="alternate" hreflang="en" href="https://ekremtekerek.github.io/deklera/">
+<link rel="alternate" hreflang="de" href="https://ekremtekerek.github.io/deklera/de/">
+<link rel="alternate" hreflang="fr" href="https://ekremtekerek.github.io/deklera/fr/">
+<link rel="alternate" hreflang="pl" href="https://ekremtekerek.github.io/deklera/pl/">
+<link rel="alternate" hreflang="x-default" href="https://ekremtekerek.github.io/deklera/">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<style>
-  :root {
-    --paper:      #F6F7F6;
-    --card:       #FFFFFF;
-    --ink:        #12171B;
-    --ink-soft:   #47535D;
-    --rule:       #DFE3E1;
-    --green:      #0F6B55;
-    --green-soft: #9ABEB2;
-    --green-wash: #EAF2EF;
-    --reject:     #8C2F2A;
-    --reject-wash:#F6E9E8;
-    --amber:      #7A5A16;
-    --amber-wash: #F6EFDD;
-
-    --serif: "Instrument Serif", Georgia, "Times New Roman", serif;
-    --sans:  "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-    --mono:  "IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --paper:      #0E1214;
-      --card:       #161B1E;
-      --ink:        #E8EDEA;
-      --ink-soft:   #9AA8AF;
-      --rule:       #262E32;
-      --green:      #5FBFA3;
-      --green-soft: #2F5C4E;
-      --green-wash: #14231F;
-      --reject:     #E08A82;
-      --reject-wash:#241715;
-      --amber:      #D7B368;
-      --amber-wash: #221D12;
-    }
-  }
-
-  :root[data-theme="dark"] {
-    --paper:      #0E1214;
-    --card:       #161B1E;
-    --ink:        #E8EDEA;
-    --ink-soft:   #9AA8AF;
-    --rule:       #262E32;
-    --green:      #5FBFA3;
-    --green-soft: #2F5C4E;
-    --green-wash: #14231F;
-    --reject:     #E08A82;
-    --reject-wash:#241715;
-    --amber:      #D7B368;
-    --amber-wash: #221D12;
-  }
-
-  body {
-    background: var(--paper);
-    color: var(--ink);
-    font-family: var(--sans);
-    font-size: 17px;
-    line-height: 1.65;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  .wrap { max-width: 47rem; margin: 0 auto; padding: 0 1.5rem; }
-
-  section { padding: 4.5rem 0; border-top: 1px solid var(--rule); }
-  section:first-of-type { border-top: 0; }
-
-  h1, h2 { font-family: var(--serif); font-weight: 400; text-wrap: balance; letter-spacing: -0.01em; }
-  h1 { font-size: clamp(2.4rem, 6vw, 3.9rem); line-height: 1.05; margin: 0 0 1.25rem; }
-  h2 { font-size: clamp(1.6rem, 3.4vw, 2.1rem); line-height: 1.15; margin: 0 0 1.5rem; }
-  h3 { font: 500 0.78rem/1.4 var(--sans); letter-spacing: 0.09em; text-transform: uppercase;
-       color: var(--ink-soft); margin: 0 0 1rem; }
-  p { margin: 0 0 1.1rem; max-width: 40rem; }
-  a { color: var(--green); }
-  strong { font-weight: 600; }
-  em { font-style: italic; }
-
-  .eyebrow {
-    font: 500 0.78rem/1 var(--mono);
-    letter-spacing: 0.14em; text-transform: uppercase;
-    color: var(--green); margin: 0 0 1.75rem;
-  }
-  .lede { font-size: 1.2rem; color: var(--ink-soft); max-width: 36rem; }
-
-  /* --- verdict strip: mirrors the plugin's own report header --- */
-  .verdict {
-    background: var(--card); border: 1px solid var(--rule); border-left: 3px solid var(--reject);
-    border-radius: 3px; padding: 1.6rem 1.75rem; margin: 2.5rem 0 0;
-  }
-  .verdict-line { font-family: var(--serif); font-size: 1.5rem; line-height: 1.25; color: var(--reject); margin: 0 0 1.4rem; }
-  .stats { display: flex; flex-wrap: wrap; gap: 2.25rem; }
-  .stat-n { font: 400 1.9rem/1 var(--sans); font-variant-numeric: tabular-nums; display: block; }
-  .stat-l { font-size: 0.8rem; color: var(--ink-soft); }
-  .n-total { color: var(--ink); }
-  .n-bad   { color: var(--reject); }
-  .n-warn  { color: var(--amber); }
-  .n-ok    { color: var(--green); }
-
-  /* --- finding card: rendered as the plugin renders it --- */
-  .finding {
-    background: var(--card); border: 1px solid var(--rule); border-radius: 3px;
-    padding: 1.4rem 1.6rem; margin: 0 0 1rem;
-  }
-  .badge {
-    display: inline-block; font: 600 0.7rem/1 var(--sans); letter-spacing: 0.02em;
-    padding: 0.35rem 0.55rem; border-radius: 3px; margin-right: 0.6rem; vertical-align: 0.1rem;
-  }
-  .b-bad  { background: var(--reject-wash); color: var(--reject); }
-  .b-warn { background: var(--amber-wash);  color: var(--amber); }
-  .f-title { font-weight: 600; }
-  .f-what { font-weight: 600; margin: 0.9rem 0 0.35rem; }
-  .f-why, .f-fix { color: var(--ink-soft); margin: 0 0 0.35rem; font-size: 0.95rem; }
-  .f-rule { font: 400 0.82rem/1 var(--mono); color: var(--ink-soft); margin: 0.7rem 0 0; }
-
-  ul { padding-left: 1.15rem; margin: 0 0 1.1rem; max-width: 40rem; }
-  li { margin-bottom: 0.5rem; }
-
-  .boundary { border-left: 3px solid var(--green-soft); padding-left: 1.4rem; }
-
-  table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
-  th, td { text-align: left; padding: 0.8rem 0.9rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
-  th { font: 500 0.78rem/1.4 var(--sans); letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-soft); }
-  td.plan { font-weight: 600; white-space: nowrap; }
-  td.price { font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--ink-soft); }
-  .scroll { overflow-x: auto; }
-
-  .cta { display: inline-block; background: var(--green); color: var(--paper);
-         font-weight: 600; text-decoration: none; padding: 0.75rem 1.4rem; border-radius: 3px; }
-  .cta:hover { filter: brightness(1.08); }
-  .cta-2 { background: transparent; color: var(--green);
-           box-shadow: inset 0 0 0 1px var(--green); margin-left: 0.6rem; }
-  .cta-note { font-size: 0.88rem; color: var(--ink-soft); margin-top: 0.9rem; }
-
-  footer { border-top: 1px solid var(--rule); padding: 2.5rem 0 4rem; color: var(--ink-soft); font-size: 0.9rem; }
-  code { font: 400 0.88em var(--mono); }
-</style>
-<style>*{box-sizing:border-box}body{margin:0}img{max-width:100%}</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="wrap">
@@ -204,17 +75,60 @@
     <h2>Then it produces the document your country requires</h2>
     <ul>
       <li><strong>France</strong> — Factur-X: a PDF/A-3 file with the XML embedded inside it</li>
-      <li><strong>Germany</strong> — XRechnung 3.0, pure XML</li>
+      <li><strong>Germany</strong> — XRechnung 3.0.2, pure XML</li>
       <li><strong>Poland</strong> — KSeF FA(3), submitted to the national platform</li>
       <li><strong>Elsewhere in the EU</strong> — EN 16931 CII</li>
     </ul>
     <p>The tax category — standard, reverse charge, intra-community supply, export —
       is derived from where the seller and the buyer actually are, not guessed from
       the rate alone.</p>
+    <p>The invoice is written in the <strong>buyer’s</strong> language, not yours.
+      A German customer receives <em>Rechnung</em>, <em>Nettobetrag</em>,
+      <em>USt-IdNr.</em>; a French one <em>Facture</em> and <em>Total HT</em>. German,
+      French and Polish are built in, and the legal wording — reverse charge,
+      intra-community supply — uses the phrasing each country expects on the face of
+      the invoice.</p>
     <p>Documents are archived and never overwritten. Regenerating creates a new
       version and the old one stays, because quietly replacing an issued invoice is
       not something an audit will forgive. Every file is stored with a hash, so you
       can prove it has not changed.</p>
+  </section>
+
+  <section>
+    <h2>Measured against the official validators</h2>
+    <p>Anyone can claim their output is valid. These are the results of running it
+      through the rule sets the authorities themselves publish.</p>
+
+    <div class="proof">
+      <p class="proof-h">Germany — XRechnung 3.0.2</p>
+      <p>The output was run through KoSIT’s official validator configuration, the same
+        Schematron a German authority applies. The first run failed twelve assertions:
+        every one of them a field the EU standard leaves optional and Germany makes
+        mandatory. All six rules are now satisfied.</p>
+      <p class="proof-r">0 findings</p>
+    </div>
+
+    <div class="proof">
+      <p class="proof-h">France — Factur-X</p>
+      <p>In France the file itself is checked, not only the data: the XML lives inside
+        a PDF/A-3 document. veraPDF, the reference implementation for PDF/A, validates
+        the finished invoice, and the embedded XML clears the official EN 16931 rule
+        set for CII syntax.</p>
+      <p class="proof-r">PDF/A-3b: PASS &nbsp;·&nbsp; EN 16931: 0 errors</p>
+    </div>
+
+    <div class="proof">
+      <p class="proof-h">Poland — KSeF</p>
+      <p>A Polish invoice does not legally exist until KSeF has accepted it, so the
+        only meaningful test is a real submission. An invoice was generated, queued,
+        sent to the national test environment and registered — through the same code
+        path a customer uses.</p>
+      <p class="proof-r">KSeF number assigned</p>
+    </div>
+
+    <p>These are measurements of real output, repeated on every release and recorded
+      in the repository. They say the document is <em>formally</em> acceptable. They
+      cannot say your figures are right — that part is yours.</p>
   </section>
 
   <section>
@@ -256,7 +170,7 @@
           <tr>
             <td class="plan">Pro</td>
             <td class="price"><a href="https://checkout.freemius.com/plugin/38206/plan/63639/">€149/yr</a></td>
-            <td>Validation against the <strong>official</strong> EN 16931 rule set before a document is issued.</td>
+            <td>Validation against the <strong>official</strong> rule set before a document is issued — EN 16931, plus Germany’s XRechnung rules for German stores.</td>
           </tr>
           <tr>
             <td class="plan">Agency</td>
@@ -296,6 +210,7 @@
   </section>
 
   <footer>
+    <p class="langs"><strong>English</strong><a href="de/" hreflang="de">Deutsch</a><a href="fr/" hreflang="fr">Français</a><a href="pl/" hreflang="pl">Polski</a></p>
     <p>Deklera is built by Hasan Ekrem Tekerek. Requires WooCommerce and PHP 8.2.
       Free version licensed GPL v2 or later.</p>
     <p>Nothing here is tax or legal advice.</p>

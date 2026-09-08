@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Deklera zeigt Ihnen, welche Ihrer WooCommerce-Bestellungen als E-Rechnung abgelehnt würden – bevor Sie sie ausstellen. XRechnung 3.0.2 für Deutschland, Factur-X für Frankreich, KSeF für Polen.">
+<meta name="color-scheme" content="light dark">
+<title>Deklera — E-Rechnung für WooCommerce</title>
+<link rel="canonical" href="https://ekremtekerek.github.io/deklera/de/">
+<link rel="alternate" hreflang="en" href="https://ekremtekerek.github.io/deklera/">
+<link rel="alternate" hreflang="de" href="https://ekremtekerek.github.io/deklera/de/">
+<link rel="alternate" hreflang="fr" href="https://ekremtekerek.github.io/deklera/fr/">
+<link rel="alternate" hreflang="pl" href="https://ekremtekerek.github.io/deklera/pl/">
+<link rel="alternate" hreflang="x-default" href="https://ekremtekerek.github.io/deklera/">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <section>
+    <p class="eyebrow">E-Rechnung für WooCommerce</p>
+    <h1>Wird diese Rechnung abgelehnt?</h1>
+    <p class="lede">Das XML zu erzeugen ist der einfache Teil. Schwierig ist, dass
+      WooCommerce-Bestelldaten dafür selten sauber genug sind — und Sie erfahren es
+      Wochen später, wenn eine Rechnung zurückkommt.</p>
+
+    <div class="verdict">
+      <p class="verdict-line">3 Ihrer letzten 6 Bestellungen würden abgelehnt.</p>
+      <div class="stats">
+        <div><span class="stat-n n-total">6</span><span class="stat-l">Geprüft</span></div>
+        <div><span class="stat-n n-bad">3</span><span class="stat-l">Würde abgelehnt</span></div>
+        <div><span class="stat-n n-warn">2</span><span class="stat-l">Zu prüfen</span></div>
+        <div><span class="stat-n n-ok">1</span><span class="stat-l">Bereit zur Rechnungsstellung</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Es beginnt damit, Ihnen die Wahrheit über Ihre Daten zu sagen</h2>
+    <p>Deklera prüft Ihre Bestellungen und meldet jedes Problem in verständlicher
+      Sprache: was passiert ist, warum es zählt, die genaue Regel und wo Sie es
+      beheben. Nicht <em>„ungültige Bestellung“</em>.</p>
+
+    <h3>Direkt aus dem Bericht</h3>
+
+    <div class="finding">
+      <span class="badge b-bad">Würde abgelehnt</span><span class="f-title">Identität des Kunden</span>
+      <p class="f-what">Dies ist ein grenzüberschreitender EU-Geschäftsverkauf ohne Umsatzsteuer, aber die USt-IdNr. des Kunden fehlt.</p>
+      <p class="f-why">Wird bei einer innergemeinschaftlichen Lieferung keine Umsatzsteuer berechnet, ist die USt-IdNr. des Käufers Pflicht. Ohne sie lässt sich die Steuerbefreiung nicht begründen und die Rechnung wird abgelehnt.</p>
+      <p class="f-fix"><strong>So beheben Sie es:</strong> Öffnen Sie die Bestellung, ergänzen Sie die USt-IdNr. in den Rechnungsdaten und erfassen Sie sie künftig an der Kasse.</p>
+      <p class="f-rule">Regel: BT-48 / BR-AE-09</p>
+    </div>
+
+    <div class="finding">
+      <span class="badge b-bad">Würde abgelehnt</span><span class="f-title">Rechnungssummen</span>
+      <p class="f-what">Die Rechnungspositionen ergeben 120,00 €, die Bestellsumme beträgt jedoch 112,50 € – eine Differenz von 7,50 €.</p>
+      <p class="f-why">Prüfdienste weisen eine Rechnung zurück, deren Summen nicht aufgehen – auch bei einem Cent. Ursache ist meist ein Rabatt, ein Gutschein oder eine Erstattung auf Bestellebene, die in keiner Position abgebildet ist.</p>
+      <p class="f-rule">Regel: BT-112 / BR-CO-15</p>
+    </div>
+
+    <div class="finding">
+      <span class="badge b-warn">Zu prüfen</span><span class="f-title">Steuerkategorie und Steuersatz</span>
+      <p class="f-what">Diese Bestellung wurde als innergemeinschaftliche Lieferung von Gegenständen behandelt.</p>
+      <p class="f-why">Für Gegenstände gilt Kategorie K, für Dienstleistungen Kategorie AE. Deklera entscheidet danach, ob die Positionen versandfähig oder virtuell sind – eine vernünftige Annahme, aber nicht immer zutreffend.</p>
+      <p class="f-rule">Regel: BT-151</p>
+    </div>
+
+    <p>Befunde werden nach Ursache gebündelt: Ein Problem, das den ganzen Shop
+      betrifft, erscheint einmal — nicht bei jeder Bestellung erneut. Und wo Deklera
+      eine Annahme treffen muss, sagt es das, statt still zu raten.</p>
+  </section>
+
+  <section>
+    <h2>Dann erzeugt es das Dokument, das Ihr Land verlangt</h2>
+    <ul>
+      <li><strong>Deutschland</strong> — XRechnung 3.0.2, reines XML</li>
+      <li><strong>Frankreich</strong> — Factur-X: eine PDF/A-3-Datei mit eingebettetem XML</li>
+      <li><strong>Polen</strong> — KSeF FA(3), an die nationale Plattform übermittelt</li>
+      <li><strong>Übrige EU</strong> — EN 16931 CII</li>
+    </ul>
+    <p>Die Steuerkategorie — Regelsteuersatz, Steuerschuldnerschaft des
+      Leistungsempfängers, innergemeinschaftliche Lieferung, Ausfuhr — ergibt sich
+      daraus, wo Verkäufer und Käufer tatsächlich sitzen, und nicht aus dem Steuersatz
+      allein.</p>
+    <p>Die Rechnung wird in der Sprache des <strong>Käufers</strong> geschrieben,
+      nicht in Ihrer. Ein französischer Kunde erhält <em>Facture</em> und
+      <em>Total HT</em>, ein polnischer <em>Faktura</em> und <em>Razem netto</em>.
+      Deutsch, Französisch und Polnisch sind eingebaut, und die rechtlichen Hinweise
+      verwenden die Formulierung, die das jeweilige Land auf der Rechnung erwartet.</p>
+    <p>Dokumente werden archiviert und nie überschrieben. Eine erneute Erzeugung legt
+      eine neue Version an, die alte bleibt bestehen — eine ausgestellte Rechnung
+      still zu ersetzen, verzeiht keine Prüfung. Jede Datei wird mit einem Hash
+      gespeichert, sodass Sie belegen können, dass sie unverändert ist.</p>
+  </section>
+
+  <section>
+    <h2>Am offiziellen Prüfdienst gemessen</h2>
+    <p>Behaupten kann jeder, seine Ausgabe sei gültig. Dies sind die Ergebnisse aus
+      den Regelwerken, die die Behörden selbst veröffentlichen.</p>
+
+    <div class="proof">
+      <p class="proof-h">Deutschland — XRechnung 3.0.2</p>
+      <p>Geprüft mit der offiziellen Validator-Konfiguration der KoSIT, demselben
+        Schematron, das auch eine deutsche Behörde anwendet. Der erste Durchlauf
+        scheiterte an zwölf Zusicherungen — jede davon ein Feld, das der EU-Standard
+        offenlässt und Deutschland zur Pflicht macht: Ansprechpartner und Telefon des
+        Verkäufers, die elektronischen Adressen beider Seiten, die Zahlungsart. Alle
+        sechs Regeln sind jetzt erfüllt.</p>
+      <p class="proof-r">0 Befunde</p>
+    </div>
+
+    <div class="proof">
+      <p class="proof-h">Frankreich — Factur-X</p>
+      <p>In Frankreich wird die Datei selbst geprüft, nicht nur die Daten: Das XML
+        steckt in einem PDF/A-3-Dokument. veraPDF, die Referenzimplementierung für
+        PDF/A, validiert die fertige Rechnung, und das eingebettete XML besteht das
+        offizielle EN-16931-Regelwerk für die CII-Syntax.</p>
+      <p class="proof-r">PDF/A-3b: PASS &nbsp;·&nbsp; EN 16931: 0 Fehler</p>
+    </div>
+
+    <div class="proof">
+      <p class="proof-h">Polen — KSeF</p>
+      <p>Eine polnische Rechnung existiert rechtlich erst, wenn KSeF sie angenommen
+        hat. Der einzig aussagekräftige Test ist deshalb eine echte Übermittlung: Eine
+        Rechnung wurde erzeugt, eingereiht, an die nationale Testumgebung gesendet und
+        registriert — über denselben Weg, den auch ein Kunde nutzt.</p>
+      <p class="proof-r">KSeF-Nummer vergeben</p>
+    </div>
+
+    <p>Das sind Messungen an echter Ausgabe, bei jeder Veröffentlichung wiederholt und
+      im Repository dokumentiert. Sie besagen, dass das Dokument <em>formal</em>
+      annehmbar ist. Sie besagen nicht, dass Ihre Zahlen stimmen — dieser Teil bleibt
+      bei Ihnen.</p>
+  </section>
+
+  <section>
+    <h2>Was es nicht tut</h2>
+    <div class="boundary">
+      <p><strong>Es übermittelt keine Rechnungen, außer an KSeF.</strong> Deklera
+        erzeugt das Dokument und prüft es; der Versand läuft über Ihren eigenen
+        akkreditierten Dienstleister — in Frankreich eine PDP, sonst ein
+        Peppol-Zugangspunkt. Polen ist die Ausnahme, weil dort eine Rechnung erst
+        existiert, wenn KSeF sie angenommen hat; polnische Shops bekommen die
+        Übermittlung daher eingebaut. Wenn Sie ein Plugin suchen, das Rechnungen
+        überall ins Netz sendet, ist dies nicht das richtige, und Sie sollten es nicht
+        mit dieser Erwartung kaufen.</p>
+      <p><strong>Es garantiert keine Rechtskonformität.</strong> Das kann keine
+        Software. Ob eine bestimmte Rechnung angenommen wird, hängt von Ihrer
+        Registrierung, Ihrem Dienstleister und von Regeln ab, die sich ändern.</p>
+      <p>Was es ehrlich versprechen kann, ist enger und nützlicher: Es sagt Ihnen,
+        wann Ihre Daten am Standard scheitern, und prüft das fertige Dokument am
+        offiziellen Regelwerk, bevor Sie es ausstellen.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Kostenlos und Pro</h2>
+    <p>Alles, was das Plugin selbst kann, funktioniert ohne Lizenz — prüfen,
+      XRechnung und Factur-X erzeugen, Rechnungskorrekturen, Archivierung,
+      automatische Erzeugung bei Abschluss einer Bestellung. Nichts im Code ist
+      abgeschaltet.</p>
+
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr><th>Tarif</th><th>Preis</th><th>Was hinzukommt</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="plan">Kostenlos</td>
+            <td class="price">0 €</td>
+            <td>Vollständige E-Rechnung: Vorabprüfung, Dokumenterzeugung, Rechnungskorrekturen, versioniertes Archiv mit Integritätsprüfung.</td>
+          </tr>
+          <tr>
+            <td class="plan">Pro</td>
+            <td class="price"><a href="https://checkout.freemius.com/plugin/38206/plan/63639/">149 €/Jahr</a></td>
+            <td>Prüfung am <strong>offiziellen</strong> Regelwerk, bevor ein Dokument ausgestellt wird — EN 16931 und für deutsche Shops zusätzlich die XRechnung-Regeln.</td>
+          </tr>
+          <tr>
+            <td class="plan">Agentur</td>
+            <td class="price"><a href="https://checkout.freemius.com/plugin/38206/plan/63641/">399 €/Jahr</a></td>
+            <td>Alles aus Pro, für alle von Ihnen betreuten Shops.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Pro kauft genau eine Sache, weil es die eine ist, die das Plugin nicht selbst
+      leisten kann. Das offizielle Regelwerk kompiliert zu XSLT&nbsp;2.0, PHPs
+      XSL-Erweiterung beherrscht nur XSLT&nbsp;1.0 — die Prüfung läuft daher auf einem
+      gehosteten Dienst statt auf Ihrer Website. Standardmäßig ist sie aus.</p>
+  </section>
+
+  <section>
+    <h2>Testen Sie es an Ihren eigenen Bestellungen</h2>
+    <p>Die kostenlose Version beantwortet die einzige Frage, die jetzt zählt: Sind
+      Ihre Bestelldaten so weit? Installieren, Bericht öffnen, in einer Minute
+      wissen Sie es.</p>
+    <p>
+      <a class="cta" href="https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/ekremtekerek/deklera/main/demo/blueprint.json">Live-Demo öffnen</a>
+      <a class="cta cta-2" href="https://github.com/ekremtekerek/deklera/releases/latest">Kostenlose Version laden</a>
+    </p>
+    <p class="cta-note">Die Demo startet ein echtes WordPress mit WooCommerce in Ihrem
+      Browser, gefüllt mit Bestellungen, die noch nicht abrechenbar sind. Es wird
+      nichts installiert und nichts verlässt Ihren Rechner.</p>
+    <p class="cta-note">Die kostenlose Version wird derzeit für das
+      WordPress.org-Verzeichnis geprüft; bis sie dort gelistet ist, installieren Sie
+      die ZIP-Datei oben von Hand. Pro-Lizenzen sind ab sofort über
+      <a href="https://checkout.freemius.com/plugin/38206/plan/63639/">Freemius</a>
+      erhältlich, das als Merchant of Record Zahlung und EU-Umsatzsteuer übernimmt.</p>
+    <p class="cta-note">Das <a href="https://github.com/ekremtekerek/deklera/blob/main/docs/GUIDE.md">Handbuch</a>
+      erklärt, was die Befunde bedeuten, wo Dokumente liegen, wie Rechnungskorrekturen
+      und der polnische KSeF-Ablauf funktionieren und was Pro hinzufügt. Quellcode und
+      Fehlermeldungen <a href="https://github.com/ekremtekerek/deklera">auf GitHub</a>.</p>
+  </section>
+
+  <footer>
+    <p class="langs"><a href="../" hreflang="en">English</a><strong>Deutsch</strong><a href="../fr/" hreflang="fr">Français</a><a href="../pl/" hreflang="pl">Polski</a></p>
+    <p>Deklera wird von Hasan Ekrem Tekerek entwickelt. Erfordert WooCommerce und
+      PHP 8.2. Die kostenlose Version steht unter GPL v2 oder später.</p>
+    <p>Nichts hiervon ist Steuer- oder Rechtsberatung.</p>
+  </footer>
+
+</div>
+</body>
+</html>

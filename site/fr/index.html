@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Deklera vous indique lesquelles de vos commandes WooCommerce seraient rejetées en facture électronique, avant de les émettre. Factur-X pour la France, XRechnung pour l’Allemagne, KSeF pour la Pologne.">
+<meta name="color-scheme" content="light dark">
+<title>Deklera — facturation électronique pour WooCommerce</title>
+<link rel="canonical" href="https://ekremtekerek.github.io/deklera/fr/">
+<link rel="alternate" hreflang="en" href="https://ekremtekerek.github.io/deklera/">
+<link rel="alternate" hreflang="de" href="https://ekremtekerek.github.io/deklera/de/">
+<link rel="alternate" hreflang="fr" href="https://ekremtekerek.github.io/deklera/fr/">
+<link rel="alternate" hreflang="pl" href="https://ekremtekerek.github.io/deklera/pl/">
+<link rel="alternate" hreflang="x-default" href="https://ekremtekerek.github.io/deklera/">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <section>
+    <p class="eyebrow">Facturation électronique pour WooCommerce</p>
+    <h1>Cette facture sera-t-elle rejetée&nbsp;?</h1>
+    <p class="lede">Produire le XML est la partie facile. Le difficile, c’est que les
+      données de commande WooCommerce sont rarement assez propres pour cela — et vous
+      l’apprenez des semaines plus tard, quand une facture revient rejetée.</p>
+
+    <div class="verdict">
+      <p class="verdict-line">3 de vos 6 dernières commandes seraient rejetées.</p>
+      <div class="stats">
+        <div><span class="stat-n n-total">6</span><span class="stat-l">Contrôlées</span></div>
+        <div><span class="stat-n n-bad">3</span><span class="stat-l">Seraient rejetées</span></div>
+        <div><span class="stat-n n-warn">2</span><span class="stat-l">À vérifier</span></div>
+        <div><span class="stat-n n-ok">1</span><span class="stat-l">Prêtes à facturer</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Cela commence par vous dire la vérité sur vos données</h2>
+    <p>Deklera analyse vos commandes et signale chaque problème en langage clair&nbsp;:
+      ce qui s’est passé, pourquoi cela compte, la référence exacte de la règle et où
+      corriger. Pas <em>« commande invalide »</em>.</p>
+
+    <h3>Directement issu du rapport</h3>
+
+    <div class="finding">
+      <span class="badge b-bad">Serait rejetée</span><span class="f-title">Identité du client</span>
+      <p class="f-what">Il s’agit d’une vente transfrontalière entre entreprises de l’UE sans TVA, mais le numéro de TVA du client est absent.</p>
+      <p class="f-why">Lorsqu’une livraison intracommunautaire est facturée sans TVA, le numéro de TVA de l’acheteur est obligatoire. Sans lui, l’exonération ne peut pas être justifiée et la facture est rejetée.</p>
+      <p class="f-fix"><strong>Comment corriger&nbsp;:</strong> Ouvrez la commande, ajoutez le numéro de TVA aux informations de facturation, puis collectez-le désormais à la commande.</p>
+      <p class="f-rule">Règle&nbsp;: BT-48 / BR-AE-09</p>
+    </div>
+
+    <div class="finding">
+      <span class="badge b-bad">Serait rejetée</span><span class="f-title">Totaux de la facture</span>
+      <p class="f-what">Les lignes de facture totalisent 120,00 € alors que le total de la commande est 112,50 €, soit un écart de 7,50 €.</p>
+      <p class="f-why">Les validateurs rejettent une facture dont les totaux ne se recoupent pas, ne serait-ce que d’un centime. Cela provient généralement d’une remise au niveau de la commande, d’un code promo ou d’un remboursement qui n’apparaît sur aucune ligne.</p>
+      <p class="f-rule">Règle&nbsp;: BT-112 / BR-CO-15</p>
+    </div>
+
+    <div class="finding">
+      <span class="badge b-warn">À vérifier</span><span class="f-title">Catégorie et taux de TVA</span>
+      <p class="f-what">Cette commande a été traitée comme une livraison intracommunautaire de biens.</p>
+      <p class="f-why">Les biens relèvent de la catégorie K et les services de la catégorie AE. Deklera tranche selon que les articles sont expédiables ou virtuels&nbsp;: une supposition raisonnable, mais pas toujours exacte.</p>
+      <p class="f-rule">Règle&nbsp;: BT-151</p>
+    </div>
+
+    <p>Les constats sont regroupés par cause&nbsp;: un problème qui concerne toute la
+      boutique n’est signalé qu’une fois, et non répété sur chaque commande. Et là où
+      Deklera doit trancher, il le dit au lieu de deviner en silence.</p>
+  </section>
+
+  <section>
+    <h2>Puis il produit le document exigé par votre pays</h2>
+    <ul>
+      <li><strong>France</strong> — Factur-X&nbsp;: un fichier PDF/A-3 avec le XML embarqué</li>
+      <li><strong>Allemagne</strong> — XRechnung 3.0.2, XML pur</li>
+      <li><strong>Pologne</strong> — KSeF FA(3), transmis à la plateforme nationale</li>
+      <li><strong>Reste de l’UE</strong> — EN 16931 CII</li>
+    </ul>
+    <p>La catégorie de TVA — taux normal, autoliquidation, livraison
+      intracommunautaire, exportation — découle de l’endroit où se trouvent réellement
+      le vendeur et l’acheteur, et non du seul taux appliqué.</p>
+    <p>La facture est rédigée dans la langue de l’<strong>acheteur</strong>, pas dans
+      la vôtre. Un client allemand reçoit <em>Rechnung</em> et <em>Nettobetrag</em>, un
+      client polonais <em>Faktura</em> et <em>Razem netto</em>. L’allemand, le français
+      et le polonais sont intégrés, et les mentions légales — autoliquidation,
+      livraison intracommunautaire — reprennent la formulation attendue dans chaque
+      pays sur le corps de la facture.</p>
+    <p>Les documents sont archivés et jamais écrasés. Une régénération crée une
+      nouvelle version et l’ancienne demeure&nbsp;: remplacer discrètement une facture
+      émise n’est pas quelque chose qu’un contrôle pardonne. Chaque fichier est stocké
+      avec une empreinte, vous pouvez donc prouver qu’il n’a pas changé.</p>
+  </section>
+
+  <section>
+    <h2>Mesuré face aux validateurs officiels</h2>
+    <p>N’importe qui peut affirmer que sa sortie est valable. Voici les résultats
+      obtenus avec les jeux de règles publiés par les autorités elles-mêmes.</p>
+
+    <div class="proof">
+      <p class="proof-h">France — Factur-X</p>
+      <p>En France, c’est le fichier lui-même qui est contrôlé, pas seulement les
+        données&nbsp;: le XML est logé dans un document PDF/A-3. veraPDF,
+        l’implémentation de référence pour PDF/A, valide la facture terminée, et le XML
+        embarqué passe le jeu de règles officiel EN 16931 pour la syntaxe CII.</p>
+      <p class="proof-r">PDF/A-3b&nbsp;: PASS &nbsp;·&nbsp; EN 16931&nbsp;: 0 erreur</p>
+    </div>
+
+    <div class="proof">
+      <p class="proof-h">Allemagne — XRechnung 3.0.2</p>
+      <p>La sortie a été passée dans la configuration officielle du validateur de la
+        KoSIT, le même Schematron qu’applique une administration allemande. La première
+        exécution a échoué sur douze assertions, chacune portant sur un champ que la
+        norme européenne laisse facultatif et que l’Allemagne rend obligatoire. Les six
+        règles concernées sont désormais satisfaites.</p>
+      <p class="proof-r">0 constat</p>
+    </div>
+
+    <div class="proof">
+      <p class="proof-h">Pologne — KSeF</p>
+      <p>Une facture polonaise n’existe juridiquement qu’une fois acceptée par KSeF&nbsp;;
+        le seul test qui ait du sens est donc une transmission réelle. Une facture a été
+        générée, mise en file, envoyée à l’environnement national de test et
+        enregistrée — par le même chemin que celui qu’emprunte un client.</p>
+      <p class="proof-r">Numéro KSeF attribué</p>
+    </div>
+
+    <p>Ce sont des mesures sur une sortie réelle, refaites à chaque version et
+      consignées dans le dépôt. Elles disent que le document est <em>formellement</em>
+      recevable. Elles ne disent pas que vos chiffres sont justes&nbsp;: cette part
+      vous revient.</p>
+  </section>
+
+  <section>
+    <h2>Ce qu’il ne fait pas</h2>
+    <div class="boundary">
+      <p><strong>Il ne transmet pas les factures, sauf à KSeF.</strong> Deklera produit
+        le document et le contrôle&nbsp;; l’acheminement passe par votre propre
+        prestataire accrédité — une PDP en France, un point d’accès Peppol ailleurs. La
+        Pologne fait exception, car une facture n’y existe juridiquement qu’une fois
+        acceptée par KSeF&nbsp;; la transmission y est donc intégrée. Si vous cherchez
+        une extension qui envoie les factures sur un réseau partout ailleurs, ce n’est
+        pas celle-ci, et vous ne devriez pas l’acheter en l’attendant.</p>
+      <p><strong>Il ne garantit pas la conformité légale.</strong> Aucun logiciel ne le
+        peut. Qu’une facture précise soit acceptée dépend de votre immatriculation, de
+        votre prestataire et de règles qui évoluent.</p>
+      <p>Ce qu’il peut promettre honnêtement est plus étroit et plus utile&nbsp;: il
+        vous dit quand vos données échoueront face à la norme, et il contrôle le
+        document terminé face au jeu de règles officiel avant que vous ne l’émettiez.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Gratuit et Pro</h2>
+    <p>Tout ce que l’extension sait faire fonctionne sans licence — analyse, génération
+      Factur-X et XRechnung, factures d’avoir, archivage, génération automatique à la
+      fin d’une commande. Rien n’est désactivé dans le code.</p>
+
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr><th>Formule</th><th>Prix</th><th>Ce qu’elle ajoute</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="plan">Gratuite</td>
+            <td class="price">0 €</td>
+            <td>Facturation électronique complète&nbsp;: contrôle préalable, génération des documents, factures d’avoir, archive versionnée avec contrôle d’intégrité.</td>
+          </tr>
+          <tr>
+            <td class="plan">Pro</td>
+            <td class="price"><a href="https://checkout.freemius.com/plugin/38206/plan/63639/">149 €/an</a></td>
+            <td>Validation face au jeu de règles <strong>officiel</strong> avant émission — EN 16931, plus les règles XRechnung pour les boutiques allemandes.</td>
+          </tr>
+          <tr>
+            <td class="plan">Agence</td>
+            <td class="price"><a href="https://checkout.freemius.com/plugin/38206/plan/63641/">399 €/an</a></td>
+            <td>Tout le contenu de Pro, sur l’ensemble des boutiques que vous gérez.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Pro n’achète qu’une chose, parce que c’est la seule que l’extension ne peut pas
+      faire seule. Le jeu de règles officiel se compile en XSLT&nbsp;2.0 et l’extension
+      XSL de PHP ne gère que XSLT&nbsp;1.0&nbsp;: le contrôle tourne donc sur un service
+      hébergé plutôt que sur votre site. Il est désactivé par défaut.</p>
+  </section>
+
+  <section>
+    <h2>Essayez-le sur vos propres commandes</h2>
+    <p>La version gratuite répond à la seule question qui compte maintenant&nbsp;: vos
+      données de commande sont-elles prêtes&nbsp;? Installez, ouvrez le rapport, vous
+      le saurez en une minute.</p>
+    <p>
+      <a class="cta" href="https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/ekremtekerek/deklera/main/demo/blueprint.json">Ouvrir la démo</a>
+      <a class="cta cta-2" href="https://github.com/ekremtekerek/deklera/releases/latest">Télécharger la version gratuite</a>
+    </p>
+    <p class="cta-note">La démo lance un vrai WordPress avec WooCommerce dans votre
+      navigateur, alimenté par des commandes qui ne sont pas prêtes à être facturées.
+      Rien n’est installé et rien ne quitte votre machine.</p>
+    <p class="cta-note">La version gratuite est en cours d’examen pour le répertoire
+      WordPress.org&nbsp;; tant qu’elle n’y figure pas, installez le zip ci-dessus à la
+      main. Les licences Pro sont disponibles dès maintenant via
+      <a href="https://checkout.freemius.com/plugin/38206/plan/63639/">Freemius</a>, qui
+      assure le paiement et la TVA européenne en tant que revendeur officiel.</p>
+    <p class="cta-note">Le <a href="https://github.com/ekremtekerek/deklera/blob/main/docs/GUIDE.md">guide
+      utilisateur</a> explique ce que signifient les constats, où sont stockés les
+      documents, comment fonctionnent les factures d’avoir et le circuit KSeF polonais,
+      et ce qu’apporte Pro. Sources et signalements
+      <a href="https://github.com/ekremtekerek/deklera">sur GitHub</a>.</p>
+  </section>
+
+  <footer>
+    <p class="langs"><a href="../" hreflang="en">English</a><a href="../de/" hreflang="de">Deutsch</a><strong>Français</strong><a href="../pl/" hreflang="pl">Polski</a></p>
+    <p>Deklera est développé par Hasan Ekrem Tekerek. Nécessite WooCommerce et
+      PHP 8.2. La version gratuite est sous licence GPL v2 ou ultérieure.</p>
+    <p>Rien de ce qui figure ici ne constitue un conseil fiscal ou juridique.</p>
+  </footer>
+
+</div>
+</body>
+</html>
