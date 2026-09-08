@@ -5,7 +5,7 @@ Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 8.2
 Requires Plugins: woocommerce
-Stable tag: 0.3.6
+Stable tag: 0.3.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -265,6 +265,14 @@ site. See **External services** above.
 3. The e-invoice box on the order screen, with document versions and history.
 
 == Changelog ==
+
+= 0.3.7 =
+* Packaging only, no functional change. The free download no longer carries
+  compiled translation files: they were never read, because the translation
+  loader only runs in the premium build, and on WordPress.org translations
+  come from translate.wordpress.org anyway. The download is smaller for it.
+* The upgrade notice for 0.3.0 was longer than the 300 characters the plugin
+  directory allows, so it was shortened.
 
 = 0.3.6 =
 * Clearer about what is and is not covered. France, Germany and Poland are
