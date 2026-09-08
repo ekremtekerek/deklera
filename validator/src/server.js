@@ -30,6 +30,83 @@ const XRECHNUNG_VERSION = process.env.XRECHNUNG_VERSION ?? '2026-08-31';
 /** İstek gövdesi üst sınırı; doğrulama CPU yakar, açık uçlu bırakılmaz. */
 const MAX_BYTES = 2 * 1024 * 1024;
 
+/*
+ * Halka acik deneme ucu (/v1/try).
+ *
+ * NEDEN VAR
+ *
+ * Urunun farki bir ozellik degil, dogruluk -- ve dogruluk ancak
+ * gosterilebilirse satar. Olculdu: ucretsiz bir rakibin XRechnung ciktisi
+ * Almanya'nin resmi denetleyicisinden 26 iddiadan dusuyor, bizimki
+ * sifirdan geciyor (bkz. docs/adr/0005 eki). Ziyaretci bunu kendi
+ * belgesiyle gorebilmeli.
+ *
+ * NEDEN SINIRLI
+ *
+ * Kimlik dogrulamasi yok, yani bu uc bedava bir API'ye donusebilir ve
+ * Pro'nun sattigi seyi bosa cikarir. Uc onlem var: IP basina saatlik
+ * kota, daha kucuk govde siniri, ve tek belge -- toplu kullanim icin
+ * elverissiz. Pro'nun satigi sey zaten bu degil: orada dogrulama HER
+ * faturada, WordPress'in icinde, kesilmeden once calisir.
+ */
+const TRY_MAX_BYTES = 512 * 1024;
+const TRY_PER_HOUR = Number(process.env.TRY_PER_HOUR ?? 10);
+const TRY_WINDOW_MS = 60 * 60 * 1000;
+
+/** IP -> { adet, sifirlama }. Surec belleginde; tek ornek calisiyoruz. */
+const tryQuota = new Map();
+
+/**
+ * Kotayi tuketir ve kalan hakki dondurur.
+ *
+ * @param {string} ip Istemci adresi.
+ * @returns {{allowed: boolean, remaining: number, resetSeconds: number}}
+ */
+function takeQuota(ip) {
+  const now = Date.now();
+
+  // Suresi dolmus kayitlari at; harita sinirsiz buyumemeli.
+  for (const [key, value] of tryQuota) {
+    if (value.reset <= now) {
+      tryQuota.delete(key);
+    }
+  }
+
+  const entry = tryQuota.get(ip) ?? { count: 0, reset: now + TRY_WINDOW_MS };
+
+  if (entry.count >= TRY_PER_HOUR) {
+    return {
+      allowed: false,
+      remaining: 0,
+      resetSeconds: Math.ceil((entry.reset - now) / 1000),
+    };
+  }
+
+  entry.count += 1;
+  tryQuota.set(ip, entry);
+
+  return {
+    allowed: true,
+    remaining: TRY_PER_HOUR - entry.count,
+    resetSeconds: Math.ceil((entry.reset - now) / 1000),
+  };
+}
+
+/**
+ * Istemci adresini bulur.
+ *
+ * Render bir vekil arkasindadir; uzak adres her istekte ayni cikar.
+ * X-Forwarded-For'un ILK degeri gercek istemcidir.
+ *
+ * @param {import('node:http').IncomingMessage} request Istek.
+ * @returns {string}
+ */
+function clientIp(request) {
+  const forwarded = String(request.headers['x-forwarded-for'] ?? '');
+
+  return forwarded.split(',')[0].trim() || request.socket.remoteAddress || 'bilinmiyor';
+}
+
 /**
  * Derlenmiş kural seti. Süreç başına bir kez okunur; her istekte 5 MB JSON
  * ayrıştırmak saniyeler alırdı.
@@ -204,6 +281,8 @@ function json(response, status, body) {
     'content-type': 'application/json; charset=utf-8',
     'cache-control': 'no-store',
     'content-length': Buffer.byteLength(payload),
+    // Deneme sayfasi baska bir kaynaktan (GitHub Pages) cagiriyor.
+    'access-control-allow-origin': '*',
   });
 
   response.end(payload);
@@ -215,7 +294,7 @@ function json(response, status, body) {
  * @param {import('node:http').IncomingMessage} request İstek.
  * @returns {Promise<string>}
  */
-function readBody(request) {
+function readBody(request, limit = MAX_BYTES) {
   return new Promise((resolve, reject) => {
     let size = 0;
     const chunks = [];
@@ -223,7 +302,7 @@ function readBody(request) {
     request.on('data', (chunk) => {
       size += chunk.length;
 
-      if (size > MAX_BYTES) {
+      if (size > limit) {
         reject(Object.assign(new Error('payload_too_large'), { status: 413 }));
         request.destroy();
 
@@ -238,6 +317,60 @@ function readBody(request) {
   });
 }
 
+/**
+ * Halka acik deneme ucu.
+ *
+ * @param {import('node:http').IncomingMessage} request Istek.
+ * @param {import('node:http').ServerResponse} response Yanit.
+ * @returns {Promise<void>}
+ */
+async function handleTry(request, response) {
+  if (request.method !== 'POST') {
+    json(response, 405, { error: 'method_not_allowed' });
+
+    return;
+  }
+
+  const quota = takeQuota(clientIp(request));
+
+  if (!quota.allowed) {
+    json(response, 429, {
+      error: 'rate_limited',
+      limit: TRY_PER_HOUR,
+      retry_after_seconds: quota.resetSeconds,
+    });
+
+    return;
+  }
+
+  let payload;
+
+  try {
+    payload = JSON.parse(await readBody(request, TRY_MAX_BYTES));
+  } catch (error) {
+    json(response, error?.status ?? 400, { error: error?.message ?? 'invalid_json' });
+
+    return;
+  }
+
+  const xml = typeof payload?.xml === 'string' ? payload.xml : '';
+
+  if (xml === '') {
+    json(response, 400, { error: 'missing_xml' });
+
+    return;
+  }
+
+  const profile = payload?.profile === 'xrechnung' ? 'xrechnung' : 'en16931';
+
+  json(response, 200, {
+    ...validate(xml, profile),
+    rules_version: RULES_VERSION,
+    xrechnung_version: XRECHNUNG_VERSION,
+    remaining: quota.remaining,
+  });
+}
+
 const server = createServer(async (request, response) => {
   const url = new URL(request.url ?? '/', 'http://localhost');
 
@@ -248,6 +381,25 @@ const server = createServer(async (request, response) => {
       xrechnung_version: XRECHNUNG_VERSION,
       syntax: 'CII',
     });
+
+    return;
+  }
+
+  // Tarayici on kontrolu.
+  if (request.method === 'OPTIONS') {
+    response.writeHead(204, {
+      'access-control-allow-origin': '*',
+      'access-control-allow-methods': 'POST, OPTIONS',
+      'access-control-allow-headers': 'content-type',
+      'access-control-max-age': '86400',
+    });
+    response.end();
+
+    return;
+  }
+
+  if (url.pathname === '/v1/try') {
+    await handleTry(request, response);
 
     return;
   }
@@ -308,4 +460,4 @@ if (process.env.NODE_ENV !== 'test') {
   });
 }
 
-export { server };
+export { server, takeQuota };

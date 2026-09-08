@@ -68,3 +68,63 @@ alıcının yanlış beklentiyle gelmesi hem iade hem kötü değerlendirme deme
 Bu dosya güncellenecek. B seçilirse ilk adım sağlayıcı seçimi olur ve o da
 ayrı bir ADR ister — Peppol erişim noktaları arasında fiyat, AB veri yerleşimi
 ve SLA farkları belirleyicidir.
+
+---
+
+## Ek: 8 Eylül 2026 — konumun ölçülmesi
+
+Bu ADR "A savunulabilir mi" sorusunu gerekçeyle cevaplamıştı. Bugün ölçtük.
+
+### Piyasa
+
+| Ürün | Ne veriyor | Fiyat |
+|---|---|---|
+| WP Overnight (100k+ kurulum) | UBL, Peppol BIS, Factur-X, ZUGFeRD üretimi | ücretsiz |
+| WP Overnight — Peppol **gönderimi** | 500 belge/yıl | 60 €/yıl |
+| E-Invoicing For WooCommerce | Factur-X, UBL, ZUGFeRD, XRechnung | ücretsiz |
+| Polonya: WP Desk KSeF | KSeF gönderimi | ücretsiz |
+| Polonya: ByteWave | KSeF gönderimi | ~69 zł/yıl |
+
+Sonuç açık: **format üretmek para etmiyor, gönderim de bizim
+düşündüğümüzden ucuz.** Bu ADR'nin "A'nın fiyat tavanı düşük" öngörüsü
+doğruydu; fiyatlar buna göre indirildi (Pro 149 € → 49 €).
+
+### Asıl bulgu: ücretsiz olan, geçerli değil
+
+Aynı Alman siparişi, aynı satıcı verisi, aynı resmi denetleyici
+(KoSIT XRechnung 3.0.2):
+
+| | Başarısız iddia | Kural |
+|---|---|---|
+| E-Invoicing For WooCommerce 1.x (8 Eylül 2026) | **26** | 10 |
+| Deklera 0.3.5 | **0** | — |
+
+Düşen kurallar Almanya'nın zorunlu kıldıkları: BR-DE-1 (ödeme talimatları),
+BR-DE-7 (satıcı e-postası), BR-DE-15 (alıcı referansı), BR-DE-21, BR-DE-27,
+BR-DE-28, ve PEPPOL-EN16931-R001 / R008 (boş elemanlar, dört kez) / R010 /
+R020.
+
+Adil olmak için rakibin okuduğu bütün ayarlar dolduruldu; eksik bırakılan
+`wooei_id_vat` sonradan eklendiğinde 28 → 26'ya indi, sıfıra inmedi.
+
+**Bu, ürünün varlık sebebinin kanıtıdır.** Bizim ilk çıktımız da 12
+iddiadan düşüyordu (ADR 0010); fark, ölçmüş olmamız. Rakip bunu düzeltmek
+isterse resmi kural setini çalıştırması gerekir — yani tam olarak Pro'nun
+sattığı şeyi.
+
+### Konumlandırmaya etkisi
+
+Fark bir özellik listesi değil, **doğruluk**. Ve gösterilebilir:
+
+> Ürettiğimiz belgeyi resmi denetleyiciden geçiriyoruz ve raporu
+> yayınlıyoruz. Aldığınız her eklentiden aynısını isteyin.
+
+**Rakip adı verilmez.** Kanıt bizde; adlandırmak hukuken riskli, gereksiz ve
+bir sonraki sürümlerinde geçersiz kalabilir. Kategoriye meydan okumak yeter.
+
+### Bu ölçüm nasıl tekrarlanır
+
+Rakip eklenti temiz yığına kurulur, aynı sipariş ve satıcı verisiyle
+XRechnung ürettirilir, `docs/RELEASE.md` → "Almanya" bölümündeki komutla
+aynı Schematron'dan geçirilir. Sürüm ve tarih not edilmeli: bu bir anlık
+ölçümdür, kalıcı bir gerçek değil.

@@ -22,6 +22,36 @@ yapamaz.
 Gövde: `{"xml": "<rsm:CrossIndustryInvoice …>", "profile": "en16931"}`,
 en fazla 2 MB.
 
+### Halka açık deneme ucu
+
+`POST /v1/try` — **kimlik doğrulaması yok.** Açılış sitesindeki
+[kontrol sayfası](https://ekremtekerek.github.io/deklera/check/) bunu çağırır.
+
+Gövde `/v1/validate` ile aynıdır (`xml`, `profile`); yanıta bir de `remaining`
+eklenir. Farkları:
+
+| | `/v1/validate` | `/v1/try` |
+|---|---|---|
+| Kimlik | Bearer anahtar | yok |
+| Gövde sınırı | 2 MB | 512 KB |
+| Kota | yok | IP başına saatte 10 (`TRY_PER_HOUR`) |
+| CORS | — | açık (sayfa başka kaynaktan çağırıyor) |
+
+**Neden var:** ürünün farkı bir özellik değil, doğruluk — ve doğruluk ancak
+gösterilebilirse satar. Ölçüldü: ücretsiz bir rakibin XRechnung çıktısı
+Almanya'nın resmi denetleyicisinden 26 iddiadan düşüyor, bizimki sıfırdan
+geçiyor (bkz. `docs/adr/0005` eki). Ziyaretçi bunu kendi belgesiyle
+görebilmeli.
+
+**Neden sınırlı:** kimlik doğrulaması olmayan bir uç, bedava bir API'ye
+dönüşüp Pro'nun sattığı şeyi boşa çıkarabilir. Kota, küçük gövde sınırı ve
+tek belge — toplu kullanım için elverişsiz. Pro'nun sattığı şey zaten bu
+değil: orada doğrulama HER faturada, WordPress'in içinde, kesilmeden önce
+çalışır.
+
+Kota süreç belleğindedir. Tek örnek çalıştığımız için yeterli; ölçekleme
+gerekirse paylaşılan bir depoya taşınmalı.
+
 ### Profiller
 
 `profile` iki değer alır:

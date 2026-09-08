@@ -90,6 +90,27 @@ check(
 // Bilinmeyen profil sessizce tabana dusmeli; istemci bizden yeni olabilir.
 check('bilinmeyen profil tabana dusuyor', validate(example, 'mars').valid);
 
+// --- Halka acik deneme ucunun kotasi ---
+//
+// Kota mantiginda bir hata iki yonde de pahalidir: ya herkesi kilitler ya
+// hic korumaz. Ikisi de sessizce olur.
+
+console.log('\n' + 'Deneme ucu kotasi');
+
+const { takeQuota } = await import('../src/server.js');
+const ip = 'sinav-' + Math.random();
+const izinler = [];
+
+for (let i = 0; i < 12; i += 1) {
+  izinler.push(takeQuota(ip).allowed);
+}
+
+const gecen = izinler.filter(Boolean).length;
+
+check('varsayilan kota 10', gecen === 10, gecen + ' istek gecti');
+check('kota asilinca reddediyor', izinler[10] === false && izinler[11] === false);
+check('baska IP etkilenmiyor', takeQuota('sinav-baska-' + Math.random()).allowed);
+
 if (failures > 0) {
   console.error(`\n${failures} kontrol basarisiz.`);
   process.exit(1);

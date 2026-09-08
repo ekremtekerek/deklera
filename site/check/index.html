@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Paste an e-invoice and see what the official rule set says. EN 16931 and Germany's XRechnung 3.0.2, checked against the validators the authorities publish.">
+<meta name="color-scheme" content="light dark">
+<title>Check an e-invoice · Deklera</title>
+<link rel="canonical" href="https://ekremtekerek.github.io/deklera/check/">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../style.css">
+<style>
+  textarea {
+    width: 100%; min-height: 14rem; padding: 0.9rem 1rem;
+    background: var(--card); color: var(--ink);
+    border: 1px solid var(--rule); border-radius: 3px;
+    font: 400 0.85rem/1.5 var(--mono); resize: vertical;
+  }
+  .row { display: flex; flex-wrap: wrap; gap: 0.8rem; align-items: center; margin: 1rem 0 0; }
+  select {
+    padding: 0.7rem 0.8rem; border: 1px solid var(--rule); border-radius: 3px;
+    background: var(--card); color: var(--ink); font: 400 0.95rem var(--sans);
+  }
+  button.cta { border: 0; cursor: pointer; font-size: 1rem; font-family: var(--sans); }
+  button.cta[disabled] { opacity: 0.55; cursor: default; }
+  .verdict-ok { border-left-color: var(--green); }
+  .verdict-ok .verdict-line { color: var(--green); }
+  .muted { font-size: 0.88rem; color: var(--ink-soft); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <section>
+    <p class="eyebrow">Free · no sign-up</p>
+    <h1>Check an e-invoice against the official rules</h1>
+    <p class="lede">Paste the XML of an e-invoice — from any plugin, any system — and
+      see what the rule set the authorities publish actually says about it.</p>
+
+    <label for="xml" class="muted">Invoice XML (CII syntax: Factur-X, ZUGFeRD, XRechnung)</label>
+    <textarea id="xml" spellcheck="false" placeholder="&lt;rsm:CrossIndustryInvoice …&gt;"></textarea>
+
+    <div class="row">
+      <select id="profile" aria-label="Rule set">
+        <option value="en16931">EN 16931 — the European baseline</option>
+        <option value="xrechnung">Germany — XRechnung 3.0.2</option>
+      </select>
+      <button class="cta" id="go" type="button">Check it</button>
+      <span class="muted" id="status"></span>
+    </div>
+
+    <div id="out"></div>
+  </section>
+
+  <section>
+    <h2>Why this page exists</h2>
+    <p>Most WooCommerce invoice plugins produce the file, and several produce it for
+      nothing. Very few check it. The rule set that decides whether a document is
+      accepted compiles to XSLT&nbsp;2.0, which PHP cannot execute — so it is easy to
+      generate an invoice that looks right and is refused.</p>
+    <p>We measured our own output against Germany's official validator before we
+      shipped, and the first run failed twelve assertions. We fixed them. This page
+      runs the same check, on whatever you paste, so you can see for yourself where
+      your documents stand.</p>
+    <p><strong>Ask your current plugin for its validator report.</strong> That is a
+      fair question to put to any vendor, including us — ours is in the
+      <a href="https://github.com/ekremtekerek/deklera/blob/main/docs/adr/0010-almanya-ulusal-kurallari.md">repository</a>.</p>
+  </section>
+
+  <section>
+    <h2>What this is not</h2>
+    <div class="boundary">
+      <p>This page checks <strong>one document, on demand</strong>, and is limited to a
+        few checks per hour. It is a demonstration, not a service.</p>
+      <p>Deklera Pro is the other thing: the same official rule set, running inside
+        WordPress, on <em>every</em> invoice, <em>before</em> it is issued — so a
+        document that would be refused never leaves your shop. The free plugin does
+        the pre-flight report on your order data, which is where most rejections
+        actually start.</p>
+      <p>Nothing you paste is stored. The document is validated in memory and the
+        result is returned to your browser.</p>
+    </div>
+    <p style="margin-top:1.5rem">
+      <a class="cta" href="../">See what Deklera does</a>
+      <a class="cta cta-2" href="https://github.com/ekremtekerek/deklera/releases/latest">Download the free plugin</a>
+    </p>
+  </section>
+
+  <footer>
+    <p class="langs"><a href="../" hreflang="en">English</a><a href="../de/" hreflang="de">Deutsch</a><a href="../fr/" hreflang="fr">Français</a><a href="../pl/" hreflang="pl">Polski</a></p>
+    <p>Deklera is built by Hasan Ekrem Tekerek. Nothing here is tax or legal advice.</p>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var UC = 'https://konform-validator.onrender.com/v1/try';
+
+  var xml = document.getElementById('xml');
+  var profile = document.getElementById('profile');
+  var go = document.getElementById('go');
+  var durum = document.getElementById('status');
+  var out = document.getElementById('out');
+
+  /**
+   * Metni guvenle ekler; yanit disaridan gelen bir belgeden turer.
+   */
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text !== undefined) n.textContent = text;
+    return n;
+  }
+
+  function temizle() {
+    while (out.firstChild) out.removeChild(out.firstChild);
+  }
+
+  function bulgu(f) {
+    var kart = el('div', 'finding');
+    kart.appendChild(el('span', 'badge ' + (f.flag === 'warning' ? 'b-warn' : 'b-bad'),
+      f.flag === 'warning' ? 'Warning' : 'Would be rejected'));
+    kart.appendChild(el('span', 'f-title', f.rule || 'Rule'));
+    kart.appendChild(el('p', 'f-what', f.message || ''));
+    if (f.location) kart.appendChild(el('p', 'f-rule', f.location));
+    return kart;
+  }
+
+  function goster(veri) {
+    temizle();
+
+    var hatalar = veri.errors || [];
+    var uyarilar = veri.warnings || [];
+    var kutu = el('div', 'verdict' + (veri.valid ? ' verdict-ok' : ''));
+
+    kutu.appendChild(el('p', 'verdict-line', veri.valid
+      ? 'No findings. This document passes the rule set.'
+      : hatalar.length + (hatalar.length === 1 ? ' finding' : ' findings') + ' — this document would be rejected.'));
+
+    var alt = el('p', 'muted', 'Rule set: EN 16931 ' + veri.rules_version
+      + (veri.profile === 'xrechnung' ? ' + XRechnung 3.0.2 (' + veri.xrechnung_version + ')' : '')
+      + ' · ' + veri.duration_ms + ' ms');
+    alt.style.margin = '0';
+    kutu.appendChild(alt);
+    out.appendChild(kutu);
+
+    hatalar.concat(uyarilar).forEach(function (f) {
+      out.appendChild(bulgu(f));
+    });
+
+    if (typeof veri.remaining === 'number') {
+      out.appendChild(el('p', 'muted', veri.remaining + ' checks left this hour.'));
+    }
+  }
+
+  go.addEventListener('click', function () {
+    var metin = xml.value.trim();
+
+    if (metin === '') {
+      durum.textContent = 'Paste an invoice first.';
+      return;
+    }
+
+    temizle();
+    go.disabled = true;
+    durum.textContent = 'Checking… the service sleeps when idle, so the first check can take up to a minute.';
+
+    fetch(UC, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ xml: metin, profile: profile.value }),
+    })
+      .then(function (r) {
+        return r.json().then(function (veri) { return { ok: r.ok, status: r.status, veri: veri }; });
+      })
+      .then(function (c) {
+        durum.textContent = '';
+
+        if (c.status === 429) {
+          out.appendChild(el('p', 'muted',
+            'That is the limit for this hour (' + c.veri.limit + ' checks). '
+            + 'It resets in about ' + Math.ceil((c.veri.retry_after_seconds || 0) / 60) + ' minutes. '
+            + 'The plugin has no such limit.'));
+          return;
+        }
+
+        if (!c.ok) {
+          out.appendChild(el('p', 'muted', 'The service could not read that: ' + (c.veri.error || c.status)));
+          return;
+        }
+
+        goster(c.veri);
+      })
+      .catch(function () {
+        durum.textContent = '';
+        out.appendChild(el('p', 'muted', 'The service did not answer. It sleeps when idle — try once more.'));
+      })
+      .finally(function () {
+        go.disabled = false;
+      });
+  });
+})();
+</script>
+</body>
+</html>
