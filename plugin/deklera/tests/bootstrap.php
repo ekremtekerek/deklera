@@ -432,6 +432,32 @@ if ( ! class_exists( 'WC_Order' ) ) {
 		}
 
 		/**
+		 * Fatura e-postasi.
+		 *
+		 * @var string
+		 */
+		private string $email = '';
+
+		/**
+		 * Fatura e-postasini belirler.
+		 *
+		 * @param string $email E-posta.
+		 * @return void
+		 */
+		public function set_billing_email( string $email ): void {
+			$this->email = $email;
+		}
+
+		/**
+		 * Fatura e-postasini dondurur.
+		 *
+		 * @return string
+		 */
+		public function get_billing_email(): string {
+			return $this->email;
+		}
+
+		/**
 		 * Meta degeri dondurur.
 		 *
 		 * @param string $key Anahtar.
@@ -451,5 +477,41 @@ if ( ! function_exists( 'get_locale' ) ) {
 	 */
 	function get_locale(): string {
 		return (string) ( $GLOBALS['deklera_test_locale'] ?? 'en_US' );
+	}
+}
+
+if ( ! function_exists( 'WC' ) ) {
+	/**
+	 * WooCommerce'in posta gondericisini taklit eder.
+	 *
+	 * Yalnizca customer_invoice() var; testlerin ilgilendigi tek sey hangi
+	 * siparis icin cagrildigi. Gercek WC_Emails'i taklit etmek, WooCommerce'in
+	 * davranisini ikinci kez uygulamak olurdu.
+	 *
+	 * @return object
+	 */
+	function WC() { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.FunctionNameInvalid -- WooCommerce'in kendi adi.
+		return new class() {
+
+			/**
+			 * Posta gonderici.
+			 *
+			 * @return object
+			 */
+			public function mailer() {
+				return new class() {
+
+					/**
+					 * Fatura e-postasini gonderir.
+					 *
+					 * @param \WC_Order $order Siparis.
+					 * @return void
+					 */
+					public function customer_invoice( $order ): void {
+						$GLOBALS['deklera_test_sent'][] = $order->get_id();
+					}
+				};
+			}
+		};
 	}
 }

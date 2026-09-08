@@ -83,7 +83,7 @@ obligation is the seller's:
 | Your country | Document |
 |---|---|
 | France | **Factur-X** — a PDF/A-3 file with the XML embedded inside it |
-| Germany | **XRechnung 3.0** — pure XML |
+| Germany | **XRechnung 3.0** — pure XML, checked against the 3.0.2 rule set |
 | Poland | **KSeF FA(3)** — see section 6, it works differently |
 | Anywhere else in the EU | **EN 16931 CII** — the common semantic standard |
 
@@ -92,6 +92,37 @@ Open any order and look at the **E-invoice** box on the right:
 - the current version, its format and size
 - **Generate new version**
 - **History** — every generation, with timestamps
+
+### How the invoice reaches your customer
+
+Once the document is archived, Deklera sends WooCommerce's **Invoice** email to
+the customer with the file attached. So the customer receives two messages a few
+seconds apart: first the order confirmation, then the invoice.
+
+That order is deliberate and worth understanding, because it is the one thing
+about the timing that surprises people. Generation runs in the background so the
+customer never waits for it — which means the document does not yet exist at the
+moment the *order completed* email goes out. Rather than delay that email, or
+make your customer wait while a remote validation runs, Deklera sends the invoice
+when it is actually ready.
+
+If you have your own delivery flow and would rather send it yourself, turn the
+email off with the `deklera/email_after_generation` filter and use **Send invoice
+to customer** on the order screen instead.
+
+Two cases deliberately do **not** trigger it:
+
+- **Regenerating** an invoice. That is your decision, not an event the customer
+  should hear about automatically; send it yourself from the order screen.
+- **Credit notes.** WooCommerce's template is titled *Invoice*, and sending a
+  refund document under that heading would tell the customer the wrong thing.
+
+### Sending the invoice onward
+
+Attaching it to an email is a convenience, not the legal channel. Except in
+Poland, Deklera does not transmit: you pass the file to your own accredited
+provider — a PDP in France, a Peppol access point elsewhere. Poland is the
+exception and is fully automatic; see section 6.
 
 ### Versions are never overwritten
 

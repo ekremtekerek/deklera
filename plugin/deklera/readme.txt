@@ -5,7 +5,7 @@ Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 8.2
 Requires Plugins: woocommerce
-Stable tag: 0.3.4
+Stable tag: 0.3.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -246,6 +246,19 @@ site. See **External services** above.
 3. The e-invoice box on the order screen, with document versions and history.
 
 == Changelog ==
+
+= 0.3.5 =
+* Your customer now actually receives the invoice. The attachment feature was
+  wired to the order-completed email, but that email is sent before the
+  document exists — generation runs in the background so the customer never
+  waits for it. The result was an attachment that never attached. Deklera now
+  sends WooCommerce's Invoice email once the document is archived, with the
+  file on it.
+* Regenerating an invoice does not email the customer again, and a credit note
+  is not sent under an "Invoice" heading. Both would tell the customer
+  something you did not mean to say. Use the order screen to send those.
+* The new email can be switched off with the deklera/email_after_generation
+  filter if you deliver invoices your own way.
 
 = 0.3.4 =
 * German, French and Polish translations. This matters more than an admin

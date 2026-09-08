@@ -9,8 +9,10 @@ declare( strict_types = 1 );
 
 namespace Deklera\Delivery;
 
+use Deklera\Invoice\SemanticInvoice;
 use Deklera\Storage\Archive;
 use Deklera\Storage\AuditLog;
+use Deklera\Storage\Document;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -34,12 +36,20 @@ final class EmailDelivery {
 	private const EMAIL_IDS = array( 'customer_completed_order', 'customer_invoice' );
 
 	/**
+	 * Ticari fatura belge türü (UNTDID 1001).
+	 *
+	 * @var string
+	 */
+	private const INVOICE_TYPE = '380';
+
+	/**
 	 * Kancaları kaydeder.
 	 *
 	 * @return void
 	 */
 	public static function register(): void {
 		add_filter( 'woocommerce_email_attachments', array( self::class, 'attach' ), 20, 4 );
+		add_action( 'deklera/document_generated', array( self::class, 'on_generated' ), 10, 3 );
 	}
 
 	/**
@@ -102,5 +112,75 @@ final class EmailDelivery {
 		);
 
 		return $attachments;
+	}
+
+	/**
+	 * Belge arşive yazıldıktan sonra fatura e-postasını gönderir.
+	 *
+	 * NEDEN AYRI BİR E-POSTA GEREKTİ
+	 *
+	 * Tasarım gereği ek, WooCommerce'in zaten gönderdiği e-postaya takılır —
+	 * ikinci bir mesaj gürültüdür. Ama ölçüldü: "sipariş tamamlandı" e-postası
+	 * belge daha ÜRETİLMEDEN çıkıyor. Üretim asenkron kuyrukta koşar, e-posta
+	 * ise aynı istekte gider. Yani özellik bağlıydı ve asıl hedefinde HİÇ
+	 * çalışmıyordu; müşteri faturasız bir onay alıyordu ve kimse fark etmezdi.
+	 *
+	 * Üretimi senkron yapmak bunu çözerdi, ama Pro'da uzak doğrulama çağrısını
+	 * durum geçişinin içine sokardı — uyuyan serviste yirmi saniye. Bir
+	 * yöneticiyi o kadar bekletmek kabul edilemez.
+	 *
+	 * Bu yüzden belge hazır olunca WooCommerce'in kendi fatura e-postası
+	 * gönderilir; ek yukarıdaki süzgeçle ona zaten takılır.
+	 *
+	 * @param Document        $document Arşivlenmiş belge.
+	 * @param \WC_Order       $order    Sipariş.
+	 * @param SemanticInvoice $invoice  Anlamsal fatura.
+	 * @return void
+	 */
+	public static function on_generated( Document $document, \WC_Order $order, SemanticInvoice $invoice ): void {
+		/**
+		 * Belge üretildikten sonra fatura e-postası gönderilsin mi.
+		 *
+		 * @param bool      $send     Gönderilsin mi.
+		 * @param Document  $document Belge.
+		 * @param \WC_Order $order    Sipariş.
+		 */
+		if ( ! \apply_filters( 'deklera/email_after_generation', true, $document, $order ) ) {
+			return;
+		}
+
+		/*
+		 * Yalnızca ilk sürüm. Yeniden üretim yöneticinin bilinçli bir eylemidir
+		 * ve müşteriye habersiz ikinci bir fatura göndermemeli; o durumda
+		 * sipariş ekranındaki gönderme düğmesi kullanılır.
+		 */
+		if ( 1 !== $document->version ) {
+			return;
+		}
+
+		/*
+		 * İade faturası bu yoldan gitmez: WooCommerce'in şablonu "Fatura"
+		 * başlığını taşır ve bir iade belgesini o başlıkla yollamak müşteriye
+		 * yanlış bilgi vermek olur.
+		 */
+		if ( self::INVOICE_TYPE !== $invoice->type_code ) {
+			return;
+		}
+
+		if ( '' === trim( (string) $order->get_billing_email() ) ) {
+			return;
+		}
+
+		if ( ! \function_exists( 'WC' ) ) {
+			return;
+		}
+
+		$mailer = \WC()->mailer();
+
+		if ( ! is_object( $mailer ) || ! method_exists( $mailer, 'customer_invoice' ) ) {
+			return;
+		}
+
+		$mailer->customer_invoice( $order );
 	}
 }
