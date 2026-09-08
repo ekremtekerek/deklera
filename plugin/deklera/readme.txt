@@ -191,6 +191,25 @@ whole point of the Polish system.
 Everywhere else, no. On Pro, the document is sent to the validation service
 described under **External services**, and only if you enable it.
 
+= How is this different from the other invoice plugins? =
+
+Most WooCommerce invoice plugins already produce the file, and several produce
+it for nothing. So does Deklera: the entire free version is the format work —
+pre-flight report, Factur-X, XRechnung, credit notes, versioned archive — and
+nothing in it is switched off.
+
+That is the entry ticket, not the product. Producing a file is easy. Knowing
+whether the data behind it will survive the rules is not, and that is the part
+that costs you weeks when it goes wrong.
+
+So Deklera does the part nobody else checks. The report tells you which orders
+would be rejected **before** you issue them. Pro runs the finished document
+through the official rule set — the one that compiles to XSLT 2.0, which PHP
+cannot execute, which is why it runs as a service rather than on your site.
+
+If you already pay to send invoices over Peppol, this does not replace that.
+It is the check you run first, so that what you send comes back accepted.
+
 = Which countries are supported? =
 
 France (Factur-X, *facture électronique*), Germany (XRechnung, *E-Rechnung*)
