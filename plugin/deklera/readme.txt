@@ -62,7 +62,7 @@ your country requires:
 * **France** — Factur-X: a PDF/A-3 file with the XML embedded inside it
 * **Germany** — XRechnung 3.0 (pure XML)
 * **Poland** — KSeF FA(3), submitted to the national platform
-* **Other countries** — EN 16931 CII
+* **Other countries** — EN 16931 CII, the European baseline. Read the FAQ below before relying on it.
 
 The tax category (standard, reverse charge, intra-community supply, export) is
 derived from where the seller and buyer are, not guessed from the rate alone.
@@ -194,8 +194,15 @@ described under **External services**, and only if you enable it.
 = Which countries are supported? =
 
 France (Factur-X, *facture électronique*), Germany (XRechnung, *E-Rechnung*)
-and Poland (KSeF FA(3)) are fully supported. Other EU countries receive
-EN 16931 CII output, which is the common semantic standard behind them.
+and Poland (KSeF FA(3)) are fully supported, and each one is measured against
+that country's own official validator before a release goes out.
+
+Other EU countries receive EN 16931 CII output, the common semantic standard
+behind all of them. **Read that as the European baseline, not as your national
+profile.** Several member states run their own mandatory format and their own
+platform — Italy's FatturaPA through the SdI is the clearest example — and
+Deklera does not produce those. If your country runs its own system, confirm
+that EN 16931 CII is accepted there before you rely on this plugin for it.
 
 **Poland** is supported, and it works differently from the others. KSeF is not
 just a format: an FA(3) invoice does not legally exist until KSeF has accepted
