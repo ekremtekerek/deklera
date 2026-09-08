@@ -102,6 +102,22 @@ final class Locale {
 	 * @return string Kurulu olduğu doğrulanmış locale.
 	 */
 	public static function document( \WC_Order $order ): string {
+		return self::installed( self::requested( $order ) );
+	}
+
+	/**
+	 * Siparişin İSTEDİĞİ belge dilini döndürür.
+	 *
+	 * Kurulu olup olmadığına BAKMAZ ve hiçbir şey indirmez; document()'ten
+	 * farkı budur. Ayrı durmasının sebebi ön uçuş: tarama sırasında yüzlerce
+	 * sipariş için dil paketi indirmeye kalkmak kabul edilemez bir maliyet
+	 * olurdu, ama istenen ile gerçekleşen arasındaki farkı görmek gerekiyor —
+	 * o fark, alıcının faturayı yanlış dilde alması demektir.
+	 *
+	 * @param \WC_Order $order Sipariş.
+	 * @return string
+	 */
+	public static function requested( \WC_Order $order ): string {
 		$candidates = array(
 			(string) $order->get_meta( self::META_OVERRIDE ),
 			self::from_wpml( $order ),
@@ -125,9 +141,7 @@ final class Locale {
 		 * @param string    $locale Çözümlenen locale.
 		 * @param \WC_Order $order  Sipariş.
 		 */
-		$locale = (string) \apply_filters( 'deklera/document_locale', $locale, $order );
-
-		return self::installed( $locale );
+		return (string) \apply_filters( 'deklera/document_locale', $locale, $order );
 	}
 
 	/**

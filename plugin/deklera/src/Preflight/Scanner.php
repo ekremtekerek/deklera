@@ -47,6 +47,7 @@ final class Scanner {
 			new Rules\BuyerIdentity(),
 			new Rules\TaxCategoryConsistency(),
 			new Rules\TotalsConsistency(),
+			new Rules\DocumentLanguage(),
 		);
 
 		/**

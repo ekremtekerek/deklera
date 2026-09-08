@@ -238,6 +238,12 @@ return array(
 	'Registered by KSeF' => 'Enregistré par KSeF',
 	'Rejected by KSeF' => 'Rejeté par KSeF',
 
+	// Belge dili kurali.
+	'Invoice language' => 'Langue de la facture',
+	'This invoice would be issued in your store language, not %s.' => 'Cette facture serait émise dans la langue de votre boutique, et non en %s.',
+	'Deklera writes the invoice in the buyer\'s language and ships German, French and Polish. WordPress can only switch to a language it has installed, so without the language pack the document falls back to your store language.' => 'Deklera rédige la facture dans la langue de l\'acheteur et intègre l\'allemand, le français et le polonais. WordPress ne peut basculer que vers une langue installée ; sans le pack de langue, le document revient à la langue de votre boutique.',
+	'Install it under Settings > General > Site Language, or add it under Dashboard > Updates. The site needs to reach WordPress.org once to download it.' => 'Installez-la dans Réglages > Général > Langue du site, ou ajoutez-la dans Tableau de bord > Mises à jour. Le site doit pouvoir joindre WordPress.org une fois pour la télécharger.',
+
 	'__cogul__' => array(
 		'All %s recent order would be accepted.' => array(
 			'La %s commande récente serait acceptée.',

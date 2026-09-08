@@ -5,7 +5,7 @@ Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 8.2
 Requires Plugins: woocommerce
-Stable tag: 0.3.3
+Stable tag: 0.3.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -239,6 +239,21 @@ site. See **External services** above.
 3. The e-invoice box on the order screen, with document versions and history.
 
 == Changelog ==
+
+= 0.3.4 =
+* German, French and Polish translations. This matters more than an admin
+  screen: the invoice is written in the buyer's language, so a German
+  customer was until now receiving a PDF labelled in English. They now get
+  Rechnung, Nettobetrag and USt-IdNr., a French customer Facture and
+  Total HT, a Polish one Faktura and Razem netto.
+* The legal wording follows each country's own convention rather than a
+  literal translation — reverse charge appears as Steuerschuldnerschaft des
+  Leistungsempfängers, autoliquidation, odwrotne obciążenie; a credit note
+  as Rechnungskorrektur, facture d'avoir, faktura korygująca.
+* A new pre-flight check warns when an invoice would go out in the wrong
+  language. WordPress can only switch to a language it has installed, so
+  without the language pack the document quietly falls back to your store
+  language — and you would not find out.
 
 = 0.3.3 =
 * Invoices now pass the national validators, not only the EU baseline. This

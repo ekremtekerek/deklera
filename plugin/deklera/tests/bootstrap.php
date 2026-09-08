@@ -336,3 +336,120 @@ if ( ! function_exists( 'wc_get_base_location' ) ) {
 		);
 	}
 }
+
+if ( ! function_exists( 'get_available_languages' ) ) {
+	/**
+	 * Sitede kurulu dillerin listesi.
+	 *
+	 * WordPress bunu WP_LANG_DIR'i tarayarak uretir. Testlerde diskte dosya
+	 * aramak yerine dogrudan verilir; kurali ilgilendiren tek sey listenin
+	 * icerigidir.
+	 *
+	 * @return string[]
+	 */
+	function get_available_languages(): array {
+		return (array) ( $GLOBALS['deklera_test_languages'] ?? array() );
+	}
+}
+
+if ( ! class_exists( 'WC_Order' ) ) {
+	/**
+	 * WooCommerce siparisinin testler icin yeterli taklidi.
+	 *
+	 * Yalnizca kurallarin okudugu alanlar var; tam bir taklit yazmak
+	 * WooCommerce'in davranisini ikinci kez uygulamak olurdu ve o kopya
+	 * gercekten sapardi.
+	 */
+	class WC_Order {
+
+		/**
+		 * Siparis kimligi.
+		 *
+		 * @var int
+		 */
+		private int $id;
+
+		/**
+		 * Fatura ulkesi.
+		 *
+		 * @var string
+		 */
+		private string $country = '';
+
+		/**
+		 * Meta degerleri.
+		 *
+		 * @var array<string,string>
+		 */
+		private array $meta = array();
+
+		/**
+		 * Kurucu.
+		 *
+		 * @param int $id Siparis kimligi.
+		 */
+		public function __construct( int $id = 1 ) {
+			$this->id = $id;
+		}
+
+		/**
+		 * Kimligi dondurur.
+		 *
+		 * @return int
+		 */
+		public function get_id(): int {
+			return $this->id;
+		}
+
+		/**
+		 * Fatura ulkesini belirler.
+		 *
+		 * @param string $country Ulke kodu.
+		 * @return void
+		 */
+		public function set_billing_country( string $country ): void {
+			$this->country = $country;
+		}
+
+		/**
+		 * Fatura ulkesini dondurur.
+		 *
+		 * @return string
+		 */
+		public function get_billing_country(): string {
+			return $this->country;
+		}
+
+		/**
+		 * Meta degeri belirler.
+		 *
+		 * @param string $key   Anahtar.
+		 * @param string $value Deger.
+		 * @return void
+		 */
+		public function set_meta( string $key, string $value ): void {
+			$this->meta[ $key ] = $value;
+		}
+
+		/**
+		 * Meta degeri dondurur.
+		 *
+		 * @param string $key Anahtar.
+		 * @return string
+		 */
+		public function get_meta( string $key = '' ) {
+			return $this->meta[ $key ] ?? '';
+		}
+	}
+}
+
+if ( ! function_exists( 'get_locale' ) ) {
+	/**
+	 * Sitenin dili.
+	 *
+	 * @return string
+	 */
+	function get_locale(): string {
+		return (string) ( $GLOBALS['deklera_test_locale'] ?? 'en_US' );
+	}
+}

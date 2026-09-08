@@ -9,7 +9,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: fr_FR\n"
 "Language-Team: French\n"
-"PO-Revision-Date: 2026-09-08 05:47:21+0000\n"
+"PO-Revision-Date: 2026-09-08 06:40:02+0000\n"
 "Last-Translator: Hasan Ekrem Tekerek\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Domain: deklera\n"
@@ -539,6 +539,24 @@ msgstr "Un écart est légitime pour un établissement secondaire, mais c'est au
 #: src/Preflight/Rules/BuyerIdentity.php:145
 msgid "Open the order and confirm both values with the customer."
 msgstr "Ouvrez la commande et confirmez les deux valeurs avec le client."
+
+#: src/Preflight/Rules/DocumentLanguage.php:53
+msgid "Invoice language"
+msgstr "Langue de la facture"
+
+#. translators: %s: locale code, for example de_DE.
+#: src/Preflight/Rules/DocumentLanguage.php:99
+#, php-format
+msgid "This invoice would be issued in your store language, not %s."
+msgstr "Cette facture serait émise dans la langue de votre boutique, et non en %s."
+
+#: src/Preflight/Rules/DocumentLanguage.php:102
+msgid "Deklera writes the invoice in the buyer's language and ships German, French and Polish. WordPress can only switch to a language it has installed, so without the language pack the document falls back to your store language."
+msgstr "Deklera rédige la facture dans la langue de l'acheteur et intègre l'allemand, le français et le polonais. WordPress ne peut basculer que vers une langue installée ; sans le pack de langue, le document revient à la langue de votre boutique."
+
+#: src/Preflight/Rules/DocumentLanguage.php:103
+msgid "Install it under Settings > General > Site Language, or add it under Dashboard > Updates. The site needs to reach WordPress.org once to download it."
+msgstr "Installez-la dans Réglages > Général > Langue du site, ou ajoutez-la dans Tableau de bord > Mises à jour. Le site doit pouvoir joindre WordPress.org une fois pour la télécharger."
 
 #: src/Preflight/Rules/InvoiceBasics.php:40
 msgid "Invoice essentials"
