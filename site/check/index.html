@@ -123,7 +123,7 @@
     var kart = el('div', 'finding');
     kart.appendChild(el('span', 'badge ' + (f.flag === 'warning' ? 'b-warn' : 'b-bad'),
       f.flag === 'warning' ? 'Warning' : 'Would be rejected'));
-    kart.appendChild(el('span', 'f-title', f.rule || 'Rule'));
+    kart.appendChild(el('span', 'f-title', f.rule || 'Not a valid document'));
     kart.appendChild(el('p', 'f-what', f.message || ''));
     if (f.location) kart.appendChild(el('p', 'f-rule', f.location));
     return kart;
@@ -181,7 +181,7 @@
 
         if (c.status === 429) {
           out.appendChild(el('p', 'muted',
-            'That is the limit for this hour (' + c.veri.limit + ' checks). '
+            'That is the limit for this hour (' + c.veri.limit + (c.veri.limit === 1 ? ' check). ' : ' checks). ')
             + 'It resets in about ' + Math.ceil((c.veri.retry_after_seconds || 0) / 60) + ' minutes. '
             + 'The plugin has no such limit.'));
           return;
