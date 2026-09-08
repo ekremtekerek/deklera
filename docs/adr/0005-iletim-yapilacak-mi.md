@@ -128,3 +128,26 @@ Rakip eklenti temiz yığına kurulur, aynı sipariş ve satıcı verisiyle
 XRechnung ürettirilir, `docs/RELEASE.md` → "Almanya" bölümündeki komutla
 aynı Schematron'dan geçirilir. Sürüm ve tarih not edilmeli: bu bir anlık
 ölçümdür, kalıcı bir gerçek değil.
+
+### Ek ölçüm: pazar lideri Almanya'yı kapsamıyor
+
+WP Overnight'ın ücretsiz eklentisi (100k+ kurulum) 8 Eylül 2026'da incelendi.
+Ürettiği biçimler:
+
+| Söz dizimi | Biçimler |
+|---|---|
+| CII | CiiD16B, Factur-X 1.0, ZUGFeRD 1.0, ZUGFeRD 2.0 |
+| UBL | Peppol BIS 3.0, UBL 2.1 |
+
+**XRechnung yok.** `edi/` ağacının tamamında "xrechnung" dizesi hiç geçmiyor.
+
+Bunun anlamını fazla geniş okumamak gerekir; dürüst hâli şu:
+
+- **Almanya B2G:** XRechnung zorunludur. Lider bunu üretmiyor, biz üretiyoruz
+  ve resmi denetleyiciden sıfır bulguyla geçiyoruz.
+- **Almanya B2B:** EN 16931 uyumlu CII (ZUGFeRD/Factur-X) kabul edilir. Lider
+  bunu üretiyor. Bu senaryoda üstünlük iddia edilemez — ölçmedik.
+
+Yani "lider Almanya'da çalışmıyor" demek YANLIŞ olur. Doğrusu: XRechnung
+gereken her yerde lider bir seçenek sunmuyor, öteki ücretsiz rakip sunuyor ama
+çıktısı resmi denetleyiciden düşüyor.
