@@ -167,8 +167,7 @@ rm -f "$STAGE/composer.lock"
 #
 # Yalnizca Pro pakette ise yarar; ucretsiz surumde ceviriler
 # translate.wordpress.org'dan dil paketi olarak gelir (bkz. docs/I18N.md 9).
-# Yine de her iki pakete de konuyor: ayirmak, ayni zip'in iki farkli icerige
-# sahip olmasi demek olurdu ve hangisinin nerede oldugu karisirdi.
+# Ikisi de burada uretilir, ucretsiz olanlar asagida cikarilir.
 echo "==> Ceviriler derleniyor"
 MSYS_NO_PATHCONV=1 docker compose run --rm -T \
   -v "$(pwd)/$STAGE/languages:/lang" \
@@ -184,7 +183,35 @@ if [ "$mo_sayisi" != "$po_sayisi" ]; then
 fi
 
 echo "    $mo_sayisi dil derlendi"
+# Ucretsiz pakete DERLENMIS ceviri konmaz.
+#
+# Sebep davranissal, kozmetik degil: Plugin::load_translations() serbest
+# yapida is_premium() yanlis oldugu icin ERKEN DONER. Yani .mo dosyalari
+# ucretsiz pakete girse bile HIC OKUNMAZ -- olu agirlik. WordPress.org'da
+# ceviriler zaten translate.wordpress.org'dan dil paketi olarak gelir
+# (bkz. docs/I18N.md 9).
+#
+# Yan faydasi: Plugin Check uretilmis .l10n.php dosyalarini PHP sanip
+# icindeki suzgec adlarini gecersiz onek diye bildiriyordu. Alti uyari
+# incelemeciye gurultu olarak gidiyordu; artik dosya yok.
+#
+# .pot KALIR: GlotPress ceviri kaynagi olarak onu okur.
+if [ -z "$SUFFIX" ]; then
+  find "$STAGE/languages" -type f ! -name '*.pot' -delete
+  echo "==> Ucretsiz paket: derlenmis ceviriler cikarildi"
+fi
+
 echo "==> Arsivleniyor"
+
+# Once varsa eski arsiv silinir.
+#
+# "zip -r" var olan bir arsivi GUNCELLER: yeni dosyalari ekler, degisenleri
+# tazeler, ama ARTIK OLMAYAN dosyalari SILMEZ. Paketten bir dosya cikarildiginda
+# eski zip'te sonsuza kadar kalir ve kimse fark etmez. Tam olarak bu oldu:
+# ucretsiz paketten derlenmis ceviriler cikarildi, hazirlik dizininde yoklardi,
+# ama zip'te duruyorlardi ve boyut hic degismedigi icin fark edilmedi.
+rm -f "$BUILD/deklera-$VERSION$SUFFIX.zip"
+
 # zip her makinede kurulu degil (Git Bash'te yok, GNU tar zip uretemez);
 # konteynerdekini kullaniyoruz.
 compose "$BUILD" sh -c "zip -qr deklera-$VERSION$SUFFIX.zip deklera"

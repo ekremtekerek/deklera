@@ -391,12 +391,9 @@ Fixes a Pro-only problem: the first validation of the day could be reported
 as "service unavailable". Nothing to do after upgrading.
 
 = 0.3.0 =
-The plugin is now called Deklera. Settings and the document archive do not
-carry over from the previous version: re-enter your VAT number, and for Polish
-stores your KSeF token. On Pro, the licence also has to be
-activated again — the rename moved where the licence is stored, so the plugin
-no longer sees the old one. Invoices already registered with KSeF keep their numbers at the
-tax office and are not affected.
+The plugin is now called Deklera. Settings and the archive do not carry over:
+re-enter your VAT number, your KSeF token, and on Pro your licence. Invoices
+already registered with KSeF keep their numbers and are unaffected.
 
 = 0.2.1 =
 Polish stores that issue VAT-exempt invoices should reissue any exempt invoice
