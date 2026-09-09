@@ -362,78 +362,52 @@ kalmalıdır.
 
 ---
 
-## Pro müşterisine doğrulama anahtarı nasıl ulaşır
+## Pro müşterisi ne alır, ne yapar
 
-**Bu adım yapılmadan Pro satılamaz.** Eklenti ekranı "anahtar satın alma
-e-postanızda" diyor; o e-posta anahtarı taşımıyorsa müşteri ilk dakikada
-tıkanır ve destek yazar.
+**Hiçbir şey.** Lisansını aktive eder, resmi doğrulama açılır. Eklenti kendini
+o lisansla yetkilendiriyor; yapıştırılacak ikinci bir dizge yok.
 
-> **Kapı önce lisans anahtarını istiyor.** Premium paket temiz kurulumda
-> eklentinin bütün ekranını Freemius'un "Welcome to Deklera! To get started,
-> please enter your license key" kapısıyla değiştiriyor; doğrulama anahtarı
-> alanı o kapının arkasında kalıyor. Yani müşteri **iki anahtar** alıyor ve
-> ilk gördüğü ekran hangisini istediğini söylemiyor. E-posta metninde sıranın
-> açıkça yazılması gerekir: önce lisans anahtarı, eklenti açıldıktan sonra
-> doğrulama anahtarı. 9 Eylül 2026'da ürünün sahibi bu tuzağa düştü — Render'daki
-> doğrulama anahtarını lisans kutusuna yapıştırdı ve Freemius doğru şekilde reddetti.
+Bu bölüm eskiden bir sayfa uzunluğundaydı ve iki anahtarın sırasını
+anlatıyordu. 0.3.8 ile o sorun ortadan kalktı — bkz. aşağıdaki "Yerine geçen
+tasarım".
+
+### Satın alma e-postası
 
 Freemius → **Emails → Customization → Specific Email Customization**:
 
 | Alan | Değer |
 |---|---|
 | Email to customize | **New subscription email** (planlar yıllık abonelik; "Lifetime" değil) |
-| Custom section title | Two keys: use them in this order |
-| Custom section content | Aşağıdaki **Metin** bölümündeki taslak |
+| Custom section title | `Your licence is all you need` |
+| Custom section content | aşağıdaki metin |
 
-Metnin içinde anahtarın yazılacağı yer açıkça işaretli:
-
-```
-Validation key:  [[REPLACE-THIS-WITH-THE-VALIDATION-KEY]]
-```
-
-Anahtar, doğrulama servisinin `LICENSE_SECRET` ortam değişkenidir (Render →
-konform-validator → Environment). Yer tutucuyu gerçek
-değerle **değiştirmeden kaydetmeyin** — kaydedilirse her müşteriye o dizge
-gider ve boş bırakmaktan kötü olur.
-
-Metin, lisans anahtarıyla doğrulama anahtarının **ayrı şeyler** olduğunu ayrıca
-söylüyor; ikisini karıştırmak en sık yapılan kurulum hatası.
-
-### Metin
-
-Freemius'un "Custom section content" alanına düz metin olarak girilir; alan
-HTML kabul ediyorsa satır sonları `<br>` ile korunmalıdır. Anahtarın yeri
-işaretli — **yer tutucu değiştirilmeden kaydedilmemelidir.**
+Metinde **yer tutucu yok**; kopyalanıp olduğu gibi kaydedilir. Eskiden anahtar
+elle yerleştiriliyordu ve yer tutucu değiştirilmeden kaydedilirse her müşteriye
+o dizge gidiyordu. O tuzak da kalktı.
 
 ```text
 Thank you for buying Deklera Pro.
 
-There are two keys, and they do different things. Use them in this order.
+There is nothing extra to set up. Your licence key is in this email;
+activating it turns on official validation.
 
 
-1. LICENCE KEY - activates the plugin
+HOW TO ACTIVATE
 
-Your licence key is in this email. Install Deklera, then open
+Install Deklera, then open
 
     WooCommerce -> Deklera
 
 The first screen asks for a licence key. Paste it there and click
-"Activate License". The plugin opens once that is done.
+"Activate License". That is the whole setup.
 
+To confirm, scroll down to "Official validation (Pro)". It should say:
 
-2. VALIDATION KEY - turns on official validation
+    Official validation is on. Your licence authorises it — there is
+    nothing to set up here.
 
-This is a different string. It is not the licence key, and the
-activation screen above will refuse it.
-
-    Validation key:  [[REPLACE-THIS-WITH-THE-VALIDATION-KEY]]
-
-Paste it in
-
-    WooCommerce -> Deklera -> Official validation (Pro) -> Validation key
-
-then click Save. The service address next to it is already filled in;
-leave it as it is unless you run your own copy of the validator.
+The two fields below it can be left alone. They exist for shops that
+run their own copy of the validation service.
 
 
 WHAT CHANGES AFTERWARDS
@@ -441,14 +415,16 @@ WHAT CHANGES AFTERWARDS
 Every invoice is checked against the official EN 16931 rule set before
 it is issued - and in German stores, against the XRechnung rules as
 well. A document that would be rejected is not issued at all, so nothing
-invalid leaves your shop - and the order screen names the rule that stopped
-it, so you know what to change.
+invalid leaves your shop - and the order screen names the rule that
+stopped it, so you know what to change.
 
 The first check after a quiet period can take up to a minute while the
 service wakes up. After that a check takes about a second.
 
-Please keep the validation key to yourself. It comes with your
-subscription.
+If your subscription lapses or is cancelled, validation stops on its
+own and the order history says so in plain terms. Everything else in
+the plugin keeps working: documents are still produced, checked
+before-hand and archived.
 
 Setup guide:
 https://github.com/ekremtekerek/deklera/blob/main/docs/GUIDE.md
@@ -456,18 +432,10 @@ https://github.com/ekremtekerek/deklera/blob/main/docs/GUIDE.md
 If anything is unclear, reply to this email.
 ```
 
-Metnin biçimi kasıtlı: numaralandırma iki anahtarı sıraya koyar, ikinci
-başlığın hemen altındaki cümle ("It is not the licence key, and the activation
-screen above will refuse it") tam olarak 9 Eylül'de yaşanan hatayı önler.
-Menü yolları eklentideki etiketlerle birebir aynıdır; değiştirilirlerse bu
-metin de değişmelidir.
+Metin üç şeyi bilerek söylüyor: kurulumun bittiğini, ekranda ne göreceğini, ve
+abonelik bitince **neyin durup neyin durmadığını**. Sonuncusu iade sebebidir:
+müşteri her şeyi kaybettiğini sanırsa geri ödeme ister.
 
-**Son cümle bir sürüm şartı taşıyor.** Metin, kuralın sipariş ekranında
-göründüğünü söylüyor. 0.3.7'de görünmüyordu: `render_audit()` yalnızca tarihi
-ve olay etiketini basıyordu ("Invalid"), kuralın adını değil — detay
-veritabanında duruyor ama hiçbir yerde gösterilmiyordu. 9 Eylül 2026'da
-düzeltildi; ön uçuş temizken belge yoksa sebep kutunun başında da gösteriliyor.
-**E-posta metni bu düzeltmeyi taşıyan sürüm yayımlanmadan kaydedilmemelidir.**
 
 ### Yerine geçen tasarım — 9 Eylül 2026
 
