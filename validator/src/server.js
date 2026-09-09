@@ -436,6 +436,21 @@ async function checkLicense(key, install, uid) {
     return { ok: false, reason: 'licence_service_unreachable' };
   }
 
+  /*
+   * Karar SDK'nin kendi anlamlandirmasiyla ayni tutuldu; kaynak
+   * `includes/entities/class-fs-plugin-license.php`:
+   *
+   *   is_features_enabled() = ! is_cancelled
+   *   is_lifetime()         = is_null( expiration )
+   *   is_expired()          = ! is_lifetime() && strtotime( expiration ) < simdi
+   *
+   * Yani bos expiration "suresiz" demektir, "suresi gecmis" degil -- tersine
+   * okunursa odemis her omur boyu musteri kilitlenir.
+   *
+   * Zaman damgasi UTC kabul edilir. SDK strtotime kullanip sunucunun saat
+   * dilimine birakiyor; servis tek bir makinede kosmadigi icin burada acikca
+   * UTC demek daha belirlenimci.
+   */
   const cancelled = true === payload?.is_cancelled;
   const expiry = payload?.expiration ? Date.parse(`${payload.expiration}Z`.replace(' ', 'T')) : null;
   const expired = null !== expiry && Number.isFinite(expiry) && expiry < now;
