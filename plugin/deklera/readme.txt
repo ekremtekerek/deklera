@@ -404,6 +404,11 @@ site. See **External services** above.
 
 == Upgrade Notice ==
 
+= 0.3.8 =
+Pro no longer needs a separate validation key: your licence now authorises
+official validation on its own. If you had pasted a key, it keeps working. The
+order screen also names the rule when a document is refused.
+
 = 0.3.2 =
 Adds a user guide and fixes the Pro setup screen, which previously left you
 with two empty fields and no explanation. Nothing to do after upgrading.
