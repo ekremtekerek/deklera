@@ -382,8 +382,8 @@ Freemius → **Emails → Customization → Specific Email Customization**:
 | Alan | Değer |
 |---|---|
 | Email to customize | **New subscription email** (planlar yıllık abonelik; "Lifetime" değil) |
-| Custom section title | One more step: your validation key |
-| Custom section content | Hazır metin panoda değilse bu bölümün altındaki taslak |
+| Custom section title | Two keys: use them in this order |
+| Custom section content | Aşağıdaki **Metin** bölümündeki taslak |
 
 Metnin içinde anahtarın yazılacağı yer açıkça işaretli:
 
@@ -391,12 +391,83 @@ Metnin içinde anahtarın yazılacağı yer açıkça işaretli:
 Validation key:  [[REPLACE-THIS-WITH-THE-VALIDATION-KEY]]
 ```
 
-Anahtar `validator/.env` içindeki `SECRET` değeridir. Yer tutucuyu gerçek
+Anahtar, doğrulama servisinin `LICENSE_SECRET` ortam değişkenidir (Render →
+konform-validator → Environment). Yer tutucuyu gerçek
 değerle **değiştirmeden kaydetmeyin** — kaydedilirse her müşteriye o dizge
 gider ve boş bırakmaktan kötü olur.
 
 Metin, lisans anahtarıyla doğrulama anahtarının **ayrı şeyler** olduğunu ayrıca
 söylüyor; ikisini karıştırmak en sık yapılan kurulum hatası.
+
+### Metin
+
+Freemius'un "Custom section content" alanına düz metin olarak girilir; alan
+HTML kabul ediyorsa satır sonları `<br>` ile korunmalıdır. Anahtarın yeri
+işaretli — **yer tutucu değiştirilmeden kaydedilmemelidir.**
+
+```text
+Thank you for buying Deklera Pro.
+
+There are two keys, and they do different things. Use them in this order.
+
+
+1. LICENCE KEY - activates the plugin
+
+Your licence key is in this email. Install Deklera, then open
+
+    WooCommerce -> Deklera
+
+The first screen asks for a licence key. Paste it there and click
+"Activate License". The plugin opens once that is done.
+
+
+2. VALIDATION KEY - turns on official validation
+
+This is a different string. It is not the licence key, and the
+activation screen above will refuse it.
+
+    Validation key:  [[REPLACE-THIS-WITH-THE-VALIDATION-KEY]]
+
+Paste it in
+
+    WooCommerce -> Deklera -> Official validation (Pro) -> Validation key
+
+then click Save. The service address next to it is already filled in;
+leave it as it is unless you run your own copy of the validator.
+
+
+WHAT CHANGES AFTERWARDS
+
+Every invoice is checked against the official EN 16931 rule set before
+it is issued - and in German stores, against the XRechnung rules as
+well. A document that would be rejected is not issued at all, so nothing
+invalid leaves your shop.
+
+The first check after a quiet period can take up to a minute while the
+service wakes up. After that a check takes about a second.
+
+Please keep the validation key to yourself. It comes with your
+subscription.
+
+Setup guide:
+https://github.com/ekremtekerek/deklera/blob/main/docs/GUIDE.md
+
+If anything is unclear, reply to this email.
+```
+
+Metnin biçimi kasıtlı: numaralandırma iki anahtarı sıraya koyar, ikinci
+başlığın hemen altındaki cümle ("It is not the licence key, and the activation
+screen above will refuse it") tam olarak 9 Eylül'de yaşanan hatayı önler.
+Menü yolları eklentideki etiketlerle birebir aynıdır; değiştirilirlerse bu
+metin de değişmelidir.
+
+**Metinde bilerek olmayan bir cümle var.** Taslak, engellenen belgenin sebebini
+sipariş ekranında görebileceğinizi söylemiyor — çünkü göremiyorsunuz.
+`OrderDocuments::render_audit()` yalnızca tarihi ve olay etiketini basıyor
+("Invalid"), kuralın adını ve mesajını değil. Oysa detay veritabanında duruyor;
+9 Eylül ölçümünde `[BR-DE-23-a]` tam metniyle kaydedildi. Pro'nun sattığı şey
+tam olarak o cümle olduğuna göre ekranda gösterilmesi gerekir. Gösterilene
+kadar e-postada söz verilmemelidir.
 
 ### Bu tasarımın bilinen zayıflığı
 
