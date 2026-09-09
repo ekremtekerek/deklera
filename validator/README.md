@@ -17,7 +17,7 @@ yapamaz.
 | Yol | Yöntem | Kimlik | Yanıt |
 |---|---|---|---|
 | `/health` | GET | yok | `{ok, rules_version, xrechnung_version, syntax}` |
-| `/v1/validate` | POST | `Authorization: Bearer <LICENSE_SECRET>` | `{valid, errors[], warnings[], profile, rules_version}` |
+| `/v1/validate` | POST | `Authorization: Bearer <lisans anahtarı>` | `{valid, errors[], warnings[], profile, rules_version}` |
 
 Gövde: `{"xml": "<rsm:CrossIndustryInvoice …>", "profile": "en16931"}`,
 en fazla 2 MB.
@@ -74,8 +74,33 @@ Bilinmeyen bir profil sessizce tabana düşer — istemci servisten yeni
 olabilir; daha az kural çalıştırmak hiç doğrulamamaktan iyidir. Yanıttaki
 `profile` alanı hangisinin koşulduğunu söyler.
 
-`LICENSE_SECRET` tanımlı değilse servis **her isteği 401 ile reddeder**.
-Yanlışlıkla kimliksiz açılan bir servis çalışır durumda görünmez.
+### Kimlik
+
+Belirteç iki şeyden biri olabilir ve sıra önemlidir:
+
+1. **Freemius lisans anahtarı** — normal yol. Eklenti kendi lisans anahtarını
+   gönderir, yanında `X-Deklera-Install` ve `X-Deklera-Uid` başlıklarıyla.
+   Servis lisansı Freemius'a sorar ve cevabı bir saat önbellekte tutar. Ayrı
+   bir anahtar yok; iptal, iade ve abonelik bitişi kendiliğinden işler.
+2. **`LICENSE_SECRET`** — izleme iş akışı ve kendi kopyasını çalıştıran
+   kurulum için. Yerelde çözülür, ağ istemez.
+
+Lisans sorgusu Freemius'a **imzalı** gider; imzasız çağrı 403 döner. İmza
+ürün kapsamındadır ve `FREEMIUS_SECRET_KEY` gerektirir. Değişken boşsa
+lisansla yetkilendirme yapılamaz ve sebep `licence_check_not_configured`
+olarak bildirilir — sessizce "geçersiz lisans" denmez, çünkü hata müşteride
+değil kurulumdadır.
+
+Freemius'a ulaşılamazsa daha önce **geçerli** denen lisans 24 saat çalışmaya
+devam eder. Ödemiş müşterinin faturasını bizim bağımlılığımızın arızası
+durduramaz.
+
+401 yanıtı sebebi de taşır: `licence_cancelled`, `licence_expired`,
+`missing_install`, `licence_service_unreachable`,
+`licence_check_not_configured`. Eklenti bunu yönetici ekranına yazar.
+
+İkisi de tanımlı değilse servis **her isteği 401 ile reddeder**. Yanlışlıkla
+kimliksiz açılan bir servis çalışır durumda görünmez.
 
 ---
 
@@ -95,6 +120,7 @@ Panelden **New → Web Service**, GitHub deposu `ekremtekerek/deklera`:
 | Instance Type | Free |
 | Health Check Path | `/health` |
 | `LICENSE_SECRET` | değer alanındaki **Generate** ile üretilir |
+| `FREEMIUS_SECRET_KEY` | Freemius panosu → ürün → **Keys** → `sk_…` |
 | `RULES_VERSION` | `1.3.16` |
 
 Kök dizin `validator` olduğu için `plugin/` altındaki değişiklikler yeniden
@@ -221,7 +247,9 @@ Riski tamamen kaldırmak isterseniz Hetzner CX22 (Almanya, ~4 €/ay) aynı
 **WooCommerce → Deklera** sayfasının altındaki "Official validation (Pro)" bölümü:
 
 - **Doğrulama ucu**: `https://<alan-adiniz>/v1/validate`
-- **Anahtar**: `.env` içindeki `LICENSE_SECRET` değeri
+- **Anahtar**: normalde **boş bırakılır** — eklenti Freemius lisans
+  anahtarını kendisi gönderir. Yalnızca kendi kopyanızı çalıştırıyorsanız
+  `.env` içindeki `LICENSE_SECRET` değerini girin.
 
 Servis erişilemezse eklenti belgeyi yine de üretir ve doğrulamanın
 çalışmadığını kaydeder. Ağ arızası fatura kesmeyi durdurmamalıdır.

@@ -506,21 +506,42 @@ kontrol.
 > kapsamında kendi kimlik bilgisini taşıması ya da başka bir yol seçilmesi
 > gerekiyor.
 >
-> **Karar bekliyor. Bu çözülmeden 0.3.8 çıkarılmaz** — çıkarsa Pro müşterisi
-> doğrulamayı hiç açamaz.
->
-> Seçenekler:
->
-> 1. **Ürün kapsamlı HMAC.** Servis kendi Freemius kimlik bilgisini taşır ve
->    lisansı sorar. Bugün çalışır, kalıcı depolama istemez. Bedeli: serviste
->    bir Freemius sırrı durur.
-> 2. **Webhook + yerel liste.** Freemius lisans olaylarını servise gönderir,
->    servis kendi listesini tutar; istek anında Freemius'a gidilmez. Daha iyi
->    çalışma özellikleri, ama Render ücretsiz katmanında **kalıcı disk yok**;
->    yeniden başlatma listeyi siler.
->
-> Ölçüm betiği: `build/sinav-lisans.php` (lisans etkinleştirildikten sonra
-> gerçek üçlüyle çalıştırılır).
+> **Seçilen yol: ürün kapsamlı HMAC.** Servis kendi Freemius gizli anahtarını
+> taşıyor ve lisansı imzalı olarak soruyor. Öteki seçenek — Freemius
+> webhook'larıyla yerel bir liste tutmak — Render ücretsiz katmanında
+> **kalıcı disk olmadığı** için elendi; yeniden başlatma listeyi silerdi.
+
+#### İmza
+
+Algoritma SDK'nın kendi uygulamasından alındı:
+
+```
+imzalanacak = METOT \n content-md5 \n content-type \n tarih \n yol
+Authorization: FS {urun}:{acik_anahtar}:base64url(hmac_sha256_hex)
+```
+
+İki ayrıntı sessizce imzayı bozar ve ikisi de kolayca kaçıyor:
+
+- PHP'nin `hash_hmac`'i varsayılan olarak **onaltılık dizge** döndürür;
+  base64 ham bayta değil o dizgeye uygulanır.
+- İmzalanan yol **sorgusuz** kısımdır; `?uid=…` imzaya girmez.
+
+Bu yüzden Node uygulaması PHP'ninkine karşı çapraz doğrulandı: aynı girdiyle
+üretilen iki imza birebir aynı çıktı (`validator/scripts/imza-capraz.mjs` ve
+`imza-php.php`). Yanlış imzanın bedeli, Freemius'un sebepsiz 403'ü ve hatanın
+müşteride aranmasıdır.
+
+#### Kurulum
+
+`FREEMIUS_SECRET_KEY` — Freemius panosu → ürün → **Keys** → `sk_…` —
+Render'da servisin ortamına konur. Depoya girmez. Boşsa lisans sorgusu
+yapılmaz ve sebep `licence_check_not_configured` olarak bildirilir; sessizce
+"geçersiz lisans" denmez.
+
+> **Gerçek uca karşı hâlâ ölçülmedi.** Karar mantığı ve imza doğrulandı, ama
+> Freemius'un canlı cevabı görülmedi — bunun için elde etkin bir lisans ve
+> `FREEMIUS_SECRET_KEY` gerekiyor. **Bu ölçüm yapılmadan 0.3.8 çıkarılmaz.**
+> Ölçüm betiği: `build/sinav-lisans.php`.
 
 ### Eski tasarımın bilinen zayıflığı
 

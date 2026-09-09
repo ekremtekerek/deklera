@@ -17,7 +17,7 @@ import { createServer } from 'node:http';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
-import { timingSafeEqual } from 'node:crypto';
+import { createHmac, timingSafeEqual } from 'node:crypto';
 import SaxonJS from 'saxon-js';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -49,6 +49,20 @@ const XRECHNUNG_VERSION = process.env.XRECHNUNG_VERSION ?? '2026-08-31';
  */
 const PRODUCT_ID = process.env.FREEMIUS_PRODUCT_ID ?? '38206';
 const FREEMIUS_API = process.env.FREEMIUS_API ?? 'https://api.freemius.com';
+
+/*
+ * Freemius urun kapsami kimlik bilgisi.
+ *
+ * Ilk tasarim "bu uc kimlik bilgisi istemiyor" varsayimina dayaniyordu.
+ * Olculdu (9 Eylul 2026): istiyor. Imzasiz cagri ciplak nginx 403 donuyor,
+ * ayni anda /v1/ping.json 200 veriyor -- yani engel bizde degil, uc yalnizca
+ * IMZALI istege cevap veriyor.
+ *
+ * Acik anahtar sir degildir, eklentinin icinde de duruyor. Sir olan yalnizca
+ * FREEMIUS_SECRET_KEY; depoya girmez, servisin ortaminda durur.
+ */
+const FREEMIUS_PUBLIC_KEY = process.env.FREEMIUS_PUBLIC_KEY ?? 'pk_d87b7be1a44f7b75829e2d8b37d48';
+const FREEMIUS_SECRET_KEY = process.env.FREEMIUS_SECRET_KEY ?? '';
 
 /** Gecerli cevap ne kadar sure guvenilir sayilir. */
 const LICENSE_TTL_MS = 60 * 60 * 1000;
@@ -311,14 +325,52 @@ function isSharedSecret(token) {
 }
 
 /**
+ * Freemius isteğini imzalar.
+ *
+ * Algoritma SDK'nın kendi uygulamasından alındı
+ * (`FreemiusWordPress::GenerateAuthorizationParams`):
+ *
+ *   imzalanacak = METOT \n content-md5 \n content-type \n tarih \n yol
+ *   Authorization: FS {kimlik}:{acik_anahtar}:base64url(hmac_sha256_hex)
+ *
+ * Iki ayrinti kolayca kaciriliyor ve ikisi de imzayi sessizce bozar:
+ *
+ *   - PHP'nin hash_hmac'i varsayilan olarak ONALTILIK DIZGE dondurur; base64
+ *     ham bayta degil o dizgeye uygulanir.
+ *   - Imzalanan sey yolun yalnizca sorgusuz kismidir; ?uid=... imzaya girmez.
+ *
+ * GET'te content-md5 ve content-type bos kalir.
+ *
+ * @param {string} method HTTP metodu.
+ * @param {string} path   Sorgusuz kaynak yolu.
+ * @returns {{Date: string, Authorization: string}}
+ */
+function signFreemius(method, path) {
+  const date = new Date().toUTCString().replace('GMT', '+0000');
+  const toSign = [method.toUpperCase(), '', '', date, path].join('\n');
+
+  const hex = createHmac('sha256', FREEMIUS_SECRET_KEY).update(toSign).digest('hex');
+
+  const signature = Buffer.from(hex)
+    .toString('base64')
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=/g, '');
+
+  return {
+    Date: date,
+    Authorization: `FS ${PRODUCT_ID}:${FREEMIUS_PUBLIC_KEY}:${signature}`,
+  };
+}
+
+/**
  * Freemius lisansını sorar ve cevabı önbelleğe alır.
  *
- * Uc: GET /v1/products/{urun}/installs/{kurulum}/license.json
+ * Uc: GET /v1/plugins/{urun}/installs/{kurulum}/license.json
  *       ?uid={site}&license_key={anahtar}
  *
- * Kimlik bilgisi istemez; ucun kendisi zaten yalnizca dogru uclu bilen
- * cagiriciya cevap verir. Yani servise bir Freemius sirri konmasi gerekmez --
- * konsaydi sizmasi paylasilan anahtardan daha kotu olurdu.
+ * Istek urun kapsaminda imzalanir; imzasiz cagri 403 doner. Cevaptaki
+ * is_cancelled ve expiration alanlari kararı verir.
  *
  * @param {string} key     Lisans anahtari.
  * @param {string} install Freemius kurulum kimligi.
@@ -338,15 +390,26 @@ async function checkLicense(key, install, uid) {
     }
   }
 
-  const url = `${FREEMIUS_API}/v1/products/${encodeURIComponent(PRODUCT_ID)}`
-    + `/installs/${encodeURIComponent(install)}/license.json`
-    + `?uid=${encodeURIComponent(uid)}&license_key=${encodeURIComponent(key)}`;
+  if (FREEMIUS_SECRET_KEY === '') {
+    /*
+     * Kimlik bilgisi konmadan lisans sorulamaz. Bunu sessizce "gecersiz"
+     * saymak yanlis olurdu: hata musteride degil kurulumdadir ve sebebin
+     * ekranda gorunmesi gerekir.
+     */
+    return { ok: false, reason: 'licence_check_not_configured' };
+  }
+
+  const path = `/v1/plugins/${encodeURIComponent(PRODUCT_ID)}`
+    + `/installs/${encodeURIComponent(install)}/license.json`;
+
+  const query = `?uid=${encodeURIComponent(uid)}&license_key=${encodeURIComponent(key)}`;
+  const signed = signFreemius('GET', path);
 
   let payload;
 
   try {
-    const answer = await fetch(url, {
-      headers: { accept: 'application/json' },
+    const answer = await fetch(`${FREEMIUS_API}${path}${query}`, {
+      headers: { accept: 'application/json', ...signed },
       signal: AbortSignal.timeout(LICENSE_TIMEOUT_MS),
     });
 

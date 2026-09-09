@@ -27,10 +27,12 @@ process.env.NODE_ENV = 'test';
  * Sunucu, server.js iceri alinmadan ONCE ayaga kalkmali: FREEMIUS_API modul
  * yuklenirken okunuyor.
  */
-const licenceHits = { count: 0 };
+const licenceHits = { count: 0, lastAuth: '', lastPath: '' };
 
 const freemiusStub = createServer((request, response) => {
   licenceHits.count += 1;
+  licenceHits.lastAuth = request.headers.authorization ?? '';
+  licenceHits.lastPath = request.url.split('?')[0];
 
   const url = new URL(request.url, 'http://stub');
   const key = url.searchParams.get('license_key') ?? '';
@@ -57,6 +59,7 @@ await new Promise((resolve) => freemiusStub.listen(0, '127.0.0.1', resolve));
 
 process.env.FREEMIUS_API = `http://127.0.0.1:${freemiusStub.address().port}`;
 process.env.LICENSE_SECRET = 'paylasilan-sinav-sirri';
+process.env.FREEMIUS_SECRET_KEY = 'sk_sinav_gizli_anahtar';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const { validate } = await import('../src/server.js');
@@ -185,6 +188,22 @@ function istek(token, extra = {}) {
 check('paylasilan sir kabul ediliyor', (await authorise(istek('paylasilan-sinav-sirri'))).ok);
 check('bos belirtec reddediliyor', !(await authorise({ headers: {} })).ok);
 check('gecerli lisans kabul ediliyor', (await authorise(istek('gecerli'))).ok);
+
+/*
+ * Imzasiz istek Freemius'tan ciplak 403 alir ve sebep yazmaz; hata "lisans
+ * gecersiz" gibi gorunur. Bu yuzden imzanin GERCEKTEN gonderildigi ve dogru
+ * yola gidildigi ayrica olculur.
+ */
+check(
+  'istek urun kapsaminda imzalaniyor',
+  licenceHits.lastAuth.startsWith('FS 38206:pk_'),
+  licenceHits.lastAuth.slice(0, 30),
+);
+check(
+  'dogru uca gidiliyor',
+  licenceHits.lastPath === '/v1/plugins/38206/installs/123456/license.json',
+  licenceHits.lastPath,
+);
 check('suresiz lisans kabul ediliyor', (await authorise(istek('suresiz'))).ok);
 
 const iptal = await authorise(istek('iptal'));
