@@ -5,7 +5,7 @@ Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 8.2
 Requires Plugins: woocommerce
-Stable tag: 0.3.7
+Stable tag: 0.3.8
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -152,10 +152,9 @@ pack downloads that WordPress itself makes.
    tell you why.
 5. Read the pre-flight report.
 
-On the Pro plan there is one more step: paste your validation key under
-**Official validation (Pro)**. The service address is already filled in; the
-key is in your purchase email, and it is not the same string as the licence
-key that activated the plugin.
+On the Pro plan there is nothing more to set up. Activating your licence
+switches official validation on; the plugin authorises itself with that
+licence, so there is no second key to paste.
 
 **The full guide** — what the findings mean, when documents are produced and
 where they are stored, credit notes, the Polish KSeF flow, and the available
@@ -265,6 +264,21 @@ site. See **External services** above.
 3. The e-invoice box on the order screen, with document versions and history.
 
 == Changelog ==
+
+= 0.3.8 =
+* When the official rule set refuses a document, the order screen now names
+  the rule and quotes what it said. Before, it said only "Invalid" and the
+  reason sat in the database where nobody could see it — which is unhelpful
+  exactly when it matters most.
+* Pro no longer needs a separate validation key. The plugin authorises itself
+  with the licence you already activated, so there is nothing extra to paste,
+  and a cancelled or lapsed subscription now stops validation on its own.
+* An existing validation key still works and still wins, for shops running
+  their own copy of the validation service.
+* Two settings — the invoice contact name and telephone number — were left
+  behind when the plugin was uninstalled with "delete my settings" turned on.
+  They are removed now. Invoices, archived documents and the key that verifies
+  them are kept, as before.
 
 = 0.3.7 =
 * Packaging only, no functional change. The free download no longer carries

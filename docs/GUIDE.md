@@ -190,19 +190,28 @@ extension only supports XSLT 1.0. So the check runs on a hosted service.
 
 ### Setting it up
 
-After your licence is activated, open **WooCommerce → Deklera** and scroll to
-**Official validation (Pro)**:
+**There is nothing to set up.** Activate your licence and official validation
+is on. The plugin authorises itself with that licence, so there is no second
+key to find, paste or lose.
 
-- **Validation service address** — already filled in. Leave it alone unless you
-  run your own copy of the service (it is open source; see `validator/README.md`).
-- **Validation key** — paste the key from your **Pro purchase email**.
+Open **WooCommerce → Deklera** and scroll to **Official validation (Pro)** if
+you want to confirm it. You should see:
 
-> The validation key is **not** the same as the licence key that activated the
-> plugin. They are two different strings for two different things. If you have
-> lost the purchase email, ask for it and it will be re-sent.
+> Official validation is on. Your licence authorises it — there is nothing to
+> set up here.
 
-That is it. From then on, every generated document is validated before it is
-archived.
+Two fields sit below that, and you can ignore both:
+
+- **Validation service address** — already filled in. Change it only if you run
+  your own copy of the service (it is open source; see `validator/README.md`).
+- **Validation key** — leave empty. It exists for shops running their own copy;
+  if you fill it in, it is used instead of your licence.
+
+From then on, every generated document is validated before it is archived.
+
+If validation stops working, the order's history says why in plain terms —
+`licence_expired` after a subscription lapses, `licence_cancelled` after a
+refund, and so on.
 
 ### What you see
 

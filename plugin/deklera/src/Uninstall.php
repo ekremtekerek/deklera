@@ -39,6 +39,12 @@ final class Uninstall {
 		'deklera_delete_data_on_uninstall',
 		'deklera_db_version',
 		'deklera_seller_vat_number',
+		// Bu ikisi ADR 0010 ile geldi (BT-41 / BT-42) ve buraya eklenmeyi
+		// unuttu; 0.3.8'in temiz kurulum sinavinda yakalandi. Geride kalan bir
+		// telefon numarasi, "ayarlarimi sil" diyen kullaniciya verilen sozu
+		// bozar. UninstallTest bunu bir daha kacirmiyor.
+		'deklera_seller_contact',
+		'deklera_seller_phone',
 		'deklera_retention_prune_enabled',
 		'deklera_validator_endpoint',
 		'deklera_validator_key',
