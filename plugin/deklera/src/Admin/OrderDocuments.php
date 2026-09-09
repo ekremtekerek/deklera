@@ -95,7 +95,7 @@ final class OrderDocuments {
 		$blockers = Generator::blockers( $order );
 
 		if ( array() === $blockers ) {
-			printf( '<p>%s</p>', esc_html__( 'No document generated yet.', 'deklera' ) );
+			self::render_last_rejection( $order->get_id() );
 
 			return;
 		}
@@ -110,6 +110,74 @@ final class OrderDocuments {
 		}
 
 		echo '</ul>';
+	}
+
+	/**
+	 * Belge yokken sebebi resmi kural setinden geliyorsa onu gösterir.
+	 *
+	 * NEDEN VAR
+	 *
+	 * Ön uçuş temizken belge üretilmemişse sebep uzak doğrulamadır. Ekranda
+	 * yalnızca "No document generated yet." yazıyordu; hangi kuralın durdurduğu
+	 * denetim izinde duruyor ama hiçbir yerde gösterilmiyordu. Pro'nun sattığı
+	 * şey tam olarak o cevaptır — görünmezse satılan şey de görünmez.
+	 *
+	 * @param int $order_id Sipariş kimliği.
+	 * @return void
+	 */
+	private static function render_last_rejection( int $order_id ): void {
+		foreach ( AuditLog::for_order( $order_id, 5 ) as $event ) {
+			if ( AuditLog::EVENT_INVALID !== (string) $event['event'] ) {
+				continue;
+			}
+
+			printf(
+				'<p><strong>%s</strong></p>',
+				esc_html__( 'The official rule set rejected this document:', 'deklera' )
+			);
+
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Metot kendi ciktisini esc_html ile kaciyor.
+			echo self::findings_html( (string) $event['detail'], '#a4261d' );
+
+			return;
+		}
+
+		printf( '<p>%s</p>', esc_html__( 'No document generated yet.', 'deklera' ) );
+	}
+
+	/**
+	 * Denetim ayrıntısını okunur satırlara böler.
+	 *
+	 * Doğrulama özeti bulguları " | " ile birleştiriyor; kutu dar olduğu için
+	 * tek satırda okunmuyorlar. Kural konumları boşluksuz uzun dizgeler
+	 * olabildiğinden sarmalama da açıkça verilir, yoksa kutu yana taşar.
+	 *
+	 * @param string $detail Denetim izindeki ayrıntı.
+	 * @param string $color  CSS rengi; boşsa soluk gri.
+	 * @return string Kaçırılmış HTML.
+	 */
+	private static function findings_html( string $detail, string $color = '' ): string {
+		$lines = array_filter(
+			array_map( 'trim', explode( ' | ', $detail ) ),
+			static fn ( string $line ): bool => '' !== $line
+		);
+
+		if ( array() === $lines ) {
+			return '';
+		}
+
+		$html = '';
+
+		foreach ( $lines as $line ) {
+			$html .= '<div style="margin-bottom:2px">' . esc_html( $line ) . '</div>';
+		}
+
+		return sprintf(
+			'<div style="overflow-wrap:anywhere;color:%s">%s</div>',
+			esc_attr( '' === $color ? '#646970' : $color ),
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Satirlar yukarida esc_html ile kacirildi.
+			$html
+		);
 	}
 
 	/**
@@ -217,10 +285,29 @@ final class OrderDocuments {
 		printf( '<p style="margin-bottom:4px"><strong>%s</strong></p><ul style="margin:0;font-size:12px">', esc_html__( 'History', 'deklera' ) );
 
 		foreach ( $events as $event ) {
+			$type   = (string) $event['event'];
+			$detail = trim( (string) $event['detail'] );
+
+			/*
+			 * Ayrinti eskiden hic basilmiyordu: satir "Invalid" diyor, hangi
+			 * kuralin durdurdugunu soylemiyordu. Olculdu — 9 Eylul 2026'da
+			 * BR-DE-23-a belgeyi dusurdu ve ekranda sebep gorunmedi.
+			 */
+			$note = '' === $detail
+				? ''
+				: self::findings_html(
+					$detail,
+					in_array( $type, array( AuditLog::EVENT_INVALID, AuditLog::EVENT_FAILED ), true )
+						? '#a4261d'
+						: ''
+				);
+
 			printf(
-				'<li>%1$s — %2$s</li>',
+				'<li style="margin-bottom:6px">%1$s — %2$s%3$s</li>',
 				esc_html( (string) $event['created_at'] ),
-				esc_html( AuditLog::label( (string) $event['event'] ) )
+				esc_html( AuditLog::label( $type ) ),
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- findings_html kendi ciktisini esc_html ile kaciyor.
+				$note
 			);
 		}
 

@@ -31,6 +31,7 @@ return array(
 
 	// Siparis ekrani.
 	'E-invoice' => 'E-faktura',
+	'The official rule set rejected this document:' => 'Urzędowy zestaw reguł odrzucił ten dokument:',
 	'No document generated yet.' => 'Nie wygenerowano jeszcze żadnego dokumentu.',
 	'This order cannot be invoiced yet:' => 'Do tego zamówienia nie można jeszcze wystawić faktury:',
 	'Version %d' => 'Wersja %d',

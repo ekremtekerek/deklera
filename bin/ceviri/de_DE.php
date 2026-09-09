@@ -31,6 +31,7 @@ return array(
 
 	// Siparis ekrani.
 	'E-invoice' => 'E-Rechnung',
+	'The official rule set rejected this document:' => 'Das offizielle Regelwerk hat dieses Dokument abgelehnt:',
 	'No document generated yet.' => 'Noch kein Dokument erzeugt.',
 	'This order cannot be invoiced yet:' => 'Für diese Bestellung kann noch keine Rechnung erstellt werden:',
 	'Version %d' => 'Version %d',

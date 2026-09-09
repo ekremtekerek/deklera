@@ -9,7 +9,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: pl_PL\n"
 "Language-Team: Polish\n"
-"PO-Revision-Date: 2026-09-08 06:40:02+0000\n"
+"PO-Revision-Date: 2026-09-09 07:15:51+0000\n"
 "Last-Translator: Hasan Ekrem Tekerek\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
 "X-Domain: deklera\n"
@@ -49,57 +49,61 @@ msgstr "Brakuje zależności Deklery. Uruchom „composer install” w katalogu 
 msgid "E-invoice"
 msgstr "E-faktura"
 
-#: src/Admin/OrderDocuments.php:98
-msgid "No document generated yet."
-msgstr "Nie wygenerowano jeszcze żadnego dokumentu."
-
 #: src/Admin/OrderDocuments.php:105
 msgid "This order cannot be invoiced yet:"
 msgstr "Do tego zamówienia nie można jeszcze wystawić faktury:"
 
+#: src/Admin/OrderDocuments.php:136
+msgid "The official rule set rejected this document:"
+msgstr "Urzędowy zestaw reguł odrzucił ten dokument:"
+
+#: src/Admin/OrderDocuments.php:145
+msgid "No document generated yet."
+msgstr "Nie wygenerowano jeszcze żadnego dokumentu."
+
 #. translators: %d: document version number.
-#: src/Admin/OrderDocuments.php:133
+#: src/Admin/OrderDocuments.php:201
 #, php-format
 msgid "Version %d"
 msgstr "Wersja %d"
 
-#: src/Admin/OrderDocuments.php:147
+#: src/Admin/OrderDocuments.php:215
 msgid "File missing or modified"
 msgstr "Brak pliku lub plik został zmieniony"
 
-#: src/Admin/OrderDocuments.php:174
+#: src/Admin/OrderDocuments.php:242
 msgid "KSeF number:"
 msgstr "Numer KSeF:"
 
-#: src/Admin/OrderDocuments.php:179
+#: src/Admin/OrderDocuments.php:247
 msgid "Not registered with KSeF yet — this file is not a legal invoice."
 msgstr "Jeszcze niezarejestrowana w KSeF — ten plik nie jest fakturą w rozumieniu prawa."
 
-#: src/Admin/OrderDocuments.php:198
+#: src/Admin/OrderDocuments.php:266
 msgid "Generate new version"
 msgstr "Wygeneruj nową wersję"
 
-#: src/Admin/OrderDocuments.php:198
+#: src/Admin/OrderDocuments.php:266
 msgid "Generate document"
 msgstr "Wygeneruj dokument"
 
-#: src/Admin/OrderDocuments.php:217
+#: src/Admin/OrderDocuments.php:285
 msgid "History"
 msgstr "Historia"
 
-#: src/Admin/OrderDocuments.php:237
+#: src/Admin/OrderDocuments.php:324
 msgid "You are not allowed to download this document."
 msgstr "Nie masz uprawnień do pobrania tego dokumentu."
 
-#: src/Admin/OrderDocuments.php:247
+#: src/Admin/OrderDocuments.php:334
 msgid "Document not found."
 msgstr "Nie znaleziono dokumentu."
 
-#: src/Admin/OrderDocuments.php:252
+#: src/Admin/OrderDocuments.php:339
 msgid "The archived file is missing or has been modified since it was created. It cannot be served."
 msgstr "Zarchiwizowany plik nie istnieje lub został zmieniony po utworzeniu. Nie może zostać udostępniony."
 
-#: src/Admin/OrderDocuments.php:280
+#: src/Admin/OrderDocuments.php:367
 msgid "You are not allowed to generate documents."
 msgstr "Nie masz uprawnień do generowania dokumentów."
 
@@ -549,16 +553,16 @@ msgid "Invoice language"
 msgstr "Język faktury"
 
 #. translators: %s: locale code, for example de_DE.
-#: src/Preflight/Rules/DocumentLanguage.php:99
+#: src/Preflight/Rules/DocumentLanguage.php:101
 #, php-format
 msgid "This invoice would be issued in your store language, not %s."
 msgstr "Ta faktura zostałaby wystawiona w języku Twojego sklepu, a nie w %s."
 
-#: src/Preflight/Rules/DocumentLanguage.php:102
+#: src/Preflight/Rules/DocumentLanguage.php:104
 msgid "Deklera writes the invoice in the buyer's language and ships German, French and Polish. WordPress can only switch to a language it has installed, so without the language pack the document falls back to your store language."
 msgstr "Deklera sporządza fakturę w języku nabywcy i zawiera niemiecki, francuski oraz polski. WordPress może przełączyć się tylko na zainstalowany język; bez pakietu językowego dokument wraca do języka Twojego sklepu."
 
-#: src/Preflight/Rules/DocumentLanguage.php:103
+#: src/Preflight/Rules/DocumentLanguage.php:105
 msgid "Install it under Settings > General > Site Language, or add it under Dashboard > Updates. The site needs to reach WordPress.org once to download it."
 msgstr "Zainstaluj go w Ustawienia > Ogólne > Język witryny albo dodaj w Kokpit > Aktualizacje. Witryna musi raz połączyć się z WordPress.org, aby go pobrać."
 

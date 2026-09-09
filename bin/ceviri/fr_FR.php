@@ -30,6 +30,7 @@ return array(
 
 	// Siparis ekrani.
 	'E-invoice' => 'Facture électronique',
+	'The official rule set rejected this document:' => 'Le jeu de règles officiel a rejeté ce document :',
 	'No document generated yet.' => 'Aucun document généré pour le moment.',
 	'This order cannot be invoiced yet:' => 'Cette commande ne peut pas encore être facturée :',
 	'Version %d' => 'Version %d',

@@ -441,7 +441,8 @@ WHAT CHANGES AFTERWARDS
 Every invoice is checked against the official EN 16931 rule set before
 it is issued - and in German stores, against the XRechnung rules as
 well. A document that would be rejected is not issued at all, so nothing
-invalid leaves your shop.
+invalid leaves your shop - and the order screen names the rule that stopped
+it, so you know what to change.
 
 The first check after a quiet period can take up to a minute while the
 service wakes up. After that a check takes about a second.
@@ -461,13 +462,12 @@ screen above will refuse it") tam olarak 9 Eylül'de yaşanan hatayı önler.
 Menü yolları eklentideki etiketlerle birebir aynıdır; değiştirilirlerse bu
 metin de değişmelidir.
 
-**Metinde bilerek olmayan bir cümle var.** Taslak, engellenen belgenin sebebini
-sipariş ekranında görebileceğinizi söylemiyor — çünkü göremiyorsunuz.
-`OrderDocuments::render_audit()` yalnızca tarihi ve olay etiketini basıyor
-("Invalid"), kuralın adını ve mesajını değil. Oysa detay veritabanında duruyor;
-9 Eylül ölçümünde `[BR-DE-23-a]` tam metniyle kaydedildi. Pro'nun sattığı şey
-tam olarak o cümle olduğuna göre ekranda gösterilmesi gerekir. Gösterilene
-kadar e-postada söz verilmemelidir.
+**Son cümle bir sürüm şartı taşıyor.** Metin, kuralın sipariş ekranında
+göründüğünü söylüyor. 0.3.7'de görünmüyordu: `render_audit()` yalnızca tarihi
+ve olay etiketini basıyordu ("Invalid"), kuralın adını değil — detay
+veritabanında duruyor ama hiçbir yerde gösterilmiyordu. 9 Eylül 2026'da
+düzeltildi; ön uçuş temizken belge yoksa sebep kutunun başında da gösteriliyor.
+**E-posta metni bu düzeltmeyi taşıyan sürüm yayımlanmadan kaydedilmemelidir.**
 
 ### Bu tasarımın bilinen zayıflığı
 
