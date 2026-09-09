@@ -285,4 +285,120 @@ final class HostedValidatorTest extends TestCase {
 
 		$this->assertStringContainsString( '"profile":"en16931"', $govde );
 	}
+
+	/*
+	 * --- Lisansla yetkilendirme ---
+	 *
+	 * Ayri bir dogrulama anahtari kaldirildi; eklenti Freemius lisans
+	 * anahtarini gonderiyor ve kurulumu iki baslikla tanitiyor. Servis bu
+	 * ucluyu Freemius'a soruyor -- biri eksikse lisans dogrulanamaz ve Pro
+	 * musterisi dogrulamayi hic acamaz. O yuzden istegin nasil kuruldugu
+	 * burada olculur.
+	 */
+
+	/**
+	 * Ayarda anahtar yokken lisans anahtari gönderilir.
+	 *
+	 * @return void
+	 */
+	public function test_the_licence_key_is_sent_when_no_key_is_stored(): void {
+		delete_option( HostedValidator::OPTION_KEY );
+		deklera_test_fs_ile( 'sk_lisans_anahtari' );
+
+		$GLOBALS['deklera_test_http'][] = $this->response( 200, array( 'valid' => true ) );
+
+		( new HostedValidator() )->validate( '<xml/>' );
+
+		$basliklar = $GLOBALS['deklera_test_http_requests'][0]['args']['headers'];
+
+		$this->assertSame( 'Bearer sk_lisans_anahtari', $basliklar['authorization'] );
+	}
+
+	/**
+	 * Kurulum ve site kimliği başlıklarda gider.
+	 *
+	 * Servis lisansı bu ikisi olmadan soramaz; eksiklerse Freemius
+	 * "missing_install" der ve doğrulama hiç çalışmaz.
+	 *
+	 * @return void
+	 */
+	public function test_the_install_is_identified_in_headers(): void {
+		delete_option( HostedValidator::OPTION_KEY );
+		deklera_test_fs_ile( 'sk_lisans_anahtari', '4242', 'ffffeeee11112222ffffeeee11112222' );
+
+		$GLOBALS['deklera_test_http'][] = $this->response( 200, array( 'valid' => true ) );
+
+		( new HostedValidator() )->validate( '<xml/>' );
+
+		$basliklar = $GLOBALS['deklera_test_http_requests'][0]['args']['headers'];
+
+		$this->assertSame( '4242', $basliklar['x-deklera-install'] );
+		$this->assertSame( 'ffffeeee11112222ffffeeee11112222', $basliklar['x-deklera-uid'] );
+	}
+
+	/**
+	 * Elle girilmiş anahtar lisans anahtarını yener.
+	 *
+	 * Kendi kopyasını çalıştıran kurulumun Freemius'a bağlı olmaması gerekir;
+	 * anahtar girmişse onu göndeririz.
+	 *
+	 * @return void
+	 */
+	public function test_a_stored_key_wins_over_the_licence(): void {
+		update_option( HostedValidator::OPTION_KEY, 'elle_girilen' );
+		deklera_test_fs_ile( 'sk_lisans_anahtari' );
+
+		$GLOBALS['deklera_test_http'][] = $this->response( 200, array( 'valid' => true ) );
+
+		( new HostedValidator() )->validate( '<xml/>' );
+
+		$basliklar = $GLOBALS['deklera_test_http_requests'][0]['args']['headers'];
+
+		$this->assertSame( 'Bearer elle_girilen', $basliklar['authorization'] );
+	}
+
+	/**
+	 * Lisans da anahtar da yoksa istek gönderilmez.
+	 *
+	 * @return void
+	 */
+	public function test_without_a_licence_or_key_nothing_is_sent(): void {
+		delete_option( HostedValidator::OPTION_KEY );
+		deklera_test_fs_ile( '' );
+
+		$sonuc = ( new HostedValidator() )->validate( '<xml/>' );
+
+		$this->assertFalse( $sonuc->available );
+		$this->assertSame( array(), $GLOBALS['deklera_test_http_requests'] );
+	}
+
+	/**
+	 * Servisin bildirdiği sebep yöneticiye ulaşır.
+	 *
+	 * "HTTP 401" tek başına hiçbir şey anlatmıyordu; iptal edilmiş lisansla
+	 * eksik kurulum kimliği arasındaki fark ne yapılacağını belirler.
+	 *
+	 * @return void
+	 */
+	public function test_the_reason_reaches_the_message(): void {
+		$GLOBALS['deklera_test_http'][] = $this->response(
+			401,
+			array(
+				'error'  => 'unauthorised',
+				'reason' => 'licence_expired',
+			)
+		);
+		$GLOBALS['deklera_test_http'][] = $this->response(
+			401,
+			array(
+				'error'  => 'unauthorised',
+				'reason' => 'licence_expired',
+			)
+		);
+
+		$sonuc = ( new HostedValidator() )->validate( '<xml/>' );
+
+		$this->assertFalse( $sonuc->available );
+		$this->assertStringContainsString( 'licence_expired', $sonuc->summary() );
+	}
 }

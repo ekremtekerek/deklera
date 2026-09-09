@@ -515,3 +515,78 @@ if ( ! function_exists( 'WC' ) ) {
 		};
 	}
 }
+
+/*
+ * Freemius SDK'sinin yerine gecen sahte.
+ *
+ * Lisansla yetkilendirme, eklentinin Freemius'tan uc sey okumasina dayanir:
+ * lisans anahtari, kurulum kimligi ve sitenin anonim kimligi. Gercek bir
+ * lisans olmadan bunlar okunamaz, dolayisiyla ISTEGIN dogru kuruldugu de
+ * olculemezdi. Testler $GLOBALS['deklera_test_fs'] doldurarak olcuyor.
+ */
+$GLOBALS['deklera_test_fs'] = null;
+
+if ( ! function_exists( 'deklera_fs' ) ) {
+	/**
+	 * Sahte Freemius ornegini dondurur.
+	 *
+	 * @return object|null
+	 */
+	function deklera_fs(): ?object {
+		return $GLOBALS['deklera_test_fs'];
+	}
+}
+
+/**
+ * Lisansi ve kurulumu olan bir sahte Freemius ornegi kurar.
+ *
+ * @param string $license Lisans anahtari.
+ * @param string $install Kurulum kimligi.
+ * @param string $uid     Site kimligi.
+ * @return void
+ */
+function deklera_test_fs_ile( string $license, string $install = '77', string $uid = 'abcdef0123456789abcdef0123456789' ): void {
+	$GLOBALS['deklera_test_fs'] = new class( $license, $install, $uid ) {
+
+		/**
+		 * Kurar.
+		 *
+		 * @param string $license Lisans anahtari.
+		 * @param string $install Kurulum kimligi.
+		 * @param string $uid     Site kimligi.
+		 */
+		public function __construct(
+			private string $license,
+			private string $install,
+			private string $uid
+		) {
+		}
+
+		/**
+		 * Lisans nesnesini dondurur.
+		 *
+		 * @return object|null
+		 */
+		public function _get_license(): ?object {
+			return '' === $this->license ? null : (object) array( 'secret_key' => $this->license );
+		}
+
+		/**
+		 * Kurulum nesnesini dondurur.
+		 *
+		 * @return object|null
+		 */
+		public function get_site(): ?object {
+			return '' === $this->install ? null : (object) array( 'id' => $this->install );
+		}
+
+		/**
+		 * Sitenin anonim kimligini dondurur.
+		 *
+		 * @return string
+		 */
+		public function get_anonymous_id(): string {
+			return $this->uid;
+		}
+	};
+}
