@@ -19,9 +19,15 @@ demoyu göstermek. Fiyattan söz eden tek cümle bile paylaşımı reklama çevi
 
 ## Bağlantılar
 
-- Sayfa: `https://ekremtekerek.github.io/deklera/`
+- Sayfa: `https://ekremtekerek.github.io/deklera/` (`/de/`, `/fr/`, `/pl/`)
+- **Kontrol aracı: `https://ekremtekerek.github.io/deklera/check/`** (`/de/check/`, `/fr/check/`, `/pl/check/`)
 - Demo: `https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/ekremtekerek/deklera/main/demo/blueprint.json`
 - Kaynak: `https://github.com/ekremtekerek/deklera`
+
+**Kontrol aracı öne çıkarılmalıdır.** Aşağıdaki metinlerin çoğu ondan önce
+yazıldı ve demoyu gösteriyor. Demo ürünü anlatır; kontrol aracı ise okuyucunun
+KENDİ belgesini sınamasına izin verir — iddia doğrulanabilir olduğu an reklam
+olmaktan çıkar. Yeni paylaşımlarda bağlantı bu olmalı.
 
 ---
 
@@ -148,6 +154,153 @@ Hedef: WooCommerce/WordPress Alman grupları, e-ticaret forumları.
 
 ---
 
+## 4b. Polonya — *KSeF* (Lehçe)
+
+Hedef: Polonya WooCommerce/WordPress grupları, e-ticaret forumları.
+
+Polonya'nın farkı iletimdir ve metin bunu açıkça söyler: FA(3) KSeF'e gidip
+numara alır. Bu, öteki iki ülkede yapmadığımız şeydir ve saklanacak değil
+söylenecek bir farktır.
+
+> **Darmowe narzędzie: które zamówienia zostałyby odrzucone jako e-faktura?**
+>
+> Jestem autorem wtyczki, więc to autopromocja — ale narzędzie jest darmowe,
+> a demo działa w przeglądarce, bez instalacji.
+>
+> Przy KSeF prawie wszystko kręci się wokół wygenerowania XML. To akurat
+> łatwa część.
+>
+> Trudne jest to, że dane zamówień WooCommerce rzadko są na tyle czyste, żeby
+> przejść — a dowiadujesz się o tym dopiero wtedy, gdy faktura wraca
+> odrzucona.
+>
+> Wtyczka zaczyna więc od tego: sprawdza zamówienia i mówi zrozumiałym
+> językiem, które zostałyby odrzucone i dlaczego, z dokładnym oznaczeniem
+> reguły i miejscem do poprawy. Na przykład wewnątrzwspólnotowa dostawa bez
+> numeru VAT nabywcy, albo pozycje sumujące się do 120,00 € przy zamówieniu
+> na 112,50 €.
+>
+> Polska jest wyjątkiem po stronie wysyłki: FA(3) trafia do KSeF i wraca z
+> numerem — bo bez numeru faktura nie istnieje w świetle prawa. W Niemczech i
+> we Francji wtyczka niczego nie wysyła; to zostaje po stronie Twojego
+> dostawcy.
+>
+> Demo w przeglądarce, nic do instalowania: [link]
+>
+> Chętnie przyjmę uwagi, zwłaszcza jeśli któreś sprawdzenie jest błędne.
+
+---
+
+## 4c. Ölçüm yazısı (İngilizce) — asıl çekim malzemesi
+
+Bu bir tanıtım gönderisi değil, **bir ölçümün anlatısı**. İşe yaramasının
+sebebi okuyucunun aynı ölçümü kendi belgesiyle yapabilmesi: iddia
+doğrulanabilir olunca reklam olmaktan çıkıyor.
+
+**Rakip ismi başlıkta geçmez.** Almanya'da karşılaştırmalı reklam yasaldır
+(UWG §6) ama nesnel olmak zorundadır; dahası satıcının rakibe saldırması
+topluluklarda affedilmez. Yöntemi yayınlarız, ismi okuyucu kendi ölçümüyle
+bulur.
+
+Yeri: site üzerinde bir yazı sayfası, ya da geliştirici topluluğunda bir
+gönderi. İkisinde de sonundaki bağlantı kontrol aracına gider.
+
+> **I ran my own WooCommerce e-invoices through Germany's official validator.
+> The first run failed six rules.**
+>
+> I build an e-invoicing plugin, so read this with that in mind. The
+> measurement is reproducible and the tool at the end is free.
+>
+> Most WooCommerce invoice plugins produce the XML, and several produce it
+> for nothing. I assumed mine was fine: the unit tests were green, the
+> library is well regarded, the output validated against EN 16931.
+>
+> Then I downloaded KoSIT's official validator configuration — the same
+> Schematron a German authority runs — and pointed it at my own output.
+>
+> Six rules failed. Every one of them a field the European standard leaves
+> optional and Germany makes mandatory: the seller's contact name and
+> telephone number, the electronic address of both parties, the payment
+> means. My invoice was valid EN 16931 and would have been refused in
+> Germany.
+>
+> That gap is the whole problem. The rule set that decides acceptance
+> compiles to XSLT 2.0, and PHP's XSL extension only speaks XSLT 1.0 — so a
+> WordPress plugin cannot run it in-process. It is genuinely easy to ship
+> something that looks right and is refused.
+>
+> I fixed the six, and then put the validator behind a page so anyone can do
+> the same measurement without installing anything:
+>
+> [kontrol aracı bağlantısı]
+>
+> Paste an invoice — from my plugin or any other — and see what the official
+> rule set says. No sign-up, nothing stored.
+>
+> If you already have an e-invoicing plugin, the useful question to put to
+> its author is simply: *can I see your validator report?* That is a fair
+> question to ask any vendor, mine included; mine is in the repository.
+
+---
+
+## 4d. Arama reklamı metinleri
+
+Hacim düşük, niyet çok yüksek: bu sorguları yazan kişi çözüm arıyor. Bütçe
+Almanya ve Polonya'ya ayrılır — **Fransa'ya değil**, çünkü orada yasal
+yükümlülük iletimdir ve biz iletmiyoruz (bkz. ADR 0005).
+
+Google sınırları: başlık **30**, açıklama **90** karakter. Aşağıdakiler
+sayılarak yazıldı.
+
+### Almanya
+
+Anahtar kelimeler: `XRechnung WooCommerce`, `E-Rechnung WooCommerce`,
+`ZUGFeRD WooCommerce`, `WooCommerce E-Rechnung Plugin`
+
+Başlıklar:
+
+- `XRechnung für WooCommerce`
+- `Wird Ihre Rechnung abgelehnt?`
+- `E-Rechnung vorher prüfen`
+- `Kostenlos, ohne Anmeldung`
+- `Am amtlichen Regelwerk`
+
+Açıklamalar:
+
+- `Prüfen Sie Ihre E-Rechnung am offiziellen Regelwerk. Kostenlos, ohne Anmeldung.`
+- `Sagt vor dem Versand, welche Bestellungen abgelehnt würden — und warum.`
+
+Açılış sayfası: `/de/check/` — reklamdan gelen kişi doğrudan aracı bulmalı,
+ürün anlatısını değil.
+
+### Polonya
+
+Anahtar kelimeler: `KSeF WooCommerce`, `KSeF WordPress`,
+`faktura ustrukturyzowana WooCommerce`
+
+Başlıklar:
+
+- `KSeF dla WooCommerce`
+- `Czy faktura zostanie odrzucona`
+- `Sprawdź e-fakturę za darmo`
+- `FA(3) prosto z WooCommerce`
+- `Bez rejestracji`
+
+Açıklamalar:
+
+- `Sprawdź e-fakturę urzędowym zestawem reguł. Za darmo, bez rejestracji.`
+- `Mówi przed wysyłką, które zamówienia zostałyby odrzucone i dlaczego.`
+
+Açılış sayfası: `/pl/check/`
+
+### Sıra
+
+**Önce WordPress.org onayı, sonra reklam.** Reklamdan gelen kişi eklentiyi
+dizinde bulamazsa tıklama boşa gider; dizin içi arama zaten kendi başına bir
+kanaldır.
+
+---
+
 ## 5. Tek cümlelik biçim — X, Mastodon
 
 > Which of your WooCommerce orders would be rejected as an EU e-invoice? Free
@@ -169,6 +322,10 @@ Hedef: WooCommerce/WordPress Alman grupları, e-ticaret forumları.
 
 ## Not
 
-Fransızca ve Almanca metinler benim yazdığım taslaklardır. Yayınlamadan önce
-ana dili o dil olan birinin gözden geçirmesi iyi olur — özellikle Almanca
-metindeki resmî ton, o topluluklarda hassas bir konudur.
+Fransızca, Almanca ve Lehçe metinler benim yazdığım taslaklardır.
+Yayınlamadan önce ana dili o dil olan birinin gözden geçirmesi iyi olur —
+özellikle Almanca metindeki resmî ton, o topluluklarda hassas bir konudur.
+
+Fransızca metin ve Fransa reklamı ayrı bir uyarı taşır: Eylül 2026'dan beri
+orada yasal yükümlülük faturayı **iletmektir** ve biz iletmiyoruz. Metin bunu
+zaten söylüyor; reklam bütçesi ise oraya ayrılmamalı (bkz. ADR 0005).
