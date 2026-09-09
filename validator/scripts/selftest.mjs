@@ -42,6 +42,7 @@ const freemiusStub = createServer((request, response) => {
     'suresiz': { id: 2, is_cancelled: false, expiration: null },
     'iptal': { id: 3, is_cancelled: true, expiration: '2099-01-01 00:00:00' },
     'suresi-dolmus': { id: 4, is_cancelled: false, expiration: '2020-01-01 00:00:00' },
+    'bilinmeyen-bicim': { id: 5, durum: 'freemius bir gun bicimi degistirirse' },
   };
 
   if (!(key in bodies)) {
@@ -103,7 +104,7 @@ check('eksik satici yakalaniyor', missing.valid === false, `${missing.errors.len
 // --- Almanya: ulusal profil (XRechnung 3.0.2) ---
 //
 // Bu bolumun sebebi somut: eklentinin ciktisi TABAN seti gecerken XRechnung'dan
-// 12 iddiadan dusuyordu (bkz. ADR 0010). Taban set tek basina Alman musteriye
+// 6 iddiadan dusuyordu (bkz. ADR 0010). Taban set tek basina Alman musteriye
 // "bu fatura kabul edilir" diyemez.
 console.log('\n' + 'XRechnung 3.0.2 ulusal profil');
 const alman = readFileSync(join(here, '..', 'fixtures', 'xrechnung-de.xml'), 'utf8');
@@ -211,6 +212,15 @@ check('iptal edilmis lisans reddediliyor', !iptal.ok && iptal.reason === 'licenc
 
 const dolmus = await authorise(istek('suresi-dolmus'));
 check('suresi dolmus lisans reddediliyor', !dolmus.ok && dolmus.reason === 'licence_expired', dolmus.reason);
+
+/*
+ * Freemius bir gun cevap bicimini degistirirse KILITLEMEYIZ. O gun gelirse
+ * secenek ikidir: her odemis musteriyi durdurmak, ya da dogrulamayi
+ * surdurup durumu bildirmek. Ilki, bizim tarafimizdaki bir degisiklik
+ * yuzunden musterinin faturasini kesmesini engellemek olurdu.
+ */
+const bicimsiz = await authorise(istek('bilinmeyen-bicim'));
+check('tanimadigimiz govde kilitlemiyor', bicimsiz.ok && bicimsiz.reason === 'licence_shape_unknown', bicimsiz.reason);
 
 const bilinmeyen = await authorise(istek('boyle-bir-anahtar-yok'));
 check('bilinmeyen anahtar reddediliyor', !bilinmeyen.ok, bilinmeyen.reason);

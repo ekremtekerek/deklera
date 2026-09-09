@@ -451,6 +451,28 @@ async function checkLicense(key, install, uid) {
    * dilimine birakiyor; servis tek bir makinede kosmadigi icin burada acikca
    * UTC demek daha belirlenimci.
    */
+  /*
+   * Tanimadigimiz bir govde gelirse KILITLEMEYIZ.
+   *
+   * Bu dal, Freemius'un bir gun cevap bicimini degistirmesi ihtimali icin
+   * var. O gun gelirse iki secenek olurdu: her odemis musteriyi kilitlemek,
+   * ya da dogrulamayi surdurup durumu bildirmek. Ilki, bizim tarafimizdaki
+   * bir degisiklik yuzunden musterinin faturasini durdurmak demektir.
+   *
+   * Iptal ve sure bitimi ANLASILAN cevaplardir ve reddedilir; burada
+   * yumusayan sey yalnizca "hic anlamadik" halidir. Cevabi disaridan kimse
+   * etkileyemez: govde Freemius'tan gelir, musteriden degil.
+   */
+  const tanidik = 'is_cancelled' in Object(payload) || 'expiration' in Object(payload);
+
+  if (!tanidik) {
+    const verdict = { ok: true, reason: 'licence_shape_unknown' };
+
+    licenseCache.set(cacheKey, { ...verdict, checkedAt: now });
+
+    return verdict;
+  }
+
   const cancelled = true === payload?.is_cancelled;
   const expiry = payload?.expiration ? Date.parse(`${payload.expiration}Z`.replace(' ', 'T')) : null;
   const expired = null !== expiry && Number.isFinite(expiry) && expiry < now;

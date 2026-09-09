@@ -538,10 +538,32 @@ Render'da servisin ortamına konur. Depoya girmez. Boşsa lisans sorgusu
 yapılmaz ve sebep `licence_check_not_configured` olarak bildirilir; sessizce
 "geçersiz lisans" denmez.
 
-> **Gerçek uca karşı hâlâ ölçülmedi.** Karar mantığı ve imza doğrulandı, ama
-> Freemius'un canlı cevabı görülmedi — bunun için elde etkin bir lisans ve
-> `FREEMIUS_SECRET_KEY` gerekiyor. **Bu ölçüm yapılmadan 0.3.8 çıkarılmaz.**
-> Ölçüm betiği: `build/sinav-lisans.php`.
+#### Canlı ölçümün durumu
+
+9 Eylül 2026'da üretimde ölçüldü: `FREEMIUS_SECRET_KEY` konduktan sonra
+Freemius **imzayı kabul etti** ve uydurma bir kurulum için kendi cümlesiyle
+cevap verdi:
+
+```
+HTTP 401  {"error":"unauthorised",
+           "reason":"Plugin [38206] not authorized to access Install [123456]."}
+```
+
+Yani imza, kapsam ve uç doğru. Ölçülmemiş olan tek şey **başarı yolunun**
+canlı gövdesi; onun için elde etkin bir lisans gerekiyor
+(`build/sinav-lisans.php`).
+
+Alan adları tahmin değil: SDK'nın kendi lisans varlığından alındı
+(`class-fs-plugin-license.php`) — `is_features_enabled = !is_cancelled`,
+`is_lifetime = expiration null`, `is_expired = !lifetime && expiration <
+şimdi`. Servis birebir bunu uyguluyor.
+
+> **Bu ölçüm artık sürüm engeli değil.** Sebebi tasarımda: tanımadığımız bir
+> gövde geldiğinde servis **kilitlemiyor**, doğrulamayı sürdürüp durumu
+> `licence_shape_unknown` olarak bildiriyor. İptal ve süre bitimi anlaşılan
+> cevaplardır ve reddedilir; yumuşayan tek hâl "hiç anlamadık"tır. Böylece
+> Freemius'un bir gün biçim değiştirmesi, ödemiş müşterilerin faturasını
+> durdurmaz. Yine de ilk gerçek Pro satışından önce canlı ölçüm yapılmalıdır.
 
 ### Eski tasarımın bilinen zayıflığı
 
