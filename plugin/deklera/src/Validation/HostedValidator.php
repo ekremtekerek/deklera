@@ -197,7 +197,7 @@ final class HostedValidator {
 	 *
 	 * EN 16931 bir tabandır; Almanya XRechnung ile üstüne daraltma koyar ve
 	 * tabanda isteğe bağlı olan alanları zorunlu kılar. Ölçüldü: eklentinin
-	 * çıktısı taban seti geçerken XRechnung'dan on iki iddiadan düşüyordu,
+	 * çıktısı taban seti geçerken XRechnung'dan altı iddiadan düşüyordu,
 	 * bkz. docs/adr/0010. Yani Alman bir müşteriye taban set tek başına
 	 * "bu fatura kabul edilir" diyemez.
 	 *
