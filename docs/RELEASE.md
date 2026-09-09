@@ -368,6 +368,15 @@ kalmalıdır.
 e-postanızda" diyor; o e-posta anahtarı taşımıyorsa müşteri ilk dakikada
 tıkanır ve destek yazar.
 
+> **Kapı önce lisans anahtarını istiyor.** Premium paket temiz kurulumda
+> eklentinin bütün ekranını Freemius'un "Welcome to Deklera! To get started,
+> please enter your license key" kapısıyla değiştiriyor; doğrulama anahtarı
+> alanı o kapının arkasında kalıyor. Yani müşteri **iki anahtar** alıyor ve
+> ilk gördüğü ekran hangisini istediğini söylemiyor. E-posta metninde sıranın
+> açıkça yazılması gerekir: önce lisans anahtarı, eklenti açıldıktan sonra
+> doğrulama anahtarı. 9 Eylül 2026'da ürünün sahibi bu tuzağa düştü — Render'daki
+> doğrulama anahtarını lisans kutusuna yapıştırdı ve Freemius doğru şekilde reddetti.
+
 Freemius → **Emails → Customization → Specific Email Customization**:
 
 | Alan | Değer |
@@ -481,6 +490,37 @@ reddedildi. Sonda betigi: `bin/pro-dogrula.php` (iki yonu de kendisi olcer ve so
 **Render ücretsiz katmanı uyuyor.** İlk istek 12 saniye sürebilir; bu bir hata
 değil, soğuk başlangıç. Eklenti zaman aşımını buna göre veriyor, ama müşteriye
 ilk doğrulamanın yavaş olabileceğini söylemek gerekir.
+
+### 9 Eylül 2026 — 0.3.7, müşterinin yolundan
+
+7 Eylül ölçümü anahtarı doğrudan veritabanına yazıyordu ve **taban** kural
+setini bozuyordu (BR-CO-15/16). İki boşluk kalmıştı: anahtarın yönetici
+ekranından girilmesi, ve **ulusal** kuralların gerçekten dönmesi. İkisi de
+9 Eylül'de kapatıldı.
+
+Temiz kurulum, WooCommerce 11.1.0, paketten kurulan 0.3.7 premium, Alman
+mağaza (profil `xrechnung`), tamamlanmış tek sipariş:
+
+| Ölçüm | Sonuç |
+|---|---|
+| Anahtar girilmeden üretim | belge üretildi, günlük: "Validation is not enabled." |
+| Kasıtlı yanlış anahtarla servis | **HTTP 401** — TLS ve kapı çalışıyor |
+| Doğru anahtar, yönetici ekranından | HTTP 200, sürüm 2, "Valid against EN 16931 1.3.16." |
+| Ödeme aracı 58, IBAN yok | üretim **engellendi**: `[BR-DE-23-a]` |
+
+Son satır sınavın kendisidir. BR-DE-23-a Almanya'nın kuralıdır ve ön uçuşta
+karşılığı **yoktur**; belgeyi düşüren şey yalnızca servisin çalıştırdığı resmi
+XRechnung kural seti olabilir. Ayrıca cevap Almanca geldi, yani KoSIT
+yapılandırmasının kendi metni.
+
+Telefonu silerek denemek işe yaramaz: ön uçuş kuralı (`NationalProfile`)
+üretimi zaten kendisi engeller ve ölçüm servisten geldiğini kanıtlamaz. Bir
+kez böyle ölçüldü ve sonuç yanıltıcıydı.
+
+**TLS uyarısı.** Bu makinede WordPress'in HTTP API'si kendi sertifika paketini
+kullanıyor ve antivirüs araya girdiği için sınav ortamında kök sertifikanın
+`wp-includes/certificates/ca-bundle.crt` sonuna eklenmesi gerekir. Eklenmezse
+istek "cURL error 60" ile düşer ve suç anahtarda sanılır.
 
 ---
 
