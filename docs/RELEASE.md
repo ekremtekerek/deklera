@@ -492,11 +492,35 @@ geçerli, süresiz, iptal edilmiş, süresi dolmuş, bilinmeyen anahtar, kurulum
 kimliği eksik, önbellek, ve Freemius erişilemezken ödemesiz süre — on bir
 kontrol.
 
-> **Gerçek uca karşı henüz ölçülmedi.** Freemius'un
-> `/v1/products/{urun}/installs/{kurulum}/license.json` ucu, WordPress
-> SDK'sıyla açılmış bir kurulum için elde etkin bir lisans olmadan
-> sınanamıyor. **Bu ölçüm yapılmadan sürüm çıkarılmaz** — yapılmazsa Pro
-> müşterisi doğrulamayı hiç açamaz. Ölçüm betiği: `build/sinav-lisans.php`.
+> **Uç kimlik doğrulaması istiyor — ölçüldü, 9 Eylül 2026.**
+> `/v1/products/38206/installs/1/license.json` çağrısı, parametreleri doğru
+> olsun ya da olmasın, çıplak bir nginx **403** döndürüyor; aynı anda
+> `/v1/ping.json` **200** veriyor, yani engel bizim tarafımızda değil.
+> `/v1/plugins/...` biçimi de aynı sonucu veriyor. Dolayısıyla "kimlik
+> bilgisi gerekmiyor" varsayımı **yanlış**: bu uç yalnızca imzalı isteğe
+> cevap veriyor.
+>
+> Freemius API'si Bearer değil **HMAC** kullanıyor
+> (`Authorization: FS {kimlik}:{acik_anahtar}:base64(hmac-sha256(...))`,
+> bkz. SDK `FreemiusWordPress.php`). Yani servisin ya ürün/geliştirici
+> kapsamında kendi kimlik bilgisini taşıması ya da başka bir yol seçilmesi
+> gerekiyor.
+>
+> **Karar bekliyor. Bu çözülmeden 0.3.8 çıkarılmaz** — çıkarsa Pro müşterisi
+> doğrulamayı hiç açamaz.
+>
+> Seçenekler:
+>
+> 1. **Ürün kapsamlı HMAC.** Servis kendi Freemius kimlik bilgisini taşır ve
+>    lisansı sorar. Bugün çalışır, kalıcı depolama istemez. Bedeli: serviste
+>    bir Freemius sırrı durur.
+> 2. **Webhook + yerel liste.** Freemius lisans olaylarını servise gönderir,
+>    servis kendi listesini tutar; istek anında Freemius'a gidilmez. Daha iyi
+>    çalışma özellikleri, ama Render ücretsiz katmanında **kalıcı disk yok**;
+>    yeniden başlatma listeyi siler.
+>
+> Ölçüm betiği: `build/sinav-lisans.php` (lisans etkinleştirildikten sonra
+> gerçek üçlüyle çalıştırılır).
 
 ### Eski tasarımın bilinen zayıflığı
 

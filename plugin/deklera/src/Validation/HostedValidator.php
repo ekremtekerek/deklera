@@ -167,12 +167,26 @@ final class HostedValidator {
 		}
 
 		if ( 200 !== $status ) {
+			if ( 404 === $status ) {
+				// 404 hem yanlis adres hem gecici kesinti demek olabilir.
+				// Iki ihtimali de soyleyelim; teshis suresini kisaltir.
+				return ValidationResult::unavailable(
+					'Validation service returned HTTP 404. Check the service address, or the service may be starting up.'
+				);
+			}
+
+			/*
+			 * 401 tek basina "yetkisiz" der ve yoneticiye hicbir sey anlatmaz.
+			 * Servis sebebi govdede bildiriyor -- lisans iptal mi, suresi mi
+			 * doldu, kurulum kimligi mi eksik, yoksa Freemius'a mi
+			 * ulasilamiyor. Fark, ne yapilacagini belirler.
+			 */
 			return ValidationResult::unavailable(
-				404 === $status
-					// 404 hem yanlis adres hem gecici kesinti demek olabilir.
-					// Iki ihtimali de soyleyelim; teshis suresini kisaltir.
-					? 'Validation service returned HTTP 404. Check the service address, or the service may be starting up.'
-					: sprintf( 'Validation service returned HTTP %d.', $status )
+				sprintf(
+					'Validation service returned HTTP %d%s.',
+					$status,
+					self::reason_of( $response )
+				)
 			);
 		}
 
@@ -316,6 +330,22 @@ final class HostedValidator {
 			'deklera/validator_key',
 			'' !== $manual ? $manual : self::license_key()
 		);
+	}
+
+	/**
+	 * Yanıttaki sebep alanını okunur bir eke çevirir.
+	 *
+	 * @param array<string,mixed> $response HTTP yanıtı.
+	 * @return string Boş ya da " (sebep)".
+	 */
+	private static function reason_of( $response ): string {
+		$body = json_decode( (string) \wp_remote_retrieve_body( $response ), true );
+
+		if ( ! is_array( $body ) || ! isset( $body['reason'] ) || ! is_string( $body['reason'] ) ) {
+			return '';
+		}
+
+		return ' (' . preg_replace( '/[^a-z_]/', '', $body['reason'] ) . ')';
 	}
 
 	/**
