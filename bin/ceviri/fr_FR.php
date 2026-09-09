@@ -91,13 +91,14 @@ return array(
 	// Pro dogrulama.
 	'Official validation (Pro)' => 'Validation officielle (Pro)',
 	'Validation against the official EN 16931 rule set requires the Pro plan. It cannot run inside WordPress because the rule set needs XSLT 2.0, which PHP does not support.' => "La validation face au jeu de règles officiel EN 16931 requiert la formule Pro. Elle ne peut pas s'exécuter dans WordPress car ce jeu de règles nécessite XSLT 2.0, que PHP ne prend pas en charge.",
-	'One step left: paste your validation key below. It is in the email you received when you bought Pro. The service address is already filled in.' => "Une dernière étape : collez votre clé de validation ci-dessous. Elle figure dans l'e-mail reçu lors de votre achat Pro. L'adresse du service est déjà renseignée.",
 	'Read the setup guide' => 'Lire le guide de configuration',
 	'Validation service address' => 'Adresse du service de validation',
 	'Already set to the service run by the plugin author. Change it only if you run your own copy of it.' => "Renseignée sur le service exploité par l'auteur de l'extension. Ne la modifiez que si vous hébergez votre propre instance.",
 	'Validation key' => 'Clé de validation',
-	'From your Pro purchase email. This is not the licence key that activated the plugin.' => "Issue de votre e-mail d'achat Pro. Ce n'est pas la clé de licence qui a activé l'extension.",
 	'Saved. Leave empty to keep it.' => 'Enregistrée. Laissez vide pour la conserver.',
+	'Official validation is on. Your licence authorises it — there is nothing to set up here.' => 'La validation officielle est active. Votre licence l’autorise — il n’y a rien à configurer ici.',
+	'Validation is not authorised yet. Activate your licence, or enter a key below if you run your own copy of the service.' => 'La validation n’est pas encore autorisée. Activez votre licence, ou saisissez une clé ci-dessous si vous hébergez votre propre copie du service.',
+	'Leave empty. Only needed if you run your own copy of the service.' => 'Laissez vide. Utile uniquement si vous hébergez votre propre copie du service.',
 
 	// KDV kategorileri.
 	'Standard rate' => 'Taux normal',

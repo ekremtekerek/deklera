@@ -469,10 +469,39 @@ veritabanında duruyor ama hiçbir yerde gösterilmiyordu. 9 Eylül 2026'da
 düzeltildi; ön uçuş temizken belge yoksa sebep kutunun başında da gösteriliyor.
 **E-posta metni bu düzeltmeyi taşıyan sürüm yayımlanmadan kaydedilmemelidir.**
 
-### Bu tasarımın bilinen zayıflığı
+### Yerine geçen tasarım — 9 Eylül 2026
 
-Servis **tek paylaşılan anahtarla** çalışıyor: her Pro müşterisi aynı dizgeyi
-alıyor. Sonuçları:
+Yukarıdaki iki anahtarlı akış **kaldırılıyor.** Eklenti artık zaten taşıdığı
+Freemius lisans anahtarını `Authorization: Bearer` olarak gönderiyor; servis
+onu Freemius'a soruyor ve cevabı bir saat önbellekte tutuyor. Girilecek ikinci
+bir anahtar yok, iptal ve abonelik bitişi kendiliğinden işliyor.
+
+| | Eski | Yeni |
+|---|---|---|
+| Müşterinin gireceği anahtar | 2 | **1** (aktivasyonda zaten giriyor) |
+| İptal / iade | elle, pratikte imkânsız | kendiliğinden |
+| Abonelik bitişi | çalışmaya devam eder | kesilir |
+| Sızıntı | herkes etkilenir | tek lisans |
+
+Servis `LICENSE_SECRET`'i kabul etmeye devam ediyor: izleme iş akışı onu
+kullanıyor ve kendi kopyasını çalıştıran kurulumun Freemius'a bağlı olmaması
+gerekir. Eklentideki anahtar alanı da duruyor ve doluysa o kazanır.
+
+Karar mantığı sahte uca karşı ölçüldü (`validator/scripts/selftest.mjs`):
+geçerli, süresiz, iptal edilmiş, süresi dolmuş, bilinmeyen anahtar, kurulum
+kimliği eksik, önbellek, ve Freemius erişilemezken ödemesiz süre — on bir
+kontrol.
+
+> **Gerçek uca karşı henüz ölçülmedi.** Freemius'un
+> `/v1/products/{urun}/installs/{kurulum}/license.json` ucu, WordPress
+> SDK'sıyla açılmış bir kurulum için elde etkin bir lisans olmadan
+> sınanamıyor. **Bu ölçüm yapılmadan sürüm çıkarılmaz** — yapılmazsa Pro
+> müşterisi doğrulamayı hiç açamaz. Ölçüm betiği: `build/sinav-lisans.php`.
+
+### Eski tasarımın bilinen zayıflığı
+
+Servis **tek paylaşılan anahtarla** çalışıyordu: her Pro müşterisi aynı dizgeyi
+alıyordu. Sonuçları:
 
 - Anahtar bir kez sızarsa herkes servisi bedava kullanır.
 - Tek bir müşterinin erişimi iptal edilemez; anahtar değişirse **hepsi** kırılır.

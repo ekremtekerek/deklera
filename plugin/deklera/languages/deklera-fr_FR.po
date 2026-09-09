@@ -9,7 +9,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: fr_FR\n"
 "Language-Team: French\n"
-"PO-Revision-Date: 2026-09-09 07:15:51+0000\n"
+"PO-Revision-Date: 2026-09-09 07:52:12+0000\n"
 "Last-Translator: Hasan Ekrem Tekerek\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Domain: deklera\n"
@@ -254,7 +254,7 @@ msgid "Saved — leave blank to keep it"
 msgstr "Enregistré — laissez vide pour le conserver"
 
 #: src/Admin/PreflightPage.php:503
-#: src/Admin/PreflightPage.php:581
+#: src/Admin/PreflightPage.php:589
 msgid "Not set"
 msgstr "Non défini"
 
@@ -278,39 +278,43 @@ msgstr "Production — les factures sont réelles"
 msgid "Start with Test. Invoices sent to Production are legally issued and cannot be withdrawn."
 msgstr "Commencez par Test. Les factures envoyées en Production sont juridiquement émises et ne peuvent pas être retirées."
 
-#: src/Admin/PreflightPage.php:547
+#: src/Admin/PreflightPage.php:548
 msgid "Official validation (Pro)"
 msgstr "Validation officielle (Pro)"
 
-#: src/Admin/PreflightPage.php:552
+#: src/Admin/PreflightPage.php:553
 msgid "Validation against the official EN 16931 rule set requires the Pro plan. It cannot run inside WordPress because the rule set needs XSLT 2.0, which PHP does not support."
 msgstr "La validation face au jeu de règles officiel EN 16931 requiert la formule Pro. Elle ne peut pas s'exécuter dans WordPress car ce jeu de règles nécessite XSLT 2.0, que PHP ne prend pas en charge."
 
-#: src/Admin/PreflightPage.php:564
-msgid "One step left: paste your validation key below. It is in the email you received when you bought Pro. The service address is already filled in."
-msgstr "Une dernière étape : collez votre clé de validation ci-dessous. Elle figure dans l'e-mail reçu lors de votre achat Pro. L'adresse du service est déjà renseignée."
+#: src/Admin/PreflightPage.php:563
+msgid "Official validation is on. Your licence authorises it — there is nothing to set up here."
+msgstr "La validation officielle est active. Votre licence l’autorise — il n’y a rien à configurer ici."
 
-#: src/Admin/PreflightPage.php:566
+#: src/Admin/PreflightPage.php:572
+msgid "Validation is not authorised yet. Activate your licence, or enter a key below if you run your own copy of the service."
+msgstr "La validation n’est pas encore autorisée. Activez votre licence, ou saisissez une clé ci-dessous si vous hébergez votre propre copie du service."
+
+#: src/Admin/PreflightPage.php:574
 msgid "Read the setup guide"
 msgstr "Lire le guide de configuration"
 
-#: src/Admin/PreflightPage.php:572
+#: src/Admin/PreflightPage.php:580
 msgid "Validation service address"
 msgstr "Adresse du service de validation"
 
-#: src/Admin/PreflightPage.php:575
+#: src/Admin/PreflightPage.php:583
 msgid "Already set to the service run by the plugin author. Change it only if you run your own copy of it."
 msgstr "Renseignée sur le service exploité par l'auteur de l'extension. Ne la modifiez que si vous hébergez votre propre instance."
 
-#: src/Admin/PreflightPage.php:580
+#: src/Admin/PreflightPage.php:588
 msgid "Validation key"
 msgstr "Clé de validation"
 
-#: src/Admin/PreflightPage.php:584
-msgid "From your Pro purchase email. This is not the licence key that activated the plugin."
-msgstr "Issue de votre e-mail d'achat Pro. Ce n'est pas la clé de licence qui a activé l'extension."
+#: src/Admin/PreflightPage.php:592
+msgid "Leave empty. Only needed if you run your own copy of the service."
+msgstr "Laissez vide. Utile uniquement si vous hébergez votre propre copie du service."
 
-#: src/Admin/PreflightPage.php:585
+#: src/Admin/PreflightPage.php:593
 msgid "Saved. Leave empty to keep it."
 msgstr "Enregistrée. Laissez vide pour la conserver."
 

@@ -222,9 +222,12 @@ final class HostedValidator {
 			\trailingslashit( $this->endpoint() ) . 'v1/validate',
 			array(
 				'timeout' => $this->timeout(),
-				'headers' => array(
-					'authorization' => 'Bearer ' . $this->key(),
-					'content-type'  => 'application/json',
+				'headers' => array_merge(
+					array(
+						'authorization' => 'Bearer ' . $this->key(),
+						'content-type'  => 'application/json',
+					),
+					self::identity_headers()
 				),
 				'body'    => (string) \wp_json_encode(
 					array(
@@ -280,19 +283,97 @@ final class HostedValidator {
 	}
 
 	/**
-	 * Lisans anahtarı.
+	 * Servise gönderilecek anahtar.
+	 *
+	 * NEDEN ARTIK AYRI BİR ANAHTAR YOK
+	 *
+	 * Önceden her Pro müşterisi ikinci bir anahtar alıyordu ve onu elle
+	 * yapıştırıyordu. Bunun üç maliyeti vardı: dizge herkeste aynıydı, yani
+	 * tek bir müşterinin erişimi iptal edilemiyordu ve aboneliği biten
+	 * kullanmaya devam ediyordu; kurulum bir adım uzuyordu; ve ilk ekran
+	 * Freemius'un lisans anahtarını istediği için ikisi karışıyordu — ürünün
+	 * sahibi bile yanlış kutuya yapıştırdı.
+	 *
+	 * Artık eklenti zaten taşıdığı Freemius lisans anahtarını gönderiyor ve
+	 * servis onu Freemius'a soruyor. Girilecek bir şey yok, iptal ve abonelik
+	 * bitişi kendiliğinden işliyor.
+	 *
+	 * Ayardaki alan kaldırılmadı: kendi kopyasını çalıştıran kurulumun
+	 * Freemius'a bağlı olmaması gerekir, ve daha önce anahtar girmiş olanın
+	 * kurulumu bozulmamalı. Girilmişse o kazanır.
 	 *
 	 * @return string
 	 */
 	private function key(): string {
+		$manual = (string) \get_option( self::OPTION_KEY, '' );
+
 		/**
-		 * Doğrulama servisinin lisans anahtarını değiştirir.
+		 * Doğrulama servisine gönderilen anahtarı değiştirir.
 		 *
 		 * @param string $key Anahtar.
 		 */
 		return (string) \apply_filters(
 			'deklera/validator_key',
-			(string) \get_option( self::OPTION_KEY, '' )
+			'' !== $manual ? $manual : self::license_key()
+		);
+	}
+
+	/**
+	 * Freemius lisans anahtarı.
+	 *
+	 * SDK yoksa ya da lisans yoksa boş döner; çağıran taraf bunu
+	 * "yapılandırılmamış" olarak okur.
+	 *
+	 * @return string
+	 */
+	public static function license_key(): string {
+		if ( ! \function_exists( 'deklera_fs' ) ) {
+			return '';
+		}
+
+		$freemius = \deklera_fs();
+
+		if ( ! is_object( $freemius ) || ! method_exists( $freemius, '_get_license' ) ) {
+			return '';
+		}
+
+		$license = $freemius->_get_license();
+
+		return is_object( $license ) && isset( $license->secret_key )
+			? (string) $license->secret_key
+			: '';
+	}
+
+	/**
+	 * Kurulumu tanıtan başlıklar.
+	 *
+	 * Servis lisansı Freemius'a sorarken anahtarın yanında kurulum kimliğini
+	 * ve sitenin anonim kimliğini istiyor; üçü birlikte olmadan sorgu
+	 * yapılamıyor. Kişisel veri taşımazlar: biri Freemius'un kendi ürettiği
+	 * sayı, öteki siteye özgü rastgele bir dizge.
+	 *
+	 * @return array<string,string>
+	 */
+	private static function identity_headers(): array {
+		if ( ! \function_exists( 'deklera_fs' ) ) {
+			return array();
+		}
+
+		$freemius = \deklera_fs();
+
+		if ( ! is_object( $freemius ) || ! method_exists( $freemius, 'get_site' ) ) {
+			return array();
+		}
+
+		$site = $freemius->get_site();
+
+		if ( ! is_object( $site ) || ! isset( $site->id ) ) {
+			return array();
+		}
+
+		return array(
+			'x-deklera-install' => (string) $site->id,
+			'x-deklera-uid'     => (string) $freemius->get_anonymous_id(),
 		);
 	}
 }

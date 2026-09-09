@@ -541,8 +541,9 @@ final class PreflightPage {
 	 * @return void
 	 */
 	private static function render_validator_settings(): void {
-		$has_pro = Licensing::has_hosted_validation();
-		$key     = (string) get_option( HostedValidator::OPTION_KEY, '' );
+		$has_pro  = Licensing::has_hosted_validation();
+		$key      = (string) get_option( HostedValidator::OPTION_KEY, '' );
+		$licensed = HostedValidator::license_key();
 
 		printf( '<hr/><p><strong>%s</strong></p>', esc_html__( 'Official validation (Pro)', 'deklera' ) );
 
@@ -551,17 +552,24 @@ final class PreflightPage {
 				'<p class="description">%s</p>',
 				esc_html__( 'Validation against the official EN 16931 rule set requires the Pro plan. It cannot run inside WordPress because the rule set needs XSLT 2.0, which PHP does not support.', 'deklera' )
 			);
-		} elseif ( '' === $key ) {
+		} elseif ( '' !== $licensed ) {
 			/*
-			 * Pro'yu yeni almis birinin gordugu ilk ekran burasi. Onceden bu
-			 * bolum iki bos alandan ve "validator.example.com" yer
-			 * tutucusundan ibaretti; ne yazilacagini soyleyen hicbir sey
-			 * yoktu. Para odendikten hemen sonra karsilasilacak en kotu ekran
-			 * budur.
+			 * Lisans dogrulamayi zaten yetkilendiriyor; yapilacak bir sey yok.
+			 * Bunu SOYLEMEK gerekiyor: bos bir alan gormek, kurulumun eksik
+			 * kaldigi izlenimini verir ve destek yazdirir.
+			 */
+			printf(
+				'<div class="notice notice-success inline"><p>%s</p></div>',
+				esc_html__( 'Official validation is on. Your licence authorises it — there is nothing to set up here.', 'deklera' )
+			);
+		} else {
+			/*
+			 * Buraya ancak lisans anahtari okunamayan bir kurulum duser
+			 * (kendi kopyasini calistiran ya da SDK'sini degistirmis olan).
 			 */
 			printf(
 				'<div class="notice notice-warning inline"><p>%1$s</p><p><a href="%2$s" target="_blank" rel="noopener">%3$s</a></p></div>',
-				esc_html__( 'One step left: paste your validation key below. It is in the email you received when you bought Pro. The service address is already filled in.', 'deklera' ),
+				esc_html__( 'Validation is not authorised yet. Activate your licence, or enter a key below if you run your own copy of the service.', 'deklera' ),
 				esc_url( self::GUIDE_URL ),
 				esc_html__( 'Read the setup guide', 'deklera' )
 			);
@@ -581,7 +589,7 @@ final class PreflightPage {
 			esc_attr( '' === $key ? __( 'Not set', 'deklera' ) : str_repeat( '•', 12 ) ),
 			$has_pro ? '' : ' disabled',
 			'' === $key
-				? esc_html__( 'From your Pro purchase email. This is not the licence key that activated the plugin.', 'deklera' )
+				? esc_html__( 'Leave empty. Only needed if you run your own copy of the service.', 'deklera' )
 				: esc_html__( 'Saved. Leave empty to keep it.', 'deklera' )
 		);
 	}

@@ -92,13 +92,14 @@ return array(
 	// Pro dogrulama.
 	'Official validation (Pro)' => 'Walidacja urzędowa (Pro)',
 	'Validation against the official EN 16931 rule set requires the Pro plan. It cannot run inside WordPress because the rule set needs XSLT 2.0, which PHP does not support.' => 'Walidacja wobec oficjalnego zestawu reguł EN 16931 wymaga planu Pro. Nie może działać wewnątrz WordPressa, ponieważ zestaw reguł wymaga XSLT 2.0, którego PHP nie obsługuje.',
-	'One step left: paste your validation key below. It is in the email you received when you bought Pro. The service address is already filled in.' => 'Został jeden krok: wklej poniżej swój klucz walidacji. Znajdziesz go w wiadomości e-mail otrzymanej przy zakupie Pro. Adres usługi jest już uzupełniony.',
 	'Read the setup guide' => 'Przeczytaj przewodnik konfiguracji',
 	'Validation service address' => 'Adres usługi walidacji',
 	'Already set to the service run by the plugin author. Change it only if you run your own copy of it.' => 'Ustawiony na usługę prowadzoną przez autora wtyczki. Zmień go tylko wtedy, gdy prowadzisz własną instancję.',
 	'Validation key' => 'Klucz walidacji',
-	'From your Pro purchase email. This is not the licence key that activated the plugin.' => 'Z wiadomości e-mail o zakupie Pro. To nie jest klucz licencyjny, którym aktywowano wtyczkę.',
 	'Saved. Leave empty to keep it.' => 'Zapisany. Zostaw puste, aby go zachować.',
+	'Official validation is on. Your licence authorises it — there is nothing to set up here.' => 'Urzędowa walidacja jest włączona. Autoryzuje ją Twoja licencja — nie ma tu nic do ustawienia.',
+	'Validation is not authorised yet. Activate your licence, or enter a key below if you run your own copy of the service.' => 'Walidacja nie jest jeszcze autoryzowana. Aktywuj licencję albo wpisz poniżej klucz, jeśli prowadzisz własną kopię usługi.',
+	'Leave empty. Only needed if you run your own copy of the service.' => 'Zostaw puste. Potrzebne tylko, jeśli prowadzisz własną kopię usługi.',
 
 	// KDV kategorileri.
 	'Standard rate' => 'Stawka podstawowa',

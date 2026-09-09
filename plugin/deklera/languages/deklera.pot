@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-09T07:14:35+00:00\n"
+"POT-Creation-Date: 2026-09-09T07:50:05+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: deklera\n"
@@ -254,7 +254,7 @@ msgid "Saved — leave blank to keep it"
 msgstr ""
 
 #: src/Admin/PreflightPage.php:503
-#: src/Admin/PreflightPage.php:581
+#: src/Admin/PreflightPage.php:589
 msgid "Not set"
 msgstr ""
 
@@ -278,39 +278,43 @@ msgstr ""
 msgid "Start with Test. Invoices sent to Production are legally issued and cannot be withdrawn."
 msgstr ""
 
-#: src/Admin/PreflightPage.php:547
+#: src/Admin/PreflightPage.php:548
 msgid "Official validation (Pro)"
 msgstr ""
 
-#: src/Admin/PreflightPage.php:552
+#: src/Admin/PreflightPage.php:553
 msgid "Validation against the official EN 16931 rule set requires the Pro plan. It cannot run inside WordPress because the rule set needs XSLT 2.0, which PHP does not support."
 msgstr ""
 
-#: src/Admin/PreflightPage.php:564
-msgid "One step left: paste your validation key below. It is in the email you received when you bought Pro. The service address is already filled in."
-msgstr ""
-
-#: src/Admin/PreflightPage.php:566
-msgid "Read the setup guide"
+#: src/Admin/PreflightPage.php:563
+msgid "Official validation is on. Your licence authorises it — there is nothing to set up here."
 msgstr ""
 
 #: src/Admin/PreflightPage.php:572
-msgid "Validation service address"
+msgid "Validation is not authorised yet. Activate your licence, or enter a key below if you run your own copy of the service."
 msgstr ""
 
-#: src/Admin/PreflightPage.php:575
-msgid "Already set to the service run by the plugin author. Change it only if you run your own copy of it."
+#: src/Admin/PreflightPage.php:574
+msgid "Read the setup guide"
 msgstr ""
 
 #: src/Admin/PreflightPage.php:580
+msgid "Validation service address"
+msgstr ""
+
+#: src/Admin/PreflightPage.php:583
+msgid "Already set to the service run by the plugin author. Change it only if you run your own copy of it."
+msgstr ""
+
+#: src/Admin/PreflightPage.php:588
 msgid "Validation key"
 msgstr ""
 
-#: src/Admin/PreflightPage.php:584
-msgid "From your Pro purchase email. This is not the licence key that activated the plugin."
+#: src/Admin/PreflightPage.php:592
+msgid "Leave empty. Only needed if you run your own copy of the service."
 msgstr ""
 
-#: src/Admin/PreflightPage.php:585
+#: src/Admin/PreflightPage.php:593
 msgid "Saved. Leave empty to keep it."
 msgstr ""
 

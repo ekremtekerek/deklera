@@ -9,10 +9,54 @@
  */
 
 import { readFileSync } from 'node:fs';
+import { createServer } from 'node:http';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 process.env.NODE_ENV = 'test';
+
+/*
+ * Freemius'un yerine gecen sahte uc.
+ *
+ * Lisans yetkilendirmesi gercek Freemius'a karsi ancak elde etkin bir lisans
+ * varken sinanabilir; oysa yanlis giden her sey odemis bir musteriyi kilitler.
+ * Bu yuzden KARAR mantigi burada, kontrollu cevaplarla olculur: iptal, sure
+ * bitimi, bilinmeyen anahtar, onbellek ve Freemius erisilemezken odemesiz
+ * sure. Gercek uca karsi olcum ayrica yapilir (docs/RELEASE.md).
+ *
+ * Sunucu, server.js iceri alinmadan ONCE ayaga kalkmali: FREEMIUS_API modul
+ * yuklenirken okunuyor.
+ */
+const licenceHits = { count: 0 };
+
+const freemiusStub = createServer((request, response) => {
+  licenceHits.count += 1;
+
+  const url = new URL(request.url, 'http://stub');
+  const key = url.searchParams.get('license_key') ?? '';
+
+  const bodies = {
+    'gecerli': { id: 1, is_cancelled: false, expiration: '2099-01-01 00:00:00' },
+    'suresiz': { id: 2, is_cancelled: false, expiration: null },
+    'iptal': { id: 3, is_cancelled: true, expiration: '2099-01-01 00:00:00' },
+    'suresi-dolmus': { id: 4, is_cancelled: false, expiration: '2020-01-01 00:00:00' },
+  };
+
+  if (!(key in bodies)) {
+    response.writeHead(404, { 'content-type': 'application/json' });
+    response.end(JSON.stringify({ error: { message: 'License not found' } }));
+
+    return;
+  }
+
+  response.writeHead(200, { 'content-type': 'application/json' });
+  response.end(JSON.stringify(bodies[key]));
+});
+
+await new Promise((resolve) => freemiusStub.listen(0, '127.0.0.1', resolve));
+
+process.env.FREEMIUS_API = `http://127.0.0.1:${freemiusStub.address().port}`;
+process.env.LICENSE_SECRET = 'paylasilan-sinav-sirri';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const { validate } = await import('../src/server.js');
@@ -110,6 +154,65 @@ const gecen = izinler.filter(Boolean).length;
 check('varsayilan kota 10', gecen === 10, gecen + ' istek gecti');
 check('kota asilinca reddediyor', izinler[10] === false && izinler[11] === false);
 check('baska IP etkilenmiyor', takeQuota('sinav-baska-' + Math.random()).allowed);
+
+// --- Lisansla yetkilendirme ---
+//
+// Yanlis giden her sey odemis bir musteriyi kilitler ya da odemeyeni iceri
+// alir; ikisi de sessizce olur.
+
+console.log('\n' + 'Lisans yetkilendirmesi');
+
+const { authorise } = await import('../src/server.js');
+
+/**
+ * Sahte istek uretir.
+ *
+ * @param {string} token   Bearer belirteci.
+ * @param {object} extra   Ek basliklar.
+ * @returns {object}
+ */
+function istek(token, extra = {}) {
+  return {
+    headers: {
+      authorization: `Bearer ${token}`,
+      'x-deklera-install': '123456',
+      'x-deklera-uid': 'a'.repeat(32),
+      ...extra,
+    },
+  };
+}
+
+check('paylasilan sir kabul ediliyor', (await authorise(istek('paylasilan-sinav-sirri'))).ok);
+check('bos belirtec reddediliyor', !(await authorise({ headers: {} })).ok);
+check('gecerli lisans kabul ediliyor', (await authorise(istek('gecerli'))).ok);
+check('suresiz lisans kabul ediliyor', (await authorise(istek('suresiz'))).ok);
+
+const iptal = await authorise(istek('iptal'));
+check('iptal edilmis lisans reddediliyor', !iptal.ok && iptal.reason === 'licence_cancelled', iptal.reason);
+
+const dolmus = await authorise(istek('suresi-dolmus'));
+check('suresi dolmus lisans reddediliyor', !dolmus.ok && dolmus.reason === 'licence_expired', dolmus.reason);
+
+const bilinmeyen = await authorise(istek('boyle-bir-anahtar-yok'));
+check('bilinmeyen anahtar reddediliyor', !bilinmeyen.ok, bilinmeyen.reason);
+
+const eksik = await authorise({ headers: { authorization: 'Bearer gecerli' } });
+check('kurulum kimligi olmadan reddediliyor', !eksik.ok && eksik.reason === 'missing_install', eksik.reason);
+
+// Onbellek: ayni ucluyu ikinci kez sormak Freemius'a gitmemeli.
+const oncesi = licenceHits.count;
+await authorise(istek('gecerli'));
+check('gecerli cevap onbellekleniyor', licenceHits.count === oncesi);
+
+// Freemius erisilemezken, daha once GECERLI denen lisans odemesiz sure boyunca
+// calismaya devam etmeli. Odemis musteriyi bizim bagimliligimiz durduramaz.
+await new Promise((resolve) => freemiusStub.close(resolve));
+
+const kapaliyken = await authorise(istek('gecerli'));
+check('servis kapaliyken onbellekten geciyor', kapaliyken.ok, kapaliyken.reason);
+
+const kapaliykenYeni = await authorise(istek('hic-sorulmamis'));
+check('servis kapaliyken bilinmeyen giremiyor', !kapaliykenYeni.ok, kapaliykenYeni.reason);
 
 if (failures > 0) {
   console.error(`\n${failures} kontrol basarisiz.`);

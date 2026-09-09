@@ -92,13 +92,14 @@ return array(
 	// Pro dogrulama.
 	'Official validation (Pro)' => 'Offizielle Validierung (Pro)',
 	'Validation against the official EN 16931 rule set requires the Pro plan. It cannot run inside WordPress because the rule set needs XSLT 2.0, which PHP does not support.' => 'Die Prüfung gegen das offizielle EN-16931-Regelwerk erfordert den Pro-Tarif. Sie kann nicht in WordPress laufen, weil das Regelwerk XSLT 2.0 benötigt, das PHP nicht unterstützt.',
-	'One step left: paste your validation key below. It is in the email you received when you bought Pro. The service address is already filled in.' => 'Nur noch ein Schritt: Fügen Sie unten Ihren Validierungsschlüssel ein. Er steht in der E-Mail, die Sie beim Kauf von Pro erhalten haben. Die Adresse des Dienstes ist bereits eingetragen.',
 	'Read the setup guide' => 'Einrichtungsanleitung lesen',
 	'Validation service address' => 'Adresse des Validierungsdienstes',
 	'Already set to the service run by the plugin author. Change it only if you run your own copy of it.' => 'Voreingestellt auf den vom Plugin-Autor betriebenen Dienst. Ändern Sie den Wert nur, wenn Sie eine eigene Instanz betreiben.',
 	'Validation key' => 'Validierungsschlüssel',
-	'From your Pro purchase email. This is not the licence key that activated the plugin.' => 'Aus Ihrer Pro-Kaufbestätigung. Das ist nicht der Lizenzschlüssel, mit dem das Plugin aktiviert wurde.',
 	'Saved. Leave empty to keep it.' => 'Gespeichert. Leer lassen, um ihn zu behalten.',
+	'Official validation is on. Your licence authorises it — there is nothing to set up here.' => 'Die offizielle Prüfung ist aktiv. Ihre Lizenz berechtigt dazu — hier ist nichts einzurichten.',
+	'Validation is not authorised yet. Activate your licence, or enter a key below if you run your own copy of the service.' => 'Die Prüfung ist noch nicht freigeschaltet. Aktivieren Sie Ihre Lizenz, oder tragen Sie unten einen Schlüssel ein, wenn Sie eine eigene Kopie des Dienstes betreiben.',
+	'Leave empty. Only needed if you run your own copy of the service.' => 'Leer lassen. Nur nötig, wenn Sie eine eigene Kopie des Dienstes betreiben.',
 
 	// KDV kategorileri.
 	'Standard rate' => 'Regelsteuersatz',
