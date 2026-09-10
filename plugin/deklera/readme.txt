@@ -5,7 +5,7 @@ Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 8.2
 Requires Plugins: woocommerce
-Stable tag: 0.3.8
+Stable tag: 0.3.9
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -264,6 +264,12 @@ site. See **External services** above.
 3. The e-invoice box on the order screen, with document versions and history.
 
 == Changelog ==
+
+= 0.3.9 =
+* Packaging only, no functional change. The download no longer carries build
+  and continuous-integration files from the bundled libraries — Schematron,
+  XSLT and CI configuration that nothing in the plugin reads. The WordPress.org
+  review asked for this, and the download is a good deal smaller for it.
 
 = 0.3.8 =
 * When the official rule set refuses a document, the order screen now names

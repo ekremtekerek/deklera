@@ -137,6 +137,42 @@ echo "izolasyon tamam\n";
 Ters eğik çizgi `chr(92)` ile kuruluyor: kabuk ve PHP arasında geçen bir
 dizgede kaçış karakteri sessizce yenir ve sınıf adı yanlış çözülür.
 
+### Üç ülkenin çıktısı — paket denetimlerinin göremediği şey
+
+**Bu adım atlanamaz ve sebebi somut.** 0.3.9 hazırlanırken pakette olmaması
+gereken dosyalar budandı ve `.yml` uzantılılar da silindi. Sınıf haritası
+eksiksizdi, izolasyon tamamdı, Plugin Check temizdi, dosya sayısı tutuyordu —
+**bütün denetimler yeşildi.** Bozulan şey dosyaların varlığı değil,
+kütüphanenin okuduğu VERİYDİ: `horstoeko/zugferd`'in `src/yaml/` dizinindeki
+270 dosya JMS serializer'ın üst verisidir ve `addMetadataDir()` ile kaydedilir.
+
+Onlarsız belge yine üretiliyordu — 8 KB, hatasız — yalnızca **yanlış**
+üretiliyordu. Fransa yolunda PDF üreticisi bozuk XML'de tarih alanını arayınca
+çöktü; hata ancak orada görünür oldu. Yayımlansaydı her müşterinin her
+faturası bozuk çıkardı.
+
+Bu yüzden paketten sonra üç yol da gerçekten koşturulur:
+
+```sh
+cp bin/uc-ulke.php build/
+C="docker compose -f docker-compose.clean.yml -p deklera-clean"
+$C run --rm -T --user root wpcli wp plugin install /build/deklera-<surum>.zip \
+  --activate --allow-root --path=/var/www/html
+$C run --rm -T --user root wpcli wp eval-file /build/uc-ulke.php \
+  --allow-root --path=/var/www/html
+```
+
+| Yol | Neyi kanıtlar |
+|---|---|
+| XRechnung düz XML | serializer üst verisi yerinde |
+| Factur-X PDF/A-3 melez | `.xmp` ve `.icc` okunabiliyor — gömülü XML, XMP uzantı şeması ve `OutputIntent` aranır |
+| FA(3) | `.xsd` okunabiliyor — Polonya belgesi resmi şemaya karşı doğrulanır |
+
+Betik `bin/uc-ulke.php` altında durur ve pakete **girmez**: `tests/` zaten
+paketten çıkarılıyor ve inceleme ekibi test dosyalarını da istemiyor. Ölçülen
+şey yine de müşteriye giden pakettir — betik dışarıdan koşar, kurulu eklentiyi
+kullanır.
+
 ### Plugin Check
 
 WordPress.org'un asıl kapısı budur. Yerel WordPress'te:

@@ -143,6 +143,81 @@ find "$STAGE/vendor/composer" -mindepth 1 -maxdepth 1 -type d | while read -r pk
 done
 
 rm -f "$KEEP"
+
+# Eklentide bulunmamasi gereken dosya turlerini cikar.
+#
+# NEDEN
+#
+# WordPress.org 10 Eylul 2026'da 0.3.6'yi bu gerekceyle geri cevirdi: bir
+# eklentinin icinde php/js/css/txt/md, birkac medya ve veri dosyasi beklenir;
+# .sch ve .xslt beklenmez. Ornek olarak on iki dosya gosterildi ama inceleme
+# ekibi "ayni sorunun butun orneklerini paylasmayabiliriz" diyor -- yani
+# yalnizca gosterilenleri silmek yetmez.
+#
+# Silinenlerin hicbiri calisma aninda okunmuyor. zugferd'in schema/ dizini
+# (sch, xslt, xsd) yalnizca ZugferdProfiles icindeki bir dizide ISIMLE
+# geciyor; hicbir kod acmiyor, ve o dizideki dogrulayici siniflari
+# (ZugferdDocumentValidator, ZugferdKositValidator) bu eklentide
+# kullanilmiyor. Geri kalanlar surekli tumlestirme ve gelistirme artefakti.
+#
+# KALANLAR VE SEBEPLERI
+#
+#   *.xmp  -- facturx_extension_schema.xmp, Factur-X'in PDF/A-3 icine gomulen
+#             XMP uzanti semasi. ZugferdDocumentPdfBuilder onu OKUYOR;
+#             silinirse Fransa ciktisi bozulur.
+#   *.xsd  -- intermedia/ksef-fa3/schema/FA3.xsd, Polonya FA(3) belgesi
+#             uretilirken resmi semaya karsi dogrulanir (Fa3Builder::SCHEMA).
+#
+# Ikisi de incelemeye aciklanmali; "gereksiz dosya" degiller.
+echo "==> Beklenmeyen dosya turleri cikariliyor"
+
+rm -rf "$STAGE/vendor-prefixed/horstoeko/zugferd/src/schema"
+
+# symfony/validator'in XML esleme semasi: yalnizca XmlFileLoader kullanir,
+# bu eklenti oznitelik tabanli eslemeyi kullanir.
+rm -rf "$STAGE/vendor-prefixed/symfony/validator/Mapping/Loader/schema"
+
+# tfpdf ile gelen ornek cikti; kutuphane onu hicbir yerde okumuyor.
+rm -f "$STAGE/vendor-prefixed/setasign/tfpdf/ex.pdf"
+
+onceki=$(find "$STAGE" -type f | wc -l)
+
+# .yml SILINMEZ. Ilk denemede silindi ve XML uretimi tamamen bozuldu:
+# zugferd'in src/yaml/ dizinindeki 270 dosya JMS serializer'in ust verisidir,
+# kutuphane onlari addMetadataDir ile KAYIT EDIYOR. Onlarsiz belge yine
+# uretiliyor -- yalnizca yanlis uretiliyor, ve hicbir hata cikmiyor.
+# Uc ulke sinavi (build/sinav-budama.php) bunu yakaladi. Ayni gerekce
+# .xlf icin de gecerli olabilir; dokunulmuyor.
+#
+# Kural: yalnizca OKUNMADIGI DOGRULANAN silinir.
+find "$STAGE" \( \
+  -name '*.map' -o -name '*.dist' -o -name '*.neon' -o -name '*.sch' -o \
+  -name '*.xslt' -o -name '*.htm' -o -name '.gitignore' -o \
+  -name '.gitattributes' -o -name '.editorconfig' -o -name '.php-cs-fixer*' \
+  \) -delete
+
+echo "    $(( onceki - $(find "$STAGE" -type f | wc -l) )) dosya cikarildi"
+
+# Gerekli olanlar hala yerinde mi. Sessizce silinmis bir sema, Fransa ya da
+# Polonya ciktisini calisma aninda bozar ve bunu ancak musteri gorur.
+for gerekli in \
+  "vendor-prefixed/horstoeko/zugferd/src/assets/facturx_extension_schema.xmp" \
+  "vendor-prefixed/horstoeko/zugferd/src/assets/sRGB2014.icc" \
+  "vendor-prefixed/intermedia/ksef-fa3/schema/FA3.xsd"; do
+  if [ ! -f "$STAGE/$gerekli" ]; then
+    echo "HATA: budama gerekli dosyayi sildi: $gerekli" >&2
+    exit 1
+  fi
+done
+
+# Serializer ust verisi: sayisi dususe belge sessizce bozulur.
+ustveri=$(find "$STAGE/vendor-prefixed/horstoeko/zugferd/src/yaml" -name '*.yml' | wc -l)
+
+if [ "$ustveri" -lt 200 ]; then
+  echo "HATA: serializer ust verisi eksik ($ustveri dosya)." >&2
+  exit 1
+fi
+
 # Temizlikten sonra classmap yeniden uretilmeli. Bu adim da izole calisir:
 # Deklera\Vendor\* siniflarinin psr-4 karsiligi yoktur, yalnizca classmap'ten
 # cozulurler; budanmis bir classmap calisma aninda olumcul hatadir.
