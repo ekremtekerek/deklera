@@ -180,6 +180,21 @@ rm -rf "$STAGE/vendor-prefixed/symfony/validator/Mapping/Loader/schema"
 # tfpdf ile gelen ornek cikti; kutuphane onu hicbir yerde okumuyor.
 rm -f "$STAGE/vendor-prefixed/setasign/tfpdf/ex.pdf"
 
+# symfony/yaml'in komut satiri araci. Kutuphanenin kendisi (YAML ayristirici)
+# serializer ust verisi icin gerekli; bu betik degil. 13 Eylul 2026
+# incelemesinde ornek olarak gosterildi.
+rm -rf "$STAGE/vendor-prefixed/symfony/yaml/Resources/bin"
+
+# Factur-X XMP semasi .xml olarak yeniden adlandirilir.
+#
+# Ikinci incelemede "calisma aninda okunuyor" diye aciklandi; ucuncu
+# incelemede yine ornek olarak geldi. Tartismak bir tur daha demek. Dosyanin
+# ici XML'dir ve kutuphane onu simplexml_load_file() ile uzantiya bakmadan
+# okur; ZugferdBuilder::use_xml_named_xmp_schema() kutuphaneye yeni adi
+# soyler. Davranis ayni, dosya turu izin verilenlerden.
+XMP_DIR="$STAGE/vendor-prefixed/horstoeko/zugferd/src/assets"
+mv "$XMP_DIR/facturx_extension_schema.xmp" "$XMP_DIR/facturx_extension_schema.xml"
+
 onceki=$(find "$STAGE" -type f | wc -l)
 
 # .yml SILINMEZ. Ilk denemede silindi ve XML uretimi tamamen bozuldu:
@@ -201,7 +216,7 @@ echo "    $(( onceki - $(find "$STAGE" -type f | wc -l) )) dosya cikarildi"
 # Gerekli olanlar hala yerinde mi. Sessizce silinmis bir sema, Fransa ya da
 # Polonya ciktisini calisma aninda bozar ve bunu ancak musteri gorur.
 for gerekli in \
-  "vendor-prefixed/horstoeko/zugferd/src/assets/facturx_extension_schema.xmp" \
+  "vendor-prefixed/horstoeko/zugferd/src/assets/facturx_extension_schema.xml" \
   "vendor-prefixed/horstoeko/zugferd/src/assets/sRGB2014.icc" \
   "vendor-prefixed/intermedia/ksef-fa3/schema/FA3.xsd"; do
   if [ ! -f "$STAGE/$gerekli" ]; then
@@ -209,6 +224,17 @@ for gerekli in \
     exit 1
   fi
 done
+
+# Incelemenin iki kez ornek gosterdigi siniflar geri gelmemeli: .xmp, .sch,
+# .xslt ve LICENSE disinda uzantisiz dosya (calistirilabilir betikler).
+yasakli=$(find "$STAGE" -type f \( -name '*.xmp' -o -name '*.sch' -o -name '*.xslt' \) | head -5)
+uzantisiz=$(find "$STAGE" -type f ! -name '*.*' ! -name 'LICENSE' | head -5)
+
+if [ -n "$yasakli$uzantisiz" ]; then
+  echo "HATA: incelemenin reddettigi dosya turleri pakette:" >&2
+  printf '  %s\n' $yasakli $uzantisiz >&2
+  exit 1
+fi
 
 # Serializer ust verisi: sayisi dususe belge sessizce bozulur.
 ustveri=$(find "$STAGE/vendor-prefixed/horstoeko/zugferd/src/yaml" -name '*.yml' | wc -l)

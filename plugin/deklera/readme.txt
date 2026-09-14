@@ -5,7 +5,7 @@ Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 8.2
 Requires Plugins: woocommerce
-Stable tag: 0.3.9
+Stable tag: 0.3.10
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -264,6 +264,12 @@ site. See **External services** above.
 3. The e-invoice box on the order screen, with document versions and history.
 
 == Changelog ==
+
+= 0.3.10 =
+* Packaging only, no functional change. A command-line tool that came with a
+  bundled library is no longer included, and the Factur-X metadata schema is
+  now shipped as an .xml file. French invoices are produced exactly as
+  before.
 
 = 0.3.9 =
 * Packaging only, no functional change. The download no longer carries build

@@ -12,6 +12,7 @@ namespace Deklera\Invoice;
 use Deklera\Vendor\horstoeko\zugferd\ZugferdDocumentBuilder;
 use Deklera\Vendor\horstoeko\zugferd\ZugferdDocumentPdfBuilder;
 use Deklera\Vendor\horstoeko\zugferd\ZugferdProfiles;
+use Deklera\Vendor\horstoeko\zugferd\ZugferdSettings;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -71,6 +72,8 @@ final class ZugferdBuilder implements DocumentBuilder {
 			throw new \RuntimeException( 'Deklera: the source PDF is empty.' );
 		}
 
+		self::use_xml_named_xmp_schema();
+
 		$builder = new ZugferdDocumentPdfBuilder( $this->build_document( $invoice, $profile ), $pdf );
 		$builder->generateDocument();
 
@@ -81,6 +84,31 @@ final class ZugferdBuilder implements DocumentBuilder {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Factur-X XMP şemasını .xml adıyla okutur.
+	 *
+	 * NEDEN
+	 *
+	 * WordPress.org incelemesi .xmp dosya türünü kabul etmiyor; iki turda da
+	 * örnek olarak gösterdi. Dosyanın içi XML'dir ve kütüphane onu
+	 * simplexml_load_file() ile, uzantıya bakmadan okur. Paket yapımı
+	 * (bin/build.sh) dosyayı .xml olarak yeniden adlandırır; burada kütüphaneye
+	 * yeni ad söylenir.
+	 *
+	 * Yeniden adlandırılmış dosya yoksa (geliştirme ağacı) kütüphanenin kendi
+	 * varsayılanı kalır. İkisi de yoksa kütüphane yüksek sesle düşer; sessiz
+	 * bir yedek yolu yoktur.
+	 *
+	 * @return void
+	 */
+	private static function use_xml_named_xmp_schema(): void {
+		$name = 'facturx_extension_schema.xml';
+
+		if ( is_file( ZugferdSettings::getAssetDirectory() . DIRECTORY_SEPARATOR . $name ) ) {
+			ZugferdSettings::setXmpMetaDataFilename( $name );
+		}
 	}
 
 	/**
