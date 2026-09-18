@@ -72,6 +72,35 @@ final class ReportTest extends TestCase {
 		$this->assertSame( 0, $report->blocked_orders() );
 		$this->assertSame( 4, $report->clean_orders() );
 		$this->assertCount( 2, $report->store_findings() );
+
+		/*
+		 * TUZAK BURADA: yukarıdaki üç satır aynı anda doğru ve bu mağazada
+		 * hiçbir fatura kesilemez. Ekran bir kez bu ikisinden yalnızca
+		 * ilkine bakıp yeşil renkle "hepsi kabul edilir" dedi.
+		 */
+		$this->assertSame( 2, $report->store_blockers() );
+	}
+
+	/**
+	 * Mağaza geneli uyarılar engel sayılmaz.
+	 *
+	 * Ayrım keskin kalmalı: `store_blockers()` ekranın rengini belirliyor ve
+	 * her uyarıyı engel saymak, düzeltilecek bir şey yokken "hiçbir fatura
+	 * kesilemez" dedirtirdi.
+	 *
+	 * @return void
+	 */
+	public function test_store_wide_warnings_are_not_blockers(): void {
+		$report = new Report(
+			3,
+			array(
+				$this->finding( Finding::STORE_WIDE, Severity::WARNING, 'soft' ),
+				$this->finding( Finding::STORE_WIDE, Severity::INFO, 'note' ),
+			)
+		);
+
+		$this->assertCount( 2, $report->store_findings() );
+		$this->assertSame( 0, $report->store_blockers() );
 	}
 
 	/**

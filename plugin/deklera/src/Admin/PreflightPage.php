@@ -250,12 +250,43 @@ final class PreflightPage {
 	private static function render_summary( Report $report ): void {
 		$blocked = $report->blocked_orders();
 
+		/*
+		 * MAGAZA GENELI BULGULAR SAYAÇLARA GIRMEZ — BASLIK GIRMEK ZORUNDA
+		 *
+		 * blocked_orders() bilerek yalnizca siparise ozgu bulgulari sayar:
+		 * sayaclar siparis sayar, ayar eksigi bir siparis sorunu degildir.
+		 * Ama baslik siparis degil DURUM anlatiyor ve o ayrimi bilmiyordu.
+		 *
+		 * Sonuc, taze bir kurulumda ekranin kendi kendiyle celismesiydi:
+		 * KDV numarasi girilmemisken, yani her fatura reddedilecekken,
+		 * baslik yesil renkle "hepsi kabul edilir" diyor, üç satir asagida
+		 * ayni ekran "reddedilir" diyordu. Urunun tum iddiasi aci gercegi
+		 * onceden soylemekken ilk satirda tersini soyluyordu.
+		 */
+		$store_blockers = $report->store_blockers();
+
 		echo '<div class="deklera-hero">';
 
 		if ( 0 === $report->scanned ) {
 			printf(
 				'<p class="deklera-lede">%s</p>',
 				esc_html__( 'There are no completed orders to check yet. Come back once you have taken your first order.', 'deklera' )
+			);
+		} elseif ( $store_blockers > 0 ) {
+			printf(
+				'<p class="deklera-lede deklera-bad">%s</p>',
+				esc_html(
+					sprintf(
+						/* translators: %s: number of store-wide problems that block every invoice. */
+						_n(
+							'Nothing can be invoiced yet: %s store-level problem would get every invoice rejected, whatever the order looks like.',
+							'Nothing can be invoiced yet: %s store-level problems would get every invoice rejected, whatever the order looks like.',
+							$store_blockers,
+							'deklera'
+						),
+						number_format_i18n( $store_blockers )
+					)
+				)
 			);
 		} elseif ( 0 === $blocked ) {
 			printf(
@@ -292,11 +323,17 @@ final class PreflightPage {
 			);
 		}
 
+		/*
+		 * Ayni gerekce: bir siparis kendi basina kusursuz olabilir ama magaza
+		 * ayari eksikken faturalanamaz. "Hazir" demek yanlis olurdu.
+		 */
+		$ready = $store_blockers > 0 ? 0 : $report->clean_orders();
+
 		$stats = array(
 			array( __( 'Checked', 'deklera' ), $report->scanned, '' ),
 			array( __( 'Would be rejected', 'deklera' ), $blocked, 'bad' ),
 			array( __( 'Needs review', 'deklera' ), $report->flagged_orders(), 'warn' ),
-			array( __( 'Ready to invoice', 'deklera' ), $report->clean_orders(), 'ok' ),
+			array( __( 'Ready to invoice', 'deklera' ), $ready, 'ok' ),
 		);
 
 		echo '<div class="deklera-stats">';

@@ -106,6 +106,35 @@ final class Report {
 	}
 
 	/**
+	 * Her faturayı engelleyen mağaza geneli sorun sayısı.
+	 *
+	 * NEDEN AYRI BİR SAYAÇ
+	 *
+	 * `blocked_orders()` bilerek sıfır döndürebilir: sayaçlar sipariş sayar ve
+	 * bir ayar eksiği sipariş sorunu değildir. Ama o sayı sıfırken bile
+	 * mağazanın KDV numarası yoksa **hiçbir fatura kesilemez**.
+	 *
+	 * Bu ayrım bir kez gözden kaçtı ve ekran kendi kendiyle çelişti: taze bir
+	 * kurulumda başlık yeşil renkle "hepsi kabul edilir" derken üç satır
+	 * aşağıda aynı ekran "reddedilir" diyordu. Sayımı görünümün içine gömmek
+	 * yerine buraya koymanın sebebi bu — çelişki modelde değil, modele
+	 * danışmamakta doğdu.
+	 *
+	 * @return int
+	 */
+	public function store_blockers(): int {
+		$count = 0;
+
+		foreach ( $this->store_findings() as $finding ) {
+			if ( Severity::BLOCKER === $finding->severity ) {
+				++$count;
+			}
+		}
+
+		return $count;
+	}
+
+	/**
 	 * Sipariş bulgularını sorun türüne göre gruplar.
 	 *
 	 * Kullanıcı tek tek siparişleri değil, tekrar eden kök sebebi görmek ister:
