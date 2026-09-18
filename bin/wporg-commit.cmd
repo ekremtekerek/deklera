@@ -14,6 +14,8 @@ REM                30 dakika beklemeden gosterir.
 REM   2. trunk   — asil yuk.
 REM   3. tags    — YUKLENMEZ. Sunucuda trunk'tan kopyalanir; dosya gitmez,
 REM                aninda biter. SVN'de etiket almanin dogru yolu da budur.
+REM                Tam URL yazilir, ^/trunk kisayolu DEGIL: batch dosyasinda
+REM                ^ kacis karakteridir ve svn'e yerel yol gecirir.
 REM
 REM Ucu de tek konteynerde kosuyor, yani parola bir kez soruluyor: svn kimligi
 REM konteynerin kendi ~/.subversion dizinine onbellekliyor ve konteyner
@@ -46,7 +48,7 @@ echo Parola bir kez sorulacak. Sertifika sorusu gelirse (p) ile kabul edin.
 echo trunk adimi uzun surer; noktalar ilerledigi surece calisiyordur.
 echo.
 
-docker run --rm -it -v "%CD%:/repo" -w /repo/build/svn alpine:3 sh -c "apk add --no-cache subversion >/dev/null && SVNOPT='--username ekremtekerek --config-option servers:global:http-timeout=1800' && echo '== 1/3 assets ==' && svn commit assets -m 'Deklera %SURUM% assets' $SVNOPT && echo '== 2/3 trunk ==' && svn commit trunk -m 'Deklera %SURUM%' $SVNOPT && echo '== 3/3 etiket (sunucuda kopya) ==' && svn copy ^^/trunk ^^/tags/%SURUM% -m 'Tag %SURUM%' $SVNOPT"
+docker run --rm -it -v "%CD%:/repo" -w /repo/build/svn alpine:3 sh -c "apk add --no-cache subversion >/dev/null && SVNOPT='--username ekremtekerek --config-option servers:global:http-timeout=1800' && echo '== 1/3 assets ==' && svn commit assets -m 'Deklera %SURUM% assets' $SVNOPT && echo '== 2/3 trunk ==' && svn commit trunk -m 'Deklera %SURUM%' $SVNOPT && echo '== 3/3 etiket (sunucuda kopya) ==' && svn copy https://plugins.svn.wordpress.org/deklera/trunk https://plugins.svn.wordpress.org/deklera/tags/%SURUM% -m 'Tag %SURUM%' $SVNOPT"
 
 echo.
 if errorlevel 1 (
