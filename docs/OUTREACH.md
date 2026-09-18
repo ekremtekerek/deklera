@@ -628,6 +628,89 @@ Soğuk mail yok (bkz. 7). Yasal ve bedava olanlar:
 
 ---
 
+## 9. Derleme yazılarına girmek — konuşmasız yol
+
+Meetup'ta konuşmak zorunlu değil ve olmayacak. Ölçüm yazısı zaten o
+konuşmanın yazılı hâli; iş onu Almanya'da bu konuda **yazan** insanların
+önüne koymak. Derleme yazıları Google'da yıllarca duruyor ve içlerine girmek
+kalıcı, tekrarlanmayan bir kazanç.
+
+### Hukuki ayrım, karıştırılmasın
+
+7. bölümdeki toplu mail yasağı burada geçerli **değil**, ama sebebi
+"küçük hacim" değil: bu sitelerin kendileri açıkça geri bildirim istiyor.
+Davet varsa soğuk reklam yoktur. Buradan çıkan kural: **mesaj gerçekten geri
+bildirim olmalı** — yazıdaki somut bir eksiği göstermeli. Kılık değiştirmiş
+tanıtım hem işe yaramaz hem daveti aşar.
+
+### Doğrulanmış hedef
+
+**kostenlose-erechnung.de** — *"E-Rechnung für Online-Shops: WooCommerce,
+Shopify & Co. 2026"*, 27 Mart 2026. Bağımsız (Dennis Bär), kendi aracı var
+ama üçüncü tarafları tarafsız anlatıyor. WooCommerce karşılaştırma tablosunda
+**yalnızca üç eklenti** var: Germanized, PDF Invoices & Packing Slips, sevDesk
+entegrasyonu. Üçü de belgeyi **üretiyor**; hiçbiri fatura kesilmeden önce
+sipariş verisini denetlemiyor. Yani eksik olan tek tek eklenti değil,
+kategorinin kendisi.
+
+Sayfanın altında: *"Fehler gefunden oder Feedback? Sag es uns direkt per
+Mail"* — adres orada.
+
+### Gönderilecek metin (Almanca)
+
+Konu: `Feedback zum Ratgeber „E-Rechnung für Online-Shops" — eine Kategorie fehlt`
+
+> Hallo,
+>
+> unter dem Ratgeber steht, dass Sie sich über Feedback per Mail freuen —
+> deshalb dieser Hinweis. Vorweg, damit es sauber ist: Ich entwickle selbst
+> ein Plugin in dem Bereich. Es ist kostenlos und liegt im
+> WordPress-Verzeichnis. Ich schreibe nicht, damit Sie es aufnehmen, sondern
+> weil mir in der Tabelle eine Kategorie fehlt.
+>
+> Ihr Vergleich für WooCommerce nennt Germanized, PDF Invoices & Packing
+> Slips und die sevDesk-Integration. Alle drei lösen dieselbe Aufgabe: das
+> Dokument erzeugen. Der Fehler, an dem Shops in der Praxis scheitern, liegt
+> aber davor — die Bestelldaten sind nicht sauber genug, und man merkt es
+> erst, wenn die Rechnung zurückkommt.
+>
+> Konkret: Ich habe meine eigene Ausgabe durch die offizielle
+> Validator-Konfiguration der KoSIT geschickt. Der erste Durchlauf ist an
+> sechs Regeln gescheitert, und jede davon war ein Feld, das EN 16931
+> offenlässt und Deutschland zur Pflicht macht — Ansprechpartner und
+> Telefonnummer des Verkäufers, die Zahlungsangaben, die elektronische
+> Adresse beider Seiten. Die Ausgabe war gültige EN 16931 und wäre trotzdem
+> abgelehnt worden.
+>
+> Warum das kaum auffällt, ist technisch: Das Regelwerk kompiliert zu
+> XSLT 2.0, die XSL-Erweiterung von PHP kann nur XSLT 1.0. Ein
+> WordPress-Plugin kann die Prüfung also gar nicht selbst ausführen.
+>
+> Die Messung mit der Tabelle aller sechs Regeln:
+> https://ekremtekerek.github.io/deklera/de/measured/
+>
+> Falls es für den Ratgeber nützlich ist, gern. Falls nicht, auch gut — dann
+> wissen Sie es zumindest.
+>
+> Viele Grüße
+> [ad soyad]
+
+**Eklenti bağlantısı gövdede bilerek yok.** Yalnızca "dizinde, ücretsiz"
+deniyor. Bağlantıyı koymak metni geri bildirimden tanıtıma çevirir ve tam da
+işe yaramaz hâle getirir; isteyen zaten arar.
+
+### Bakılacak diğerleri
+
+| Site | Ne | Durum |
+|---|---|---|
+| bonpago.de | e-fatura danışmanlığı blogu, Ağustos 2026 WooCommerce yazısı | bakılmadı |
+| konzept-welt.de | doğrudan bir rakip eklentiyi anlatan yazı | bakılmadı, yorum bölümü olabilir |
+| netzhandwerker.de | ajans blogu — çarpan kitlesi | bakılmadı |
+| welaunch.io | WooCommerce eklentisi satıyor, muhtemelen rakip | düşük öncelik |
+| qualimero.com | **elendi:** satıcının Shopware içerik pazarlaması, WooCommerce eklentisi karşılaştırmıyor | ilgisiz |
+
+---
+
 ## Yapılmaması gerekenler
 
 - **WordPress.org destek forumlarında kendi eklentinizi tanıtmayın.** Orası
