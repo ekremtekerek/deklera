@@ -722,6 +722,9 @@ işe yaramaz hâle getirir; isteyen zaten arar.
   (fatura ileten) ürünleri. Farkı anlatın, kusur aramayın.
 - **Yorumlara cevap vermeyi göze alamayacağınız gün paylaşmayın.** Cevapsız
   bırakılmış bir tanıtım paylaşımı, hiç paylaşmamaktan kötüdür.
+- **LinkedIn kapalı.** Ürün sahibinin kararı, 18 Eylül 2026. Oturum açık olsa
+  da oradan paylaşım yapılmaz; kanal listesinde sayılmaz, bir daha
+  önerilmez.
 
 ## Not
 
