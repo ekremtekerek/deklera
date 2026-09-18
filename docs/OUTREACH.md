@@ -232,7 +232,10 @@ gönderi. İkisinde de sonundaki bağlantı kontrol aracına gider.
 > I fixed the six, and then put the validator behind a page so anyone can do
 > the same measurement without installing anything:
 >
-> [kontrol aracı bağlantısı]
+> https://ekremtekerek.github.io/deklera/measured/
+>
+> (Yazı artık sitede duruyor; gönderilerde doğrudan bu adres verilir.
+> Sonundaki bağlantılar kontrol aracına ve dizine gidiyor.)
 >
 > Paste an invoice — from my plugin or any other — and see what the official
 > rule set says. No sign-up, nothing stored.

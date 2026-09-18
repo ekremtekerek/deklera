@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="I ran my own WooCommerce e-invoices through Germany's official validator. The first run failed six rules — every one of them optional in EN 16931 and mandatory in Germany. Here is the measurement, and a free tool to repeat it on your own invoice.">
+<meta name="color-scheme" content="light dark">
+<title>Six rules · Deklera</title>
+<link rel="canonical" href="https://ekremtekerek.github.io/deklera/measured/">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <section>
+    <p class="eyebrow">A measurement · September 2026</p>
+    <h1>I ran my own e-invoices through Germany’s official validator. The first run failed six rules.</h1>
+    <p class="lede">I build an e-invoicing plugin for WooCommerce, so read this
+      with that in mind. The measurement is reproducible, and the tool at the end
+      is free and needs no sign-up.</p>
+  </section>
+
+  <section>
+    <h2>What I assumed</h2>
+    <p>Most WooCommerce invoice plugins produce the XML, and several produce it for
+      nothing. I assumed mine was fine. The unit tests were green. The library is
+      well regarded. The output validated against EN 16931.</p>
+    <p>Then I downloaded KoSIT’s official validator configuration — the same
+      Schematron a German authority runs — and pointed it at my own output.</p>
+  </section>
+
+  <section>
+    <h2>What came back</h2>
+    <p>Six rules failed. Every one of them a field the European standard leaves
+      <em>optional</em> and Germany makes <em>mandatory</em>:</p>
+
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr><th>Rule</th><th>What it wants</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="plan">BR-DE-5</td><td>Seller contact point (BT-41)</td></tr>
+          <tr><td class="plan">BR-DE-6</td><td>Seller contact telephone number (BT-42)</td></tr>
+          <tr><td class="plan">BR-DE-1</td><td>Payment instructions (BG-16)</td></tr>
+          <tr><td class="plan">BR-DE-27</td><td>The telephone number may not be blank</td></tr>
+          <tr><td class="plan">PEPPOL-EN16931-R020</td><td>Seller electronic address (BT-34)</td></tr>
+          <tr><td class="plan">PEPPOL-EN16931-R010</td><td>Buyer electronic address (BT-49)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>My invoice was valid EN 16931 and would have been refused in Germany. My own
+      tests could not have told me that, because they were testing the wrong thing:
+      the standard, not the country.</p>
+  </section>
+
+  <section>
+    <h2>Why this gap exists at all</h2>
+    <p>The rule set that decides whether a document is accepted compiles to
+      XSLT&nbsp;2.0. PHP’s XSL extension only speaks XSLT&nbsp;1.0. A WordPress
+      plugin therefore <strong>cannot run it in-process</strong> — not as a
+      shortcut, not with more effort. It is genuinely easy to ship something that
+      looks right and is refused.</p>
+    <p>That is not a criticism of any particular plugin. It is the reason the
+      problem is invisible: the software that produces the file is structurally
+      unable to check it.</p>
+  </section>
+
+  <section>
+    <h2>Repeat it on your own invoice</h2>
+    <p>I fixed the six, and then put the validator behind a page so anyone can run
+      the same measurement without installing anything.</p>
+    <p>
+      <a class="cta" href="../check/">Check an invoice</a>
+      <a class="cta cta-2" href="https://wordpress.org/plugins/deklera/">Get the free plugin</a>
+    </p>
+    <p class="cta-note">Paste an invoice — from my plugin or any other — and see
+      what the official rule set says. No sign-up, nothing stored.</p>
+  </section>
+
+  <section>
+    <h2>A fair question to ask any vendor</h2>
+    <div class="boundary">
+      <p>If you already use an e-invoicing plugin, the useful question to put to its
+        author is simply: <strong>can I see your validator report?</strong></p>
+      <p>That is a fair question to ask anyone selling this, me included. Mine is in
+        the <a href="https://github.com/ekremtekerek/deklera/blob/main/docs/adr/0010-almanya-ulusal-kurallari.md">repository</a>,
+        with the failures written down as well as the fixes.</p>
+    </div>
+  </section>
+
+  <footer>
+    <p class="langs"><a href="../">English</a><a href="../de/" hreflang="de">Deutsch</a><a href="../fr/" hreflang="fr">Français</a><a href="../pl/" hreflang="pl">Polski</a></p>
+    <p>Deklera is built by Hasan Ekrem Tekerek. Nothing here is tax or legal advice.</p>
+  </footer>
+
+</div>
+</body>
+</html>
