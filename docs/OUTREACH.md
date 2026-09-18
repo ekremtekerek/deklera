@@ -69,7 +69,8 @@ olmaktan çıkar. Yeni paylaşımlarda bağlantı bu olmalı.
 >
 > There is also a browser demo, nothing to install, loading a store with orders that are
 > deliberately not ready:
-> [link]
+>
+> https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/ekremtekerek/deklera/main/demo/blueprint.json
 >
 > It also generates Factur-X for France and XRechnung for Germany, but the
 > pre-flight report is the part I actually care about.
