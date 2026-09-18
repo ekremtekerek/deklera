@@ -4,7 +4,20 @@ REM
 REM Parola bu dosyada YOKTUR ve olmamalidir. svn soracak; WordPress.org
 REM profilindeki SVN parolasi (giris parolasi degil).
 REM
-REM Oncesinde: bash bin/wporg-yukle.sh <surum>  ile calisma kopyasi hazirlanir.
+REM NEDEN UC ADIM
+REM
+REM Ilk deneme tek islemde 4378 dosya gondermeye calisti ve sunucu islemi
+REM kapatirken zaman asimina ugradi (E175012). Bolerek gonderiyoruz:
+REM
+REM   1. assets  — 7 dosya. Saniyeler surer ve parolanin dogru oldugunu
+REM                30 dakika beklemeden gosterir.
+REM   2. trunk   — asil yuk.
+REM   3. tags    — YUKLENMEZ. Sunucuda trunk'tan kopyalanir; dosya gitmez,
+REM                aninda biter. SVN'de etiket almanin dogru yolu da budur.
+REM
+REM Ucu de tek konteynerde kosuyor, yani parola bir kez soruluyor: svn kimligi
+REM konteynerin kendi ~/.subversion dizinine onbellekliyor ve konteyner
+REM kapaninca o da siliniyor. Makinede parola izi kalmiyor.
 
 setlocal
 
@@ -29,14 +42,17 @@ echo.
 echo Kullanici adi: ekremtekerek
 echo Parola       : WordPress.org profilindeki SVN parolasi
 echo.
-echo Sertifika sorusu gelirse (p) ile kalici kabul edin.
+echo Parola bir kez sorulacak. Sertifika sorusu gelirse (p) ile kabul edin.
+echo trunk adimi uzun surer; noktalar ilerledigi surece calisiyordur.
 echo.
 
-docker run --rm -it -v "%CD%:/repo" -w /repo/build/svn alpine:3 sh -c "apk add --no-cache subversion >/dev/null && svn commit --username ekremtekerek -m 'Deklera %SURUM%'"
+docker run --rm -it -v "%CD%:/repo" -w /repo/build/svn alpine:3 sh -c "apk add --no-cache subversion >/dev/null && SVNOPT='--username ekremtekerek --config-option servers:global:http-timeout=1800' && echo '== 1/3 assets ==' && svn commit assets -m 'Deklera %SURUM% assets' $SVNOPT && echo '== 2/3 trunk ==' && svn commit trunk -m 'Deklera %SURUM%' $SVNOPT && echo '== 3/3 etiket (sunucuda kopya) ==' && svn copy ^^/trunk ^^/tags/%SURUM% -m 'Tag %SURUM%' $SVNOPT"
 
 echo.
 if errorlevel 1 (
   echo Gonderim BASARISIZ. Yukaridaki hatayi okuyun.
+  echo Bir adim gectiyse tekrar calistirmak zararsiz: gonderilmis olan
+  echo adim 'no changes' deyip gecer.
 ) else (
   echo Gonderildi. Eklenti birkac dakika icinde su adreste gorunur:
   echo   https://wordpress.org/plugins/deklera
