@@ -108,8 +108,14 @@ Commit SENDE. Parola bu betige girmez. Su komutu kendi terminalinde calistir
 
   docker run --rm -it -v "$KOK:/repo" -w /repo/$CALISMA alpine:3 sh -c \\
     "apk add --no-cache subversion >/dev/null && \\
-     svn commit --username ekremtekerek \\
-       -m 'Deklera $SURUM' $SVN_SECENEK"
+     svn commit --username ekremtekerek -m 'Deklera $SURUM'"
+
+Git Bash kullaniyorsan komutun basina winpty ekle; PowerShell ya da cmd ise
+gerek yok.
+
+Parolayi svn soracak. --non-interactive KULLANILMAZ: o secenekle svn parola
+soramaz ve kimlik dogrulama hatasiyla duser. Checkout icin gerekliydi, orada
+kimlik istenmiyor. Sertifika sorusu gelirse (p) ile kalici kabul.
 
 Commit sonrasi eklenti birkac dakika icinde
 https://wordpress.org/plugins/deklera adresinde gorunur.
