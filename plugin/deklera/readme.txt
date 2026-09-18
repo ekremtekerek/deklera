@@ -1,6 +1,6 @@
 === Deklera ===
 Contributors: ekremtekerek
-Tags: woocommerce, e-invoicing, e-rechnung, factur-x, ksef
+Tags: woocommerce, xrechnung, e-rechnung, factur-x, ksef
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 8.2
