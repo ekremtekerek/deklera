@@ -60,6 +60,10 @@ final class PreflightPage {
 		add_action( 'admin_menu', array( self::class, 'add_menu' ), 60 );
 		add_action( 'admin_post_deklera_save_settings', array( self::class, 'save_settings' ) );
 		add_action( 'admin_post_deklera_rescan', array( self::class, 'rescan' ) );
+		add_filter(
+			'plugin_action_links_' . plugin_basename( \Deklera\PLUGIN_FILE ),
+			array( self::class, 'action_links' )
+		);
 	}
 
 	/**
@@ -76,6 +80,35 @@ final class PreflightPage {
 			self::SLUG,
 			array( self::class, 'render' )
 		);
+	}
+
+	/**
+	 * Eklentiler listesindeki satıra rapora giden bağlantıyı koyar.
+	 *
+	 * BU SATIR NEDEN VAR
+	 *
+	 * Eklentinin tek ekranı WooCommerce menüsünün altında duruyor ve
+	 * etkinleştirme hiçbir iz bırakmıyor: kullanıcı kuruyor, ekranda bir şey
+	 * olmuyor, ürünün var olduğunu gösteren tek işaret aramayı bilene görünen
+	 * bir alt menü. Oysa kullanıcı tam o anda eklentiler listesine bakıyor.
+	 *
+	 * Bağlantının metni "Ayarlar" değil, çünkü gidilen yer ayar sayfası değil:
+	 * hiçbir yapılandırma yapmadan siparişlerin kaçının reddedileceğini
+	 * gösteren rapor. İlk izlenimi veren ekran orası.
+	 *
+	 * @param array<int|string, string> $links Mevcut bağlantılar.
+	 * @return array<int|string, string>
+	 */
+	public static function action_links( array $links ): array {
+		$link = sprintf(
+			'<a href="%s">%s</a>',
+			esc_url( self::url() ),
+			esc_html__( 'Pre-flight check', 'deklera' )
+		);
+
+		array_unshift( $links, $link );
+
+		return $links;
 	}
 
 	/**
@@ -634,7 +667,7 @@ final class PreflightPage {
 	 *
 	 * @return string
 	 */
-	private static function url(): string {
+	public static function url(): string {
 		return admin_url( 'admin.php?page=' . self::SLUG );
 	}
 
