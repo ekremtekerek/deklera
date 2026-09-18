@@ -179,6 +179,65 @@ Hedef: WooCommerce/WordPress Alman grupları, e-ticaret forumları.
 
 ---
 
+## 4a. Almanya — Facebook grupları (Almanca)
+
+Facebook forum değil ve 4. bölümdeki metin oraya uzun gelir: ilk iki satırdan
+sonra "Mehr anzeigen" ile kesiliyor ve kimse açmıyor. Kanca ilk satırda
+olmalı.
+
+İkinci fark kitlede: o gruplarda çoğunlukla **mağaza sahibi** var, geliştirici
+değil. Ellerinde yapıştıracak bir fatura XML'i yok, yani kontrol aracı onlara
+hitap etmiyor. Onlara hitap eden şey ön uçuş raporu — "kendi siparişlerine bak"
+— ve oraya giden yol dizin.
+
+**Gövdede tek bağlantı.** Facebook çok bağlantılı gönderilerin erişimini
+kısıyor; ölçüm yazısı ve kontrol aracı ilk yoruma konur.
+
+> Welche Ihrer WooCommerce-Bestellungen würden als E-Rechnung abgelehnt werden?
+>
+> Ich bin der Entwickler des Plugins, das hier ist also in eigener Sache — es
+> ist kostenlos und liegt im WordPress-Verzeichnis.
+>
+> Beim Thema E-Rechnung dreht sich fast alles um das Erzeugen der XML. Das ist
+> der einfache Teil. Schwierig ist, dass WooCommerce-Bestelldaten selten sauber
+> genug dafür sind — und man merkt es erst Wochen später, wenn eine Rechnung
+> zurückkommt.
+>
+> Das Plugin fängt deshalb dort an. Es prüft Ihre Bestellungen und sagt in
+> verständlicher Sprache, welche abgelehnt würden und warum: mit der genauen
+> Regel und der Stelle zum Korrigieren. Zum Beispiel eine innergemeinschaftliche
+> Lieferung ohne USt-IdNr. des Kunden. Oder Positionen, die auf 120,00 € kommen,
+> während die Bestellung 112,50 € ausweist.
+>
+> XRechnung 3.0 erzeugt es ebenfalls. **Versenden** tut es in Deutschland
+> nichts — das läuft weiter über Ihren eigenen Dienstleister.
+>
+> Plugins → Installieren → "Deklera"
+> https://wordpress.org/plugins/deklera/
+>
+> Über Rückmeldungen freue ich mich, besonders wenn eine Prüfung falsch liegt.
+
+**İlk yoruma** (gönderdikten hemen sonra, kendi gönderinin altına):
+
+> Falls es jemanden technisch interessiert: Ich habe meine eigene Ausgabe durch
+> den offiziellen KoSIT-Validator geschickt, bevor ich veröffentlicht habe. Der
+> erste Durchlauf ist an sechs deutschen Regeln gescheitert — alle davon Felder,
+> die die EU-Norm offenlässt und Deutschland zur Pflicht macht.
+>
+> Die ganze Messung: https://ekremtekerek.github.io/deklera/measured/
+>
+> Und hier können Sie eine eigene Rechnung gegen dasselbe Regelwerk prüfen,
+> ohne Anmeldung: https://ekremtekerek.github.io/deklera/check/
+
+### Gönderdikten sonra
+
+İlk saat önemli. Soru gelirse hızlı cevap ver; cevapsız kalan gönderi ölür ve
+grupta bir daha paylaşmak zorlaşır. "Ablehnung" ya da "Rechnung kam zurück"
+diyen biri çıkarsa, ona ürünü değil **kuralı** anlat — hangi BR kuralına
+takıldığını sorabilirsin. Bu, satış konuşmasından daha çok güven kazandırıyor.
+
+---
+
 ## 4b. Polonya — *KSeF* (Lehçe)
 
 Hedef: Polonya WooCommerce/WordPress grupları, e-ticaret forumları.
