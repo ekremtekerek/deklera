@@ -35,7 +35,12 @@ echo readme.txt duzeltmesi gonderiliyor (trunk + tags/0.3.10).
 echo Kullanici adi: ekremtekerek
 echo.
 
-docker run --rm -it -v "%CD%:/repo" -w /repo/build alpine:3 sh -c "apk add --no-cache subversion >/dev/null && SVNOPT='--username ekremtekerek --config-option servers:global:http-timeout=1800' && echo '== 1/2 trunk ==' && cd /repo/build/svn && svn commit trunk/readme.txt -m 'readme: directory tags' $SVNOPT && echo '== 2/2 etiket ==' && cd /repo/build/svn-etiket && svn commit readme.txt -m 'readme: directory tags' $SVNOPT"
+REM Gonderim mesaji burada duruyor: her readme duzeltmesinde degistirilir,
+REM yoksa SVN gecmisinde ard arda ayni satir kalir ve hangi commit neyi
+REM degistirdi okunmaz.
+set MSG=readme: searchable title, ZUGFeRD and faktura ustrukturyzowana, KSeF testing status
+
+docker run --rm -it -v "%CD%:/repo" -w /repo/build alpine:3 sh -c "apk add --no-cache subversion >/dev/null && SVNOPT='--username ekremtekerek --config-option servers:global:http-timeout=1800' && MSG='%MSG%' && echo '== 1/2 trunk ==' && cd /repo/build/svn && svn commit trunk/readme.txt -m \"$MSG\" $SVNOPT && echo '== 2/2 etiket ==' && cd /repo/build/svn-etiket && svn commit readme.txt -m \"$MSG\" $SVNOPT"
 
 echo.
 if errorlevel 1 (

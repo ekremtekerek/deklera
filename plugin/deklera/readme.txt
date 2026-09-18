@@ -1,4 +1,4 @@
-=== Deklera ===
+=== Deklera – E-Rechnung, XRechnung & KSeF for WooCommerce ===
 Contributors: ekremtekerek
 Tags: woocommerce, xrechnung, e-rechnung, factur-x, ksef
 Requires at least: 6.5
@@ -9,7 +9,7 @@ Stable tag: 0.3.10
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Which WooCommerce orders would be rejected as e-invoices? Find out before you issue them. XRechnung, Factur-X, KSeF.
+Which WooCommerce orders would be rejected as e-invoices? Find out before you issue them. XRechnung, ZUGFeRD/Factur-X, KSeF.
 
 == Description ==
 
@@ -60,9 +60,14 @@ override it with a filter.
 Deklera maps each order to the EN 16931 semantic model and produces the format
 your country requires:
 
-* **France** — Factur-X: a PDF/A-3 file with the XML embedded inside it
-* **Germany** — XRechnung 3.0 (pure XML)
-* **Poland** — KSeF FA(3), submitted to the national platform
+* **France** — Factur-X: a PDF/A-3 file with the XML embedded inside it. The
+  EN 16931 profile it uses is the same specification **ZUGFeRD 2.x** publishes
+  under its own name, so a German recipient that accepts ZUGFeRD accepts these
+  files
+* **Germany** — XRechnung 3.0, the pure-XML *E-Rechnung* the public sector and
+  a growing number of B2B recipients require
+* **Poland** — KSeF FA(3), the *faktura ustrukturyzowana*, submitted to the
+  national platform
 * **Other countries** — EN 16931 CII, the European baseline. Read the FAQ below before relying on it.
 
 The tax category (standard, reverse charge, intra-community supply, export) is
@@ -96,7 +101,9 @@ at a time.
 
 France requires e-invoicing from September 2026, small businesses from
 September 2027. Poland's KSeF already covers most VAT-registered businesses.
-Germany accepts XRechnung and ZUGFeRD today.
+Germany accepts XRechnung and ZUGFeRD today, and under the
+*E-Rechnungspflicht* every business there has had to be able to receive an
+e-invoice since January 2025.
 
 == External services ==
 
@@ -235,6 +242,15 @@ invoice and is not one.
 You need a KSeF token from your KSeF account. Start in the test environment —
 invoices sent there have no legal effect — and switch to production when you
 are satisfied.
+
+One limit worth stating plainly, because you would rather read it here than
+find it out later. The FA(3) document itself is generated against the
+Ministry's official XSD and validated against it. The **submission** client is
+written to the Ministry's own API specification — authentication, the
+encrypted session, the upload and the status polling — but it has not yet been
+exercised against a live KSeF account, because even the test environment needs
+a token issued from a Polish taxpayer's account. If you run it and something
+does not match, open an issue with what came back and it will be fixed.
 
 One thing to check if you issue VAT-exempt invoices: KSeF requires the legal
 basis for the exemption and keeps three separate fields for it — a Polish act,
