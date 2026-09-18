@@ -532,6 +532,102 @@ kanaldır.
 
 ---
 
+## 6. Keşfedilme: ölçüm, 18 Eylül 2026
+
+Soru şuydu: bu kadar eklentinin içinde bizi nasıl bulacaklar. Cevabı tahmin
+etmek yerine ölçtük.
+
+### Dizin araması — korkulan kalabalık yok
+
+WordPress.org plugins API ile, o terimi arayan birinin gördüğü **tüm** liste:
+
+| Arama | Dizindeki toplam eklenti | Bizim sıra |
+|---|---|---|
+| XRechnung | 13 | 9 |
+| E-Rechnung | 19 | 12 |
+| KSeF | 15 | 10 |
+| EN 16931 | 18 | 8 |
+| Factur-X | 24 | 13 |
+| faktura ustrukturyzowana | — | hiç çıkmıyordu |
+
+WP yönetim paneli bir sayfada ~24 sonuç gösteriyor, yani hepsinde zaten ilk
+sayfadayız. Sorun görünürlük değil **sıra**.
+
+### Rakiplerin gerçek büyüklüğü
+
+| Kurulum | Puan | Eklenti | Son güncelleme |
+|---|---|---|---|
+| 300.000 | 100% · 1863 oy | PDF Invoices & Packing Slips | 2026-08-21 |
+| 900 | 92% · 32 oy | Faktur Pro for WooCommerce | 2026-07-27 |
+| 100 | 100% · 4 oy | E-Invoicing For WooCommerce | 2025-11-20 |
+| 0 | 0 oy | Falkemit E-Invoice for XRechnung | 2026-06-27 |
+| 0 | 0 oy | Komplyo E-Invoicing | 2026-06-19 |
+| 0 | 0 oy | Rechnova – E-Rechnung | 2026-08-01 |
+| 0 | 0 oy | **Deklera** | — |
+
+Doğrudan e-fatura rakiplerinin üçü tam sıfırda, biri on aydır güncellenmemiş.
+Tek yerleşik olan 300 binlik PDF eklentisi ve onun XRechnung desteği ayrı bir
+**ücretli** eklenti — yani bizim bedava sunduğumuz şey orada para.
+
+**Sonuç:** kapılmış bir pazar değil, henüz kimsenin kazanmadığı bir pazar. Ve
+sayılar küçük olduğu için tavan yakın: sıfırdan elli kuruluma çıkmak bizi ilk
+üçe taşır. Elli kurulum, tek bir orta boy Alman ajansının müşteri portföyü.
+
+### Sıraya etki eden üç şey ve durumları
+
+1. **Addaki anahtar kelime** — yapıldı. Dizinde görünen başlık artık
+   `Deklera – E-Rechnung, XRechnung & KSeF for WooCommerce`; slug ve mevcut
+   kurulumlar etkilenmiyor. SVN'e itmek için `bin\wporg-readme.cmd`.
+2. **Gövdedeki terimler** — yapıldı. "faktura ustrukturyzowana" (o aramada
+   hiç çıkmıyorduk) ve "ZUGFeRD" (Almanya'da Factur-X'ten çok daha fazla
+   aranıyor) eklendi.
+3. **Kurulum ve puan** — sıfır yorumla tavan var. Bu mail atarak değil,
+   kuran çıkınca isteyerek alınır.
+
+---
+
+## 7. Toplu e-posta: neden hayır
+
+Bir daha gündeme gelmesin diye gerekçesiyle yazılıyor.
+
+Almanya birincil pazarımız ve orada istenmeyen ticari e-posta **UWG §7
+Abs. 2 Nr. 2** kapsamında yasak — **B2B muafiyeti yok**, alıcının önceden
+açık rızası şart. Pratik sonucu: Abmahnung. Rakip ya da Wettbewerbszentrale
+tek bir e-posta üstünden ihtarname yollar; masraf, Unterlassungserklärung ve
+sonraki ihlalde sözleşme cezası çıkar. Tek satış olmadan dört haneli fatura
+ödenir.
+
+Üstelik kazınan adreslerin çoğu Einzelunternehmer'a ait, yani GDPR anlamında
+kişisel veri: Art. 14 gereği kazıdığınız herkese bir ay içinde bildirim
+borcunuz doğar. Polonya'da da aynı rıza şartı var.
+
+**Almanya'da yasal olan tek soğuk kanal posta** (B2B'de opt-out rejimi) — ama
+para harcamayı gerektirir.
+
+---
+
+## 8. Ajans ve topluluk yolu — çarpan burada
+
+Tek tek mağaza sahibi değil, **çok mağaza yöneten** taraf hedeflenir: Alman
+WooCommerce ajansları ve Steuerberater'lar. Biri kırk müşteri mağazasına
+kurarsa dizindeki sıra sorunu kendiliğinden çözülür.
+
+Soğuk mail yok (bkz. 7). Yasal ve bedava olanlar:
+
+- **WordPress Meetup'ları.** Almanya'da düzenli olanlar var ve neredeyse
+  hepsi konuşmacı arıyor; `wpmeetups.de` şemsiye liste, `events.wordpress.org`
+  takvim. **Leipzig'de doğrudan bir WooCommerce Meetup'ı var** — hedef kitle
+  birebir. Yirmi dakikalık "E-Rechnung in WooCommerce: was der offizielle
+  Validator sagt" sunumu, ölçüm yazısının canlı hâli.
+- **WordCamp** konuşmacı başvuruları ücretsiz.
+- **Var olan soruya cevap olmak.** Bu kalıcı: konu yıllarca aramada kalıyor.
+  Ama WordPress.org'da **başka bir eklentinin destek forumunda kendi
+  eklentini tanıtmak yasak** — orada cevap verilmez. Genel forumlar, GitHub
+  konuları ve Almanca/Lehçe topluluklar serbest; yazar olduğun her seferinde
+  söylenir.
+
+---
+
 ## Yapılmaması gerekenler
 
 - **WordPress.org destek forumlarında kendi eklentinizi tanıtmayın.** Orası
