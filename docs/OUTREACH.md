@@ -285,6 +285,133 @@ söylenecek bir farktır.
 
 ---
 
+## 4e. Polonya — hangi grup, neden
+
+Tarama sonucu (18 Eylül 2026). Lehçe "zlecenia" grupları kalabalık ama
+serbest çalışan ilan panosu; yine de Polonya'da eklentiyi **kuran** taraf
+ajanslar olduğu için değersiz değiller.
+
+| Grup | Üye | Kural | Karar |
+|---|---|---|---|
+| WordPress / WooCommerce: Zlecenia, Realizacje, Pomoc Techniczna | 10,2 B | yönetici kuralı yok, kapakta hosting reklamı | **girildi, gönderi canlı** |
+| WooCommerce PL | 13,7 B | 4. kural: yönetici izni olmadan dış site/hizmet tanıtımı yasak | izin isteniyor |
+| WordPress / WooCommerce Polska (Zlecenia, Pomoc…) | 16 B | üyelere özel, kurallar dışarıdan görünmüyor | sonra |
+| KSeF - e-faktury prosto z chmury | 2,5 B | bir SaaS satıcısının kendi grubu | girilmez |
+
+### KSeF iddiası: ne söylenir, ne söylenmez
+
+`plugin/deklera/src/Ksef/Client.php` başlığı açık: uç noktalar Bakanlık'ın
+kendi belgelerinden (CIRFMF/ksef-api, API v2) alındı ama **hiçbiri canlı
+sınanmadı** — `api-test` mağaza sahibinin hesabından çıkan bir jeton
+istiyor. Bu yüzden 4b'deki "FA(3) trafia do KSeF i wraca z numerem" cümlesi
+bir gönderiye **olduğu gibi konmaz**.
+
+Yerine kanıtlanmış olan söylenir (FA(3) resmî XSD'ye göre üretilir ve
+doğrulanır, ön uçuş kontrolü çalışır), kanıtlanmamış olan da açıkça söylenir.
+Geliştirici grubunda bu satış konuşmasından daha çok cevap getiriyor, üstelik
+tam ihtiyacımız olan şeyi istiyor: test jetonu olan bir Polonyalı.
+
+### WooCommerce PL — yönetici izin mesajı
+
+Yöneticiler Magdalena ve Daniel, moderatör Piotr ve beş kişi. 9. kural
+tereddütte özel mesajı işaret ediyor, yani izin istemek kuralın kendi
+öngördüğü yol.
+
+**Uyarı:** 8. kural gerçek ad-soyad hesabı şart koşuyor. Facebook hesabı
+"Fansif Ekrem" görünüyor; katılma isteği bu yüzden reddedilebilir. Mesajın
+altına eklenti sayfasındaki adın yazılması işi kolaylaştırır.
+
+> Dzień dobry,
+>
+> Piszę zgodnie z punktem 4 regulaminu, żeby zapytać o zgodę przed
+> publikacją.
+>
+> Jestem autorem darmowej wtyczki do e-faktur dla WooCommerce (KSeF FA(3),
+> XRechnung, EN 16931). Od niedawna jest w oficjalnym katalogu WordPressa:
+> https://wordpress.org/plugins/deklera/ — nie sprzedaję przez nią niczego w
+> grupie i nie mam linków afiliacyjnych.
+>
+> Chciałbym opublikować jeden post o KSeF w WooCommerce, w dwóch częściach.
+>
+> Co jest sprawdzone: FA(3) generowany według oficjalnego XSD i przez nie
+> walidowany, oraz kontrola zamówień przed wysyłką — wtyczka mówi
+> zrozumiałym językiem, które zamówienia zostałyby odrzucone i dlaczego, z
+> oznaczeniem reguły.
+>
+> Czego sprawdzić nie mogłem: samej wysyłki do KSeF. Klient API jest
+> napisany według dokumentacji Ministerstwa, ale nigdy nie działał na żywo —
+> do środowiska api-test potrzebny jest token wystawiany z konta polskiego
+> podatnika, a ja polskiej firmy nie mam. Szukam kogoś, kto zechciałby to ze
+> mną przetestować.
+>
+> Jeśli wolicie, mogę przesłać treść do akceptacji przed publikacją albo
+> całkiem z niej zrezygnować.
+>
+> Pozdrawiam,
+> [imię i nazwisko]
+
+### Yayınlanan gönderi (10,2 B'lik grupta, 18 Eylül 2026)
+
+> Wtyczka do e-faktur dla WooCommerce — i uczciwie: czego jeszcze nie
+> sprawdziłem
+>
+> Jestem jej autorem, więc to autopromocja. Wtyczka jest darmowa i leży w
+> katalogu WordPressa.
+>
+> Przy KSeF prawie wszystko kręci się wokół wygenerowania XML. To akurat
+> łatwa część. Trudniejsze jest to, że dane zamówień WooCommerce rzadko są
+> na tyle czyste, żeby przejść — a dowiadujesz się o tym dopiero wtedy, gdy
+> faktura wraca odrzucona.
+>
+> Co jest sprawdzone:
+>
+> – FA(3) generowany według oficjalnego XSD Ministerstwa i przez nie
+> walidowany.
+> – Kontrola przed wysyłką: wtyczka przegląda zamówienia i mówi zrozumiałym
+> językiem, które zostałyby odrzucone i dlaczego — z oznaczeniem reguły i
+> miejscem do poprawy. Na przykład WDT bez numeru VAT nabywcy. Albo pozycje
+> sumujące się do 120,00 zł przy zamówieniu na 112,50 zł.
+>
+> Czego sprawdzić nie mogłem:
+>
+> – Samej wysyłki do KSeF. Klient API jest napisany według dokumentacji
+> Ministerstwa (CIRFMF/ksef-api, API v2): uwierzytelnienie, sesja
+> szyfrowana, wysyłka, odpytywanie o numer. Ale nigdy nie działał na żywo —
+> do środowiska api-test potrzebny jest token wystawiany z konta podatnika,
+> a ja polskiej firmy nie mam.
+>
+> Piszę to wprost, bo wolę, żeby ktoś o tym wiedział przed instalacją niż
+> po.
+>
+> Jeśli ktoś ma token testowy KSeF i miałby ochotę przepuścić przez to jedną
+> fakturę, bardzo chętnie doprowadzę tę część do końca i napiszę tutaj, co
+> wyszło.
+>
+> https://wordpress.org/plugins/deklera/
+
+---
+
+## 4f. Fransa — Facebook'ta kanal yok
+
+Arandı, bulunamadı. Sebebi kayda geçsin ki bir daha aranmasın:
+
+- Fransızca WooCommerce grubu yok. Arama "WooCommerce France" için yalnızca
+  dropshipping ve İngilizce genel gruplar döndürüyor.
+- Konuya tam oturan tek grup **Le forum de la facturation électronique**
+  (37,9 B). Üç sorun birden: 5. kural *"Aucune auto-promotion"* diyor ve
+  araç paylaşımına yalnızca **bir soruya cevap olarak** izin veriyor;
+  6. kural ilk ihlalde silme, tekrarında kalıcı yasak; ve grubu **Abby**
+  adlı Fransız faturalama SaaS'i işletiyor (2. kuralda kendi adları geçiyor),
+  yani rakibin evi. Üstelik ayda 8 gönderi alıyor.
+- Geri kalanlar 100–700 üyelik ölü gruplar ya da Tunus'a ait.
+
+Fransa'ya gidilecekse Facebook'tan değil: WordPress.org'un Fransızca destek
+forumu, wpfr.net ve WPMarmite çevresi. Ayrıca ADR 0005 duruyor — Fransa'da
+yasal yükümlülük iletim ve biz iletmiyoruz, yani oraya bütçe ayırmadan önce
+o karar verilmeli.
+
+---
+
 ## 4c. Ölçüm yazısı (İngilizce) — asıl çekim malzemesi
 
 Bu bir tanıtım gönderisi değil, **bir ölçümün anlatısı**. İşe yaramasının
