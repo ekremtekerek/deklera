@@ -20,6 +20,8 @@ demoyu göstermek. Fiyattan söz eden tek cümle bile paylaşımı reklama çevi
 ## Bağlantılar
 
 - Sayfa: `https://ekremtekerek.github.io/deklera/` (`/de/`, `/fr/`, `/pl/`)
+- **Ölçüm yazısı: `https://ekremtekerek.github.io/deklera/measured/`** — gönderilerin kancası
+- **Dizin sayfası: `https://wordpress.org/plugins/deklera/`** — kurmak isteyen buraya
 - **Kontrol aracı: `https://ekremtekerek.github.io/deklera/check/`** (`/de/check/`, `/fr/check/`, `/pl/check/`)
 - Demo: `https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/ekremtekerek/deklera/main/demo/blueprint.json`
 - Kaynak: `https://github.com/ekremtekerek/deklera`
@@ -54,7 +56,18 @@ olmaktan çıkar. Yeni paylaşımlarda bağlantı bu olmalı.
 > with no VAT and no customer VAT number, or invoice lines that add up to
 > €120.00 against an order total of €112.50.
 >
-> Browser demo, nothing to install, loads a store with orders that are
+> The whole measurement is written up here — the six German rules my own
+> output failed, and why:
+>
+> https://ekremtekerek.github.io/deklera/measured/
+>
+> You can run the same check on your own invoice, no sign-up:
+>
+> https://ekremtekerek.github.io/deklera/check/
+>
+> The plugin is free in the directory: https://wordpress.org/plugins/deklera/
+>
+> There is also a browser demo, nothing to install, loading a store with orders that are
 > deliberately not ready:
 > [link]
 >
@@ -80,7 +93,8 @@ olmaktan çıkar. Yeni paylaşımlarda bağlantı bu olmalı.
 > exact EN 16931 rule — missing customer VAT number on an intra-community
 > sale, totals that do not reconcile, that kind of thing.
 >
-> Browser demo, no install: [link]
+> Measurement and free checker: https://ekremtekerek.github.io/deklera/measured/
+> Plugin: https://wordpress.org/plugins/deklera/
 >
 > I'm the developer. It's free; there is a paid tier for official validation,
 > but the report is the part worth looking at.
@@ -144,7 +158,17 @@ Hedef: WooCommerce/WordPress Alman grupları, e-ticaret forumları.
 > Lieferung ohne USt-IdNr. des Kunden, oder Positionen, die auf 120,00 €
 > kommen, während die Bestellung 112,50 € ausweist.
 >
-> Demo im Browser, nichts zu installieren: [Link]
+> Die ganze Messung — welche sechs deutschen Regeln meine eigene Ausgabe
+> gerissen hat und warum:
+>
+> https://ekremtekerek.github.io/deklera/measured/
+>
+> Dieselbe Prüfung können Sie an Ihrer eigenen Rechnung laufen lassen, ohne
+> Anmeldung:
+>
+> https://ekremtekerek.github.io/deklera/check/
+>
+> Das Plugin ist kostenlos im Verzeichnis: https://wordpress.org/plugins/deklera/
 >
 > Es erzeugt auch XRechnung 3.0. In Deutschland **versendet** es nichts — das
 > läuft weiter über Ihren eigenen Dienstleister. (Polen ist die Ausnahme: dort
@@ -185,7 +209,17 @@ söylenecek bir farktır.
 > we Francji wtyczka niczego nie wysyła; to zostaje po stronie Twojego
 > dostawcy.
 >
-> Demo w przeglądarce, nic do instalowania: [link]
+> Cały pomiar — które sześć niemieckich reguł odrzuciło mój własny wynik
+> i dlaczego:
+>
+> https://ekremtekerek.github.io/deklera/measured/
+>
+> To samo sprawdzenie możesz uruchomić na własnej fakturze, bez
+> rejestracji:
+>
+> https://ekremtekerek.github.io/deklera/check/
+>
+> Wtyczka jest za darmo w katalogu: https://wordpress.org/plugins/deklera/
 >
 > Chętnie przyjmę uwagi, zwłaszcza jeśli któreś sprawdzenie jest błędne.
 
@@ -307,7 +341,7 @@ kanaldır.
 ## 5. Tek cümlelik biçim — X, Mastodon
 
 > Which of your WooCommerce orders would be rejected as an EU e-invoice? Free
-> plugin, browser demo, nothing to install: [link]
+> plugin, and a free checker for your own invoice: https://ekremtekerek.github.io/deklera/check/
 
 ---
 
