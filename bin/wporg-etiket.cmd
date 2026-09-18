@@ -11,8 +11,9 @@ REM hatasi verdirir. Bir kez verdirdi.
 
 setlocal
 
+REM Varsayilan surum her surumde guncellenir; bkz. wporg-commit.cmd.
 set SURUM=%~1
-if "%SURUM%"=="" set SURUM=0.3.10
+if "%SURUM%"=="" set SURUM=0.3.11
 
 set DEPO=https://plugins.svn.wordpress.org/deklera
 

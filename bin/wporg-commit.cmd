@@ -23,8 +23,11 @@ REM kapaninca o da siliniyor. Makinede parola izi kalmiyor.
 
 setlocal
 
+REM Varsayilan surum HER SURUMDE guncellenir. Cift tiklanan bir betige
+REM arguman verilmez; burasi geride kalirsa sessizce eski surumu gonderir ve
+REM bunu ancak dizinde yanlis numarayi gorunce anlarsiniz.
 set SURUM=%~1
-if "%SURUM%"=="" set SURUM=0.3.10
+if "%SURUM%"=="" set SURUM=0.3.11
 
 set KOK=%~dp0..
 pushd "%KOK%"
