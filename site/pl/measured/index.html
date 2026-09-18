@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Przepuściłem własne faktury z WooCommerce przez oficjalny walidator. Pierwszy przebieg nie przeszedł sześciu reguł — każda z nich opcjonalna w EN 16931 i obowiązkowa w kraju odbiorcy. Oto pomiar, co z niego wynika dla KSeF, i darmowe narzędzie, żeby powtórzyć go na własnej fakturze.">
+<meta name="color-scheme" content="light dark">
+<title>Sześć reguł · Deklera</title>
+<link rel="canonical" href="https://ekremtekerek.github.io/deklera/pl/measured/">
+<link rel="alternate" hreflang="en" href="https://ekremtekerek.github.io/deklera/measured/">
+<link rel="alternate" hreflang="de" href="https://ekremtekerek.github.io/deklera/de/measured/">
+<link rel="alternate" hreflang="pl" href="https://ekremtekerek.github.io/deklera/pl/measured/">
+<link rel="alternate" hreflang="x-default" href="https://ekremtekerek.github.io/deklera/measured/">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <section>
+    <p class="eyebrow">Pomiar · wrzesień 2026 · <a href="../../measured/" hreflang="en" lang="en">Read in English</a></p>
+    <h1>Przepuściłem własne e-faktury przez oficjalny walidator. Pierwszy przebieg nie przeszedł sześciu reguł.</h1>
+    <p class="lede">Piszę wtyczkę do e-faktur dla WooCommerce, więc czytaj to z
+      tą świadomością. Pomiar jest powtarzalny, a narzędzie na końcu jest
+      darmowe i nie wymaga rejestracji.</p>
+  </section>
+
+  <section>
+    <h2>Co założyłem</h2>
+    <p>Większość wtyczek do faktur w WooCommerce generuje XML, kilka robi to za
+      darmo. Założyłem, że u mnie jest w porządku. Testy były zielone.
+      Biblioteka ma dobrą opinię. Wynik był zgodny z EN 16931.</p>
+    <p>Potem pobrałem oficjalną konfigurację walidatora KoSIT — ten sam
+      Schematron, który uruchamia niemiecki urząd — i skierowałem go na własny
+      wynik.</p>
+  </section>
+
+  <section>
+    <h2>Co wróciło</h2>
+    <p>Sześć reguł odpadło. Każda z nich dotyczyła pola, które europejska norma
+      <em>pozostawia opcjonalnym</em>, a kraj odbiorcy czyni
+      <em>obowiązkowym</em>:</p>
+
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr><th>Reguła</th><th>Czego wymaga</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="plan">BR-DE-5</td><td>Osoba kontaktowa sprzedawcy (BT-41)</td></tr>
+          <tr><td class="plan">BR-DE-6</td><td>Numer telefonu sprzedawcy (BT-42)</td></tr>
+          <tr><td class="plan">BR-DE-1</td><td>Dane do płatności (BG-16)</td></tr>
+          <tr><td class="plan">BR-DE-27</td><td>Numer telefonu nie może być pusty</td></tr>
+          <tr><td class="plan">PEPPOL-EN16931-R020</td><td>Adres elektroniczny sprzedawcy (BT-34)</td></tr>
+          <tr><td class="plan">PEPPOL-EN16931-R010</td><td>Adres elektroniczny nabywcy (BT-49)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Moja faktura była poprawną EN 16931 i zostałaby odrzucona. Własne testy
+      nie mogły mi tego powiedzieć, bo sprawdzały coś innego: normę, a nie
+      kraj.</p>
+  </section>
+
+  <section>
+    <h2>Dlaczego ta luka w ogóle istnieje</h2>
+    <p>Zestaw reguł, który decyduje o przyjęciu dokumentu, kompiluje się do
+      XSLT&nbsp;2.0. Rozszerzenie XSL w PHP obsługuje tylko XSLT&nbsp;1.0.
+      Wtyczka WordPressa <strong>nie może więc uruchomić go u siebie</strong> —
+      ani na skróty, ani większym nakładem pracy. Naprawdę łatwo jest wydać coś,
+      co wygląda poprawnie i zostaje odrzucone.</p>
+    <p>To nie zarzut wobec konkretnej wtyczki. To powód, dla którego problem
+      jest niewidoczny: oprogramowanie, które tworzy plik, strukturalnie nie
+      jest w stanie go sprawdzić.</p>
+  </section>
+
+  <section>
+    <h2>Co to znaczy przy KSeF</h2>
+    <p>Pomiar powyżej dotyczył reguł niemieckich, bo tam mierzyłem najpierw. Ale
+      mechanizm jest dokładnie ten sam, a w Polsce stawka jest wyższa, bo KSeF
+      to nie tylko format. <strong>Faktura ustrukturyzowana nie istnieje w
+      świetle prawa, dopóki KSeF jej nie przyjmie i nie nada numeru.</strong>
+      Dokument, który „prawie” przechodzi, nie jest fakturą.</p>
+    <p>Dlatego wtyczka zaczyna od kontroli zamówień, a nie od XML: mówi
+      zrozumiałym językiem, które zamówienia zostałyby odrzucone i dlaczego, z
+      oznaczeniem reguły i miejscem do poprawy. Na przykład wewnątrzwspólnotowa
+      dostawa bez numeru VAT nabywcy. Albo pozycje sumujące się do 120,00&nbsp;zł
+      przy zamówieniu na 112,50&nbsp;zł.</p>
+
+    <div class="boundary">
+      <p><strong>Czego jeszcze nie sprawdziłem, i mówię to wprost.</strong> Sam
+        dokument FA(3) jest generowany według oficjalnego XSD Ministerstwa i
+        przez nie walidowany. Natomiast klient wysyłki — uwierzytelnienie,
+        szyfrowana sesja, wysłanie i odpytywanie o numer — jest napisany
+        według specyfikacji API Ministerstwa, ale nigdy nie działał na żywym
+        koncie: nawet środowisko testowe wymaga tokena wystawianego z konta
+        polskiego podatnika, a ja polskiej firmy nie mam.</p>
+      <p>Jeśli masz token testowy i przepuścisz przez to jedną fakturę, chętnie
+        doprowadzę tę część do końca. Wolę, żebyś przeczytał to tutaj niż
+        odkrył później.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Powtórz to na własnej fakturze</h2>
+    <p>Poprawiłem te sześć, a potem umieściłem walidator za stroną, żeby każdy
+      mógł wykonać ten sam pomiar bez instalowania czegokolwiek.</p>
+    <p>
+      <a class="cta" href="../check/">Sprawdź fakturę</a>
+      <a class="cta cta-2" href="https://wordpress.org/plugins/deklera/">Pobierz darmową wtyczkę</a>
+    </p>
+    <p class="cta-note">Wklej fakturę — z mojej wtyczki albo z dowolnej innej —
+      i zobacz, co mówi oficjalny zestaw reguł. Bez rejestracji, nic nie jest
+      zapisywane.</p>
+  </section>
+
+  <section>
+    <h2>Uczciwe pytanie do każdego dostawcy</h2>
+    <div class="boundary">
+      <p>Jeśli używasz już wtyczki do e-faktur, użyteczne pytanie do jej autora
+        brzmi po prostu: <strong>czy mogę zobaczyć raport z walidatora?</strong></p>
+      <p>To uczciwe pytanie do każdego, kto to sprzedaje, mnie również. Mój leży
+        w <a href="https://github.com/ekremtekerek/deklera/blob/main/docs/adr/0010-almanya-ulusal-kurallari.md">repozytorium</a>,
+        razem z błędami, nie tylko z poprawkami.</p>
+    </div>
+  </section>
+
+  <footer>
+    <p class="langs"><a href="../../measured/" hreflang="en">English</a><a href="../../de/measured/" hreflang="de">Deutsch</a><a href="../../fr/" hreflang="fr">Français</a><strong>Polski</strong></p>
+    <p>Deklera jest tworzona przez Hasana Ekrema Tekereka. Nic tutaj nie jest
+      poradą podatkową ani prawną.</p>
+  </footer>
+
+</div>
+</body>
+</html>
