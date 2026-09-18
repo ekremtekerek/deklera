@@ -80,6 +80,10 @@
     letter-spacing: 0.14em; text-transform: uppercase;
     color: var(--green); margin: 0 0 1.75rem;
   }
+  /* Ust satirdaki dil baglantisi: `a` ile `.eyebrow` ayni rengi kullaniyor,
+     alt cizgi olmazsa baglanti oldugu anlasilmiyor. */
+  .eyebrow a { text-decoration: underline; text-underline-offset: 0.25em; }
+
   .lede { font-size: 1.2rem; color: var(--ink-soft); max-width: 36rem; }
 
   /* --- verdict strip: mirrors the plugin's own report header --- */
