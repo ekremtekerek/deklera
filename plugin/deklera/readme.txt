@@ -9,7 +9,7 @@ Stable tag: 0.3.10
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Find out which of your orders would be rejected as e-invoices — before the tax authority does.
+Which WooCommerce orders would be rejected as e-invoices? Find out before you issue them. XRechnung, Factur-X, KSeF.
 
 == Description ==
 
@@ -22,8 +22,9 @@ Deklera starts at that problem, not at the XML.
 
 Install it, open the report, and it tells you in plain language which of your
 recent orders would be rejected and why. Then it produces the document your
-country requires — and, on the Pro plan, checks it against the **official**
-EN 16931 rule set before it is issued.
+country requires — **XRechnung** in Germany, **Factur-X** in France,
+**KSeF FA(3)** in Poland — and, on the Pro plan, checks it against the
+**official** EN 16931 rule set before it is issued.
 
 = The pre-flight check =
 
