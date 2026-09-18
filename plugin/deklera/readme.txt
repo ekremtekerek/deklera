@@ -5,7 +5,7 @@ Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 8.2
 Requires Plugins: woocommerce
-Stable tag: 0.3.10
+Stable tag: 0.3.11
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -281,6 +281,18 @@ site. See **External services** above.
 3. The e-invoice box on the order screen, with document versions and history.
 
 == Changelog ==
+
+= 0.3.11 =
+
+* The pre-flight screen no longer contradicts itself. On a fresh install with
+  no VAT number — that is, when every invoice would be rejected — the summary
+  said in green that all recent orders would be accepted, while the same
+  screen listed two store-level problems as "Would be rejected" three lines
+  below. It now leads with the store-level blockers, and "Ready to invoice"
+  reads zero, because nothing is.
+* The plugins list now links straight to the pre-flight report. Until now the
+  only way in was a submenu at the bottom of the WooCommerce menu, and
+  activating the plugin left no sign it was there at all.
 
 = 0.3.10 =
 * Packaging only, no functional change. A command-line tool that came with a

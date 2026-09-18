@@ -22,6 +22,15 @@ ZIP="build/deklera-${SURUM}-premium.zip"
 cd "$KOK"
 [ -f "$ZIP" ] || { echo "paket yok: $ZIP" >&2; exit 1; }
 
+# Sinav yardimcilari SURUM KONTROLUNDE, build/ altinda degil.
+#
+# Bir sure yalnizca build/ altinda durdular ve o dizin gitignore'da: on bir
+# dosya, yedi yuz satirdan fazla kapi kodu, tek bir makinede ve yedeksiz.
+# Disk gitse ya da depo baska bir yerde klonlansa sinavlarin hicbiri
+# calismazdi; bunu da ancak calistirmayi deneyince gorurduk. Konteyner
+# sozlesmesi (./build:/build) degismesin diye her kosuda kopyalaniyorlar.
+cp bin/sinav/sinav-*.php build/
+
 C="docker compose -f docker-compose.clean.yml -p deklera-clean"
 export MSYS_NO_PATHCONV=1
 
@@ -96,7 +105,28 @@ echo "$URETIM" | grep -q "butun  : EVET" \
 	|| { printf '  HATA  butunluk dogrulanmadi\n'; HATA=$((HATA + 1)); }
 
 echo
-echo "3. Kaldirma temizligi"
+echo "3. Ilk izlenim"
+# Kaldirma temizliginden ONCE kosmali: eklenti oradan sonra kurulu degil.
+#
+# Bu adim, butun kapilarin makineye bakan ciktiyi sinamasi yuzunden acilan
+# boslugu kapatiyor. Ayrintili gerekce bin/sinav/sinav-ekran.php basinda.
+EKRAN="$(wpcli wp eval-file /build/sinav-ekran.php --allow-root --path=/var/www/html 2>&1)"
+printf '%s\n' "$EKRAN" | sed 's/^/  /'
+
+# Sessiz gecmeye karsi: "EKRAN: gecti" satiri YOKSA bu adim basarisizdir,
+# tek tek HATA satiri saymasak bile. Betik olumcul bir PHP hatasiyla duserse
+# hic HATA satiri yazilmaz; o durumda sifir eklemek, kapiyi hic kosmamakla
+# ayni sey olurdu.
+if printf '%s\n' "$EKRAN" | grep -q "EKRAN: gecti"; then
+	:
+else
+	SAYI="$(printf '%s\n' "$EKRAN" | grep -c 'HATA' || true)"
+	[ "${SAYI:-0}" -gt 0 ] 2>/dev/null || SAYI=1
+	HATA=$((HATA + SAYI))
+fi
+
+echo
+echo "4. Kaldirma temizligi"
 wpcli sh -c "
 wp option update deklera_delete_data_on_uninstall 1 --allow-root --path=/var/www/html >/dev/null
 wp plugin uninstall deklera --deactivate --allow-root --path=/var/www/html

@@ -354,6 +354,38 @@ kaldırma temizliği hiç çalışmıyordu.
 Ortam hazır: `docker-compose.clean.yml`. Eklenti dizinini BAĞLAMAZ, yalnızca
 `build/` dizinini salt okunur bağlar; paket `wp plugin install` ile kurulur.
 
+### 3. adım: ilk izlenim — 18 Eylül 2026'da eklendi
+
+Sınav uzun süre yalnızca **makineye bakan** çıktıyı ölçtü: kurulum, belge
+üretimi, dosya bütünlüğü, kaldırma temizliği. Ürünün bütün değeri ise bir
+**insanın okuduğu** ekranda ve o ekranı hiçbir kapı denetlemiyordu.
+
+Bedeli şu oldu: taze bir kurulumda, mağazanın KDV numarası girilmemişken —
+yani her fatura reddedilecekken — ön uçuş ekranı yeşil renkle "All 1 recent
+order would be accepted" diyor, üç satır aşağıda aynı ekran iki kez "Would be
+rejected" diyordu. Sayaç da "1 Ready to invoice" gösteriyordu. 119 birim testi
+yeşildi ve `ReportTest` hatayı doğuran durumu zaten iddia ediyordu — **doğru
+olduğu için** geçiyordu. Model doğruydu; ekran modele danışmıyordu.
+
+Kapı `bin/sinav/sinav-ekran.php` altında ve **sözcüklere değil yapıya** bakar:
+mağaza geneli bir engel varken başlık `deklera-ok` sınıfını taşıyamaz ve
+"Ready to invoice" sayacı sıfırdan büyük olamaz; ayarlar girilince tersi.
+Başlığın kelimeleri değişebilir ve değişmesi de gerekir — sözcük sınayan bir
+kapı ilk çeviri düzeltmesinde yalancı kırmızı verir ve kapatılır.
+
+**Yeni bir kapı eklerken:** önce hatayı İÇEREN paketle koşturun ve kırmızı
+yandığını görün. 0.3.11'in kapısı 0.3.10'da dört kez kırmızı yanıyor. Bu adım
+atlanırsa hiçbir şey ölçmeyen bir kapı yazmış olabilirsiniz ve bunu asla
+öğrenemezsiniz — ilk yazımda tam olarak bu oldu: `wp eval-file` dosyayı
+fonksiyon kapsamında `include` ettiği için sayaç hiç artmıyordu.
+
+### Sınav yardımcıları sürüm kontrolünde
+
+`bin/sinav/*.php`. Bir süre yalnızca `build/` altında durdular ve o dizin
+gitignore'da: on iki dosya, dokuz yüz satırdan fazla kapı kodu, tek bir
+makinede ve yedeksiz. Betik her koşuda `build/` altına kopyalar; konteyner
+sözleşmesi (`./build:/build`) değişmedi.
+
 ```sh
 C="docker compose -f docker-compose.clean.yml -p deklera-clean"
 $C down -v && $C up -d
