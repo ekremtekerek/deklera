@@ -26,6 +26,10 @@ country requires — **XRechnung** in Germany, **Factur-X** in France,
 **KSeF FA(3)** in Poland — and, on the Pro plan, checks it against the
 **official** EN 16931 rule set before it is issued.
 
+Want to see what the official rule set says about an invoice before you install
+anything? Paste one here, no sign-up, nothing stored:
+https://ekremtekerek.github.io/deklera/check/
+
 = The pre-flight check =
 
 This is what the plugin is for. It scans your orders and reports, for each
@@ -188,6 +192,16 @@ verifies them against the official rule set before they leave your site. Whether
 a specific tax authority accepts a specific invoice also depends on your
 registration, your provider and rules that change over time. No plugin can
 promise that, and any that does is not being honest with you.
+
+What can be shown is the measurement. I ran my own output through KoSIT's
+official validator configuration before release; the first run failed six
+rules, every one of them a field EN 16931 leaves optional and Germany makes
+mandatory. The whole thing is written up, failures included:
+https://ekremtekerek.github.io/deklera/measured/ (also in German at
+/de/measured/ and Polish at /pl/measured/)
+
+Ask the same question of any vendor you are considering: can I see your
+validator report?
 
 = Does it send my invoices anywhere? =
 

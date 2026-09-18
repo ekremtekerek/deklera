@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name:       Deklera
- * Plugin URI:        https://github.com/ekremtekerek/deklera
+ * Plugin URI:        https://ekremtekerek.github.io/deklera/
  * Description:       Turns WooCommerce orders into legally valid e-invoices for the seller's country and delivers them through the seller's own e-invoicing provider.
  * Version:           0.3.11
  * Requires at least: 6.5
