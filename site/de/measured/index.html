@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Ich habe meine eigenen WooCommerce-Rechnungen durch den offiziellen Validator der KoSIT geschickt. Der erste Durchlauf ist an sechs Regeln gescheitert — jede davon in EN 16931 optional und in Deutschland Pflicht. Hier ist die Messung, und ein kostenloses Werkzeug, um sie an Ihrer eigenen Rechnung zu wiederholen.">
+<meta name="color-scheme" content="light dark">
+<title>Sechs Regeln · Deklera</title>
+<link rel="canonical" href="https://ekremtekerek.github.io/deklera/de/measured/">
+<link rel="alternate" hreflang="en" href="https://ekremtekerek.github.io/deklera/measured/">
+<link rel="alternate" hreflang="de" href="https://ekremtekerek.github.io/deklera/de/measured/">
+<link rel="alternate" hreflang="x-default" href="https://ekremtekerek.github.io/deklera/measured/">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <section>
+    <p class="eyebrow">Eine Messung · September 2026</p>
+    <h1>Ich habe meine eigenen E-Rechnungen durch den offiziellen Validator geschickt. Der erste Durchlauf ist an sechs Regeln gescheitert.</h1>
+    <p class="lede">Ich entwickle ein E-Rechnungs-Plugin für WooCommerce, lesen Sie
+      das also mit diesem Hinweis im Kopf. Die Messung ist nachvollziehbar, und
+      das Werkzeug am Ende ist kostenlos und braucht keine Anmeldung.</p>
+  </section>
+
+  <section>
+    <h2>Wovon ich ausgegangen bin</h2>
+    <p>Die meisten WooCommerce-Rechnungs-Plugins erzeugen die XML, mehrere davon
+      kostenlos. Ich bin davon ausgegangen, dass meines in Ordnung ist. Die Tests
+      waren grün. Die verwendete Bibliothek hat einen guten Ruf. Die Ausgabe war
+      nach EN 16931 gültig.</p>
+    <p>Dann habe ich die offizielle Validator-Konfiguration der KoSIT
+      heruntergeladen — dasselbe Schematron, das auch eine deutsche Behörde
+      ausführt — und sie auf meine eigene Ausgabe angesetzt.</p>
+  </section>
+
+  <section>
+    <h2>Was zurückkam</h2>
+    <p>Sechs Regeln sind gerissen. Jede einzelne davon ein Feld, das die
+      europäische Norm <em>offenlässt</em> und Deutschland zur <em>Pflicht</em>
+      macht:</p>
+
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr><th>Regel</th><th>Was sie verlangt</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="plan">BR-DE-5</td><td>Ansprechpartner des Verkäufers (BT-41)</td></tr>
+          <tr><td class="plan">BR-DE-6</td><td>Telefonnummer des Ansprechpartners (BT-42)</td></tr>
+          <tr><td class="plan">BR-DE-1</td><td>Zahlungsangaben (BG-16)</td></tr>
+          <tr><td class="plan">BR-DE-27</td><td>Die Telefonnummer darf nicht leer sein</td></tr>
+          <tr><td class="plan">PEPPOL-EN16931-R020</td><td>Elektronische Adresse des Verkäufers (BT-34)</td></tr>
+          <tr><td class="plan">PEPPOL-EN16931-R010</td><td>Elektronische Adresse des Käufers (BT-49)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Meine Rechnung war gültige EN 16931 und wäre in Deutschland abgelehnt
+      worden. Meine eigenen Tests konnten mir das nicht sagen, weil sie das
+      Falsche geprüft haben: die Norm, nicht das Land.</p>
+  </section>
+
+  <section>
+    <h2>Warum diese Lücke überhaupt existiert</h2>
+    <p>Das Regelwerk, das über die Annahme eines Dokuments entscheidet,
+      kompiliert zu XSLT&nbsp;2.0. Die XSL-Erweiterung von PHP spricht nur
+      XSLT&nbsp;1.0. Ein WordPress-Plugin kann es deshalb
+      <strong>nicht im eigenen Prozess ausführen</strong> — nicht mit einem
+      Kniff, nicht mit mehr Aufwand. Es ist tatsächlich leicht, etwas
+      auszuliefern, das richtig aussieht und trotzdem zurückgewiesen wird.</p>
+    <p>Das ist kein Vorwurf an ein bestimmtes Plugin. Es ist der Grund, warum das
+      Problem unsichtbar bleibt: Die Software, die die Datei erzeugt, ist
+      strukturell außerstande, sie zu prüfen.</p>
+  </section>
+
+  <section>
+    <h2>Wiederholen Sie es an Ihrer eigenen Rechnung</h2>
+    <p>Ich habe die sechs behoben und den Validator dann hinter eine Seite
+      gelegt, damit jeder dieselbe Messung durchführen kann, ohne etwas zu
+      installieren.</p>
+    <p>
+      <a class="cta" href="../check/">Rechnung prüfen</a>
+      <a class="cta cta-2" href="https://wordpress.org/plugins/deklera/">Kostenloses Plugin holen</a>
+    </p>
+    <p class="cta-note">Fügen Sie eine Rechnung ein — aus meinem Plugin oder
+      einem beliebigen anderen — und sehen Sie, was das offizielle Regelwerk
+      dazu sagt. Keine Anmeldung, nichts wird gespeichert.</p>
+  </section>
+
+  <section>
+    <h2>Eine faire Frage an jeden Anbieter</h2>
+    <div class="boundary">
+      <p>Wenn Sie bereits ein E-Rechnungs-Plugin einsetzen, ist die nützliche
+        Frage an dessen Autor schlicht:
+        <strong>Kann ich Ihren Prüfbericht sehen?</strong></p>
+      <p>Das ist eine faire Frage an jeden, der so etwas verkauft, mich
+        eingeschlossen. Meiner liegt im
+        <a href="https://github.com/ekremtekerek/deklera/blob/main/docs/adr/0010-almanya-ulusal-kurallari.md">Repository</a>,
+        mit den Fehlschlägen ebenso wie mit den Korrekturen.</p>
+    </div>
+  </section>
+
+  <footer>
+    <p class="langs"><a href="../../measured/" hreflang="en">English</a><strong>Deutsch</strong><a href="../../fr/" hreflang="fr">Français</a><a href="../../pl/" hreflang="pl">Polski</a></p>
+    <p>Deklera wird von Hasan Ekrem Tekerek entwickelt. Nichts hiervon ist eine
+      Steuer- oder Rechtsberatung.</p>
+  </footer>
+
+</div>
+</body>
+</html>
